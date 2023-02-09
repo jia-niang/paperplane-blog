@@ -1,0 +1,40 @@
+kind: pipeline
+name: default
+
+workspace:
+  path: /home/node/app
+
+steps:
+  - name: build
+    image: node:14
+    volumes:
+      - name: npmcache
+        path: /usr/local/share/.cache/yarn
+    commands:
+      - yarn config set registry https://registry.npmmirror.com
+      - yarn
+      - yarn build
+    environment:
+      CI: false
+
+  - name: deploy
+    image: node:14
+    volumes:
+      - name: webroot
+        path: /webroot
+    commands:
+      - mkdir -p /webroot/blog/
+      - rm -rf /webroot/blog/**/*.*
+      - cp -rf ./public/* /webroot/blog/
+
+volumes:
+  - name: webroot
+    host:
+      path: /home/ubuntu/www
+  - name: npmcache
+    host:
+      path: /home/ubuntu/npmcache
+
+trigger:
+  branch:
+    - master
