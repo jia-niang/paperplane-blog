@@ -579,7 +579,7 @@ import omit from 'lodash/omit'
 
 这里以 antd 为例，入口文件一般这样写：
 
-```react
+```jsx
 import React from 'react'
 import { render } from 'react-dom'
 
