@@ -298,11 +298,13 @@ Object.prototype.__proto__ === null
 对于类而言：
 
 - 如果一个类没有继承任何其它的类，那么它的 `.prototype` 原型上的 `.__proto__` 便是 `Object.prototype`，所以类派生出的实例都有 `.toString()` 等属性；
+
 - 如果一个类没有继承任何其它的类，那么它的构造函数（类名）的 `.__proto__` 便是 `Function.prototype`，这和 JS 中所有函数的行为相同；如果它继承了某一个类，它的 `.__proto__` 便是它继承的类的构造函数本身；
 
 - 如果某个类继承了另一个类，它的 `.prototype` 原型上的 `.__proto__` 便是它继承的类的 `.prototype`；因此子类派生的实例可以使用父类上的方法。
 
 上面这些话，用代码来描述就是这样：
+
 ``` js
 // 普通的类，不继承任何类
 // 它的构造方法来自于 Function.prototype，属性来自于 Object.prototype
