@@ -1,0 +1,12 @@
+menu:
+  Home: /
+  Archives: /archives
+rss: false
+
+recent_posts_limits: 5
+
+sidebar: bottom
+widgets:
+  - category
+  - tag
+  - archive
