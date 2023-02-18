@@ -51,7 +51,7 @@ function fixedEncodeURIComponent (str) {
 
 `isNaN()`：判断值是否为非数值，它会尝试转换参数为数值，如果转换后还是无法当做数值，那么返回 `true`，也因此当把布尔值用做参数时，它始终返回 `false`；注意它和 `Number.isNaN()` 不同，后者对不是 `NaN` 的值永远返回 `false`
 
-`isFinite()`：判断值是否有限，**注意对于 `NaN` 它返回 `false`**；注意它和 `Number.isFinite()` 不同，后者对非数值永远返回 `false`
+`isFinite()`：判断值是否有限，**注意对于 `NaN` 它返回 `false` 值**；注意它和 `Number.isFinite()` 不同，后者对非数值永远返回 `false`
 
 `parseInt(str, radix)`：从字符串中解析整数，按照从左往右顺序并忽略空格，如果遇到非法字符则停止解析并保留已解析的部分，返回解析出来的数值或 `NaN`，还可以传入第二个参数表示进制数；注意它不支持科学计数法，只有 0x 开头的数字会当做十六进制，**建议在任何使用场景下都须传入第二个参数**；全等于 `Number.parseInt()`；更好的选择是 `Number()`
 
@@ -434,7 +434,7 @@ function fixedEncodeURIComponent (str) {
 
 `Number.isNaN()`：判断是否为 `NaN`，和全局的 `isNaN` 的区别是它对非数值永远返回 `true`，不会尝试转换为数字
 
-`Number.isFinite()`：判断数值是否可数，**对非数值始终返回 `false`**，它不会尝试把参数转换为数值
+`Number.isFinite()`：判断数值是否可数，**对非数值始终返回 `false` 值**，它不会尝试把参数转换为数值
 
 `Number.parseInteger()` `Number.parseFloat()`：同全局的同名方法，见上文
 
@@ -471,7 +471,7 @@ function fixedEncodeURIComponent (str) {
 # Math
 `Math.abs()`：计算数值的绝对值
 
-`Math.sign()`：返回 0、**-0**、-1、+1 来判断一个数的符号
+`Math.sign()`：返回 `0`、`-0`、`1`、`-1` 来判断一个数的符号
 
 `Math.max(...n)` `Math.min(...n)`：返回所有参数中的最大/最小值
 
@@ -958,7 +958,7 @@ with (b) {
 
 `set.add(item)` `set.delete(item)` `set.clear()`：添加/删除/清空元素
 
-`set.keys()` `set.values()` `set.entries()`：返回所有键/值/键值对的枚举器；**`Set` 的键和值完全相同**
+`set.keys()` `set.values()` `set.entries()`：返回所有键/值/键值对的枚举器；**注意 `Set` 的键和值完全相同**
 
 `set.forEach(fn, [thisArg])`：依次对元素执行回调，回调形如 `fn(item, set)`
 
@@ -1008,7 +1008,7 @@ with (b) {
 
 `task.catch(rejFn)`：处理错误的情况
 
-`task.finally(fn)`：不论完成还是失败都将执行，**`fn` 回调没有任何参数**
+`task.finally(fn)`：不论完成还是失败都将执行，**注意 `fn` 回调没有任何参数**
 
 -----
 
