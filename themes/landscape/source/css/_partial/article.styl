@@ -1,12 +1,31 @@
 .article
   margin: block-margin 0
 
+.article-post
+  border-radius: 3px
+  box-shadow: 0px 0px 4px 2px #bbb;
+  border: 0.7em solid transparent;
+  box-sizing: border-box
+  background: linear-gradient(white, white) padding-box, repeating-linear-gradient(-45deg, #c0332f 0, #c0332f 12.5%, color-letter-white 0, color-letter-white 25%, #356daa 0, #356daa 37.5%, color-letter-white 0, color-letter-white 50%) 0 / 6em 6em
+  .article-inner
+    border-radius: 3px
+    overflow: hidden
+    border: none
+    box-shadow: none
+    margin: -1px
+
 .article-inner
   @extend $block
   overflow: hidden
-
+  
 .article-meta
   clearfix()
+  font-size: 1.2em
+  padding: 0 0 0.4em
+  margin: 1.4em article-padding 0
+  position: relative
+  height: 1.5em
+  border-bottom: 1px solid #ddd
 
 .article-date
   @extend $block-caption
@@ -24,13 +43,16 @@
 .article-category-link
   @extend $block-caption
   margin: 0 12px 1em
+  &:first-of-type
+    margin-left: 0
 
 .article-header
   padding: article-padding article-padding 0
 
 .article-title
+  text-align: center
   text-decoration: none
-  font-size: 2em
+  font-size: 2.5em
   font-weight: bold
   color: color-default
   line-height: line-height-title
@@ -50,7 +72,7 @@
     font-weight: bold
   h1, h2, h3, h4, h5, h6
     line-height: line-height-title
-    margin: line-height-title 0
+    margin: 50px 0 15px
   a
     color: color-link
     text-decoration: none
@@ -59,6 +81,8 @@
   ul, ol, dl
     margin-top: line-height
     margin-bottom: line-height
+    li
+      margin: 0.2em 0
   img, video
     max-width: 100%
     height: auto
@@ -78,9 +102,11 @@
     border-bottom: 1px solid color-border
     padding: 10px 0
   blockquote
+    p
+      line-height: unset;
+      margin: 0.2em 0
     font-family: font-serif
     margin: line-height 20px
-    text-align: center
     footer
       font-size: font-size
       margin: line-height 0
@@ -139,9 +165,11 @@
   clearfix()
   font-size: 0.85em
   line-height: line-height
-  border-top: 1px solid color-border
   padding-top: line-height
-  margin: 0 article-padding article-padding
+  border-top: 1px solid #ddd
+  margin: 40px article-padding article-padding
+  &.homepage
+    border-top: none
   a
     color: color-grey
     text-decoration: none
@@ -151,6 +179,7 @@
 .article-tag-list-item
   float: left
   margin-right: 10px
+  font-size: 20px
 
 .article-tag-list-link
   &:before
@@ -167,6 +196,7 @@
   cursor: pointer
   float: right
   margin-left: 20px
+  font-size: 20px
   &:before
     content: "\f064"
     font-family: font-icon
@@ -176,7 +206,7 @@
   clearfix()
   position: relative
   @media mq-normal
-    margin: block-margin 0
+    margin: 40px 0
     &:before
       absolute-center(8px)
       content: ""

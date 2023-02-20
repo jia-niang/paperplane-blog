@@ -1,19 +1,25 @@
+color-logo-text = #555
+
 #header
   height: banner-height
   position: relative
-  border-bottom: 1px solid color-border
-  &:before, &:after
-    content: ""
-    position: absolute
-    left: 0
-    right: 0
-    height: 40px
-  &:before
-    top: 0
-    background: linear-gradient(rgba(0, 0, 0, 0.2), transparent)
-  &:after
-    bottom: 0
-    background: linear-gradient(transparent, rgba(0, 0, 0, 0.2))
+  // border-bottom: 1em solid transparent;
+  // padding: 0
+  // box-sizing: border-box
+  // background: linear-gradient(white, white) padding-box, repeating-linear-gradient(-45deg, color-letter-red 0, color-letter-red 12.5%, color-letter-white 0, color-letter-white 25%, color-letter-blue 0, color-letter-blue 37.5%, color-letter-white 0, color-letter-white 50%) 0 / 6em 6em
+
+  // &:before, &:after
+  //   content: ""
+  //   position: absolute
+  //   left: 0
+  //   right: 0
+  //   height: 40px
+  // &:before
+  //   top: 0
+  //   background: linear-gradient(rgba(0, 0, 0, 0.2), transparent)
+  // &:after
+  //   bottom: 0
+  //   background: linear-gradient(transparent, rgba(0, 0, 0, 0.2))
 
 #header-outer
   height: 100%
@@ -29,21 +35,23 @@
   left: 0
   width: 100%
   height: 100%
-  background: url(banner-url) center #000
+  background: color-background
   background-size: cover
-  z-index: -1
 
 #header-title
-  text-align: center
+  text-align: left
   height: logo-size
   position: absolute
   top: 50%
   left: 0
-  margin-top: logo-size * -0.5
+  margin-top: logo-size * -0.2
+
+#logo-wrap,#subtitle-wrap
+  padding-left: 15px
 
 $logo-text
   text-decoration: none
-  color: #fff
+  color: color-logo-text
   font-weight: 300
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3)
 
@@ -52,6 +60,8 @@ $logo-text
   font-size: logo-size
   line-height: logo-size
   letter-spacing: 2px
+  font-weight: normal
+  padding-left: 3px
 
 #subtitle
   @extend $logo-text
@@ -68,8 +78,8 @@ $logo-text
 
 $nav-link
   float: left
-  color: #fff
-  opacity: 0.6
+  color: color-logo-text
+  opacity: 0.8
   text-decoration: none
   text-shadow: 0 1px rgba(0, 0, 0, 0.2)
   transition: opacity 0.2s
@@ -91,7 +101,6 @@ $nav-link
 
 .main-nav-link
   @extend $nav-link
-  font-weight: 300
   letter-spacing: 1px
   @media mq-mobile
     display: none
@@ -137,8 +146,9 @@ $nav-link
   right: 0
   background: #fff
   padding: 5px 15px
-  border-radius: 15px
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3)
+  border-radius: 9999px
+  border: 1px solid rgba(0, 0, 0, 0.3)
+  // box-shadow: 0 0 10px rgba(0, 0, 0, 0.3)
 
 .search-form-input
   border: none

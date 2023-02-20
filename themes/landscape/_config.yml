@@ -3,7 +3,7 @@ menu:
   Home: /
   Archives: /archives
 rss: /atom.xml
-banner: "images/banner.jpg"
+banner: 'images/banner.jpg'
 
 # Content
 excerpt_link: Read More
@@ -25,13 +25,11 @@ copyright:
 #   All website licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY 4.0</a></br>
 
 # Sidebar
-sidebar: right
+sidebar: bottom
 widgets:
-- category
-- tag
-- tagcloud
-- archive
-- recent_posts
+  - category
+  - tag
+  - archive
 
 # display widgets at the bottom of index pages (pagination == 2)
 index_widgets:
@@ -47,7 +45,7 @@ recent_posts_limits: 5
 # Miscellaneous
 google_analytics:
 gauges_analytics:
-favicon: /favicon.png
+favicon: 'css/images/favicon-96.png'
 twitter:
 fb_admins:
 fb_app_id:
@@ -55,8 +53,8 @@ fb_app_id:
 # valine comment system. https://valine.js.org
 valine:
   enable: false # if you want use valine,please set this value is true
-  appId:  # leancloud application app id
-  appKey:  # leancloud application app key
+  appId: # leancloud application app id
+  appKey: # leancloud application app key
   notify: false # valine mail notify (true/false) https://github.com/xCss/Valine/wiki
   verify: false # valine verify code (true/false)
   pageSize: 10 # comment list page size
