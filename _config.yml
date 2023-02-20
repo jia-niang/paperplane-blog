@@ -106,4 +106,4 @@ theme: landscape
 deploy:
   type: ''
 
-disqus_shortname: paperplane-cc
+# disqus_shortname: paperplane-cc
