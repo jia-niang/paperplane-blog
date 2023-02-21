@@ -10,6 +10,12 @@
       <div class="article-meta">
         <%- partial('post/date', {class_name: 'article-date', date_format: null}) %>
         <%- partial('post/category') %>
+        <% if (post.comments && theme.valine.enable && theme.valine.appId && theme.valine.appKey ){ %>
+          <a href="<%- url_for(post.path) %>#comments" class="article-comment-link">
+            <span class="post-comments-count valine-comment-count" data-xid="<%- url_for(post.path) %>" itemprop="commentCount"></span>
+            <%= __('comment') %>
+          </a>
+        <% } %>
       </div>
       <div class="e-content article-entry" itemprop="articleBody">
         <% if (post.excerpt && index){ %>
@@ -24,23 +30,20 @@
         <% } %>
       </div>
       <footer class="article-footer <%= !index ? '' : 'homepage' %>">
-        <!-- <a data-url="<%- post.permalink %>" data-id="<%= post._id %>" data-title="<%= post.title %>" class="article-share-link"><%= __('share') %></a> -->
-        <% if (post.comments && config.disqus_shortname){ %>
-          <a href="<%- post.permalink %>#disqus_thread" class="article-comment-link"><%= __('comment') %></a>
-        <% } %>
-        <% if (post.comments && theme.valine.enable && theme.valine.appId && theme.valine.appKey ){ %>
-          <a href="<%- url_for(post.path) %>#comments" class="article-comment-link">
-            <span class="post-comments-count valine-comment-count" data-xid="<%- url_for(post.path) %>" itemprop="commentCount"></span>
-            <%= __('comment') %>
-          </a>
-        <% } %>
+        <div>
+          <!-- <a data-url="<%- post.permalink %>" data-id="<%= post._id %>" data-title="<%= post.title %>" class="article-share-link"><%= __('share') %></a> -->
+          <!-- <% if (post.comments && config.disqus_shortname){ %>
+            <a href="<%- post.permalink %>#disqus_thread" class="article-comment-link"><%= __('comment') %>
+            </a>
+          <% } %> -->
+        </div>
         <%- partial('post/tag') %>
+        <% if (!index){ %>
+          <%- partial('post/nav') %>
+        <% } %>
       </footer>
     </div>
   </div>
-  <% if (!index){ %>
-    <%- partial('post/nav') %>
-  <% } %>
 </article>
 
 <% if (!index && post.comments && config.disqus_shortname){ %>

@@ -165,9 +165,7 @@
   clearfix()
   font-size: 20px
   line-height: line-height
-  padding-top: line-height
-  border-top: 1px solid #ddd
-  margin: 40px article-padding article-padding
+  margin: 40px article-padding 10px
   &.homepage
     border-top: none
   a
@@ -175,6 +173,11 @@
     text-decoration: none
     &:hover
       color: color-default
+
+.article-tag-list
+  height: 40px
+  padding-top: 10px
+  border-top: 1px solid #ddd
 
 .article-tag-list-item
   float: left
@@ -185,11 +188,10 @@
     content: "#"
 
 .article-comment-link
+  @extend $block-caption
   float: right
-  &:before
-    content: "\f075"
-    font-family: font-icon
-    padding-right: 8px
+  text-shadow: 0 1px #fff
+  text-decoration: none
 
 .article-share-link
   cursor: pointer
@@ -201,41 +203,46 @@
     padding-right: 6px
 
 #article-nav
-  clearfix()
   position: relative
+  display: flex
+  padding-top: 10px
+  font-size: 0.8em
+  border-top: 1px solid #ddd;
+  flex-wrap: wrap
   @media mq-normal
-    margin: 40px 0
+    flex-wrap: nowrap
     &:before
-      absolute-center(8px)
-      content: ""
-      border-radius: 50%
-      background: color-border
-      box-shadow: 0 1px 2px #fff
+      content: ''
+      position: absolute
+      top: 10px
+      bottom: 0px
+      left: 50%
+      width: 1px
+      border-left: 1.5px solid #ddd
 
 .article-nav-link-wrap
   text-decoration: none
   text-shadow: 0 1px #fff
   color: color-grey
   box-sizing: border-box
-  margin-top: block-margin
+  margin-top: 0
   text-align: center
   display: block
   &:hover
     color: color-default
   @media mq-normal
     width: 50%
-    margin-top: 0
 
 #article-nav-newer
   @media mq-normal
-    float: left
-    text-align: right
+    display: inline-block
+    text-align: center
     padding-right: 20px
 
 #article-nav-older
   @media mq-normal
-    float: right
-    text-align: left
+    display: inline-block
+    text-align: center
     padding-left: 20px
 
 .article-nav-caption
@@ -248,9 +255,15 @@
     margin-right: -2px
 
 .article-nav-title
-  font-size: 0.85em
+  font-size: 1em
   line-height: line-height
-  margin-top: 0.5em
+  margin-top: 0
+  overflow: hidden
+  white-space: nowrap
+  text-overflow: ellipsis
+  max-width: 300px
+  @media mq-normal
+    max-width: 380px
 
 .article-share-box
   position: absolute
