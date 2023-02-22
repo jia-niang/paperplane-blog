@@ -43,13 +43,20 @@ yarn config get registry
 # 遇到 sass 等库安装失败
 
 ``` bash
+# 推荐：
+# 在项目根目录创建 .npmrc 文件，写入以下内容：
+# sass_binary_site=https://npmmirror.com/mirrors/node-sass/
+echo "sass_binary_site=https://npmmirror.com/mirrors/node-sass/" >> .npmrc
+
+# 或者用 cnpm 安装：
+cnpm i sass
+
+# 也可以这样全局设置：
 # npm
 npm config set sass-binary-site https://registry.npmmirror.com/node-sass
 # yarn
 yarn config set sass-binary-site https://registry.npmmirror.com/node-sass
 
-# 或者
-yarn global add mirror-config-china
 ```
 
 
