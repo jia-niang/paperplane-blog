@@ -107,6 +107,7 @@ export https_proxy=http://127.0.0.1:7890
 # macOS
 sudo vim /etc/hosts
 # Windows
+# 注意编码必须是 ANSI，不能使用 UTF-8 等
 notepad c:\windows\system32\drivers\etc\hosts
 ```
 
