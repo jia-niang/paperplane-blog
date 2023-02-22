@@ -187,7 +187,10 @@ for (const key of files) {
 
 Node.js 的模块分为两类，内置模块和文件模块：内置模块是由 Node.js 编译出的二进制字节码文件，例如 fs、path 等都是 Node.js 的内置模块，加载速度最快；而文件模块是动态加载的，速度稍慢。这两类模块都会被缓存。
 
-文件模块分为 `.js`、`.node`、`.json`  三种后缀，对于每种后缀 Node.js 的加载方式也有不同：`.js` 后缀的是普通的 CommonJS 文件模块；`.node` 后缀的是通过 C/C++ 编写的插件类的东西，用的也是特殊的加载方式；`.json` 则会读取文件并用 `JSON.parse()` 来解析加载。
+文件模块分为 `.js`、`.node`、`.json`  三种后缀，对于每种后缀 Node.js 的加载方式也有不同：
+`.js` 后缀的是普通的 CommonJS 文件模块；
+`.node` 后缀的是通过 C/C++ 编写的插件类的东西，用的也是特殊的加载方式；
+`.json` 则会读取文件并用 `JSON.parse()` 来解析加载。
 
 可以参考 [阮一峰的文章](http://www.ruanyifeng.com/blog/2015/05/require.html)，源码实现可以参考《深入浅出 Node.js》一书，还有一篇 [社区的博文](https://cnodejs.org/topic/57454824991011691ef17b09)。
 
@@ -198,9 +201,8 @@ Node.js 的模块分为两类，内置模块和文件模块：内置模块是由
   /* 加载的模块的代码在这里执行 */
 })
 ```
-运行这一段代码使用的是 vm 原生模块中的 `vm.runInThisContext()` 方法，代码是在方法体内运行的，因此不会污染全局作用域。而前面提到的 CommonJS 可以使用的几个变量，其实都是这个方法的参数传进来。可以看做是把加载的模块的代码复制到方法体内执行。
-
-Node.js 会在运行时计算出 `__filename` 和 `__dirname` 等参数的值，并传给这个方法。
+运行这一段代码使用的是 vm 原生模块中的 `vm.runInThisContext()` 方法，代码是在方法体内运行的，因此不会污染全局作用域。
+可以看做是把加载的模块的代码复制到这个方法体内执行，Node.js 会在运行时计算出 `__filename` 和 `__dirname` 等参数的值，并传给这个方法，也会以参数的形式提供 `require` 方法。
 
 
 
@@ -232,9 +234,11 @@ require(['jquery', 'underscore', 'vue'], function ($, _, Vue) {
   /* 在该函数内可以使用$、_、Vue参数名了 */
 })
 ```
-第一个参数是一个数组，传入要加载的模块名；第二个参数是一个 callback，它的参数依次是传入的模块名加载完成之后的模块变量。只有当前面定义的所有模块都加载完成后才会执行 callback。
+第一个参数是一个数组，传入要加载的模块名；
+第二个参数是一个 callback，它的参数依次是传入的模块名加载完成之后的模块变量。
+只有当前面定义的所有模块都加载完成后才会执行 callback。
 
-上述代码会令浏览器加载 `jquery`、`underscore`、`vue ` 三个名称的模块，在 callback 中它们分别成为 `&`、`_`、`vue` 三个参数名。
+上述代码会令浏览器加载 `jquery`、`underscore`、`vue` 三个名称的模块，在 callback 中它们分别成为 `&`、`_`、`vue` 三个参数名。
 
 *****
 
@@ -259,7 +263,8 @@ define(['mod'], function (m) {
 
 ## 非 AMD 模块适配处理
 
-AMD 加载的模块必须符合其规范，即使用 `define()` 定义依赖项，并在 callback 中返回模块暴露的内容。但是实际使用中很多模块并没有用符合 AMD 格式的方式定义，因此需要我们对这些模块进行适配。
+AMD 加载的模块必须符合其规范，即使用 `define()` 定义依赖项，并在 callback 中返回模块暴露的内容。
+但是实际使用中很多模块并没有用符合 AMD 格式的方式定义，因此需要我们对这些模块进行适配。
 
 这里我们以 jQuery 来举例进行 AMD 适配：
 
@@ -274,7 +279,9 @@ requirejs.config({
 ```
 这里的 `shim` 表示需要适配的模块，`exports` 表示 jQuery 使用变量 `$` 作为暴露出的接口。
 
-如果需要适配的模块还依赖于其它模块，例如 jQuery 的 datatable 插件依赖于 jQuery 模块，所以也会产生一个依赖关系。因为 jQuery和 datatable 都不是 AMD 规范的，所以还可以在 require 中定义适配时的依赖关系：
+如果需要适配的模块还依赖于其它模块，例如 jQuery 的 datatable 插件依赖于 jQuery 模块，所以也会产生一个依赖关系。
+因为 jQuery和 datatable 都不是 AMD 规范的，所以还可以在 require 中定义适配时的依赖关系：
+
 ``` js
 requirejs.config({
   shim: {
@@ -345,13 +352,14 @@ requirejs.config({
   }
 })
 ```
-使用这种方式，注意 deps 加载 css 文件需要加上 `css!` 前缀，表示调用定义名为 `css` 的插件来加载它。
+使用这种方式，注意此时在 `deps` 中要加载 css 文件需要加上 `css!` 前缀，表示调用定义名为 `css` 的插件来加载它。
 
 
 
 # ES Module 简介
 
-ES Module 已经被最新的浏览器支持，需要使用  `<script type="module"> ` 的方式引入，此时浏览器将 JS 视为“模块”而不是“代码”。新版本的 Node.js 也已支持 ES Module，需要在 package.json 中设置一些属性来开启，见下文。
+ES Module 已经被最新的浏览器支持，需要使用  `<script type="module">` 的方式引入，此时浏览器将 JS 视为“模块”而不是“代码”。
+新版本的 Node.js 也已支持 ES Module，需要在 package.json 中设置一些属性来开启，见下文。
 
 ES Module 规范制定的时候，考虑到了以下因素：
 
@@ -397,13 +405,15 @@ import 'example'
 ```
 **import语句始终会在其他代码运行前执行**，可以当做隐含的变量提升。
 
-需要注意的是，ES Module 不会缓存模块的输出。它不像 CommonJS 一样，模块对外暴露出的方法、变量在第一次运行之后就被缓存。ES Module 模块导出的实际上是一个引用，它可以用于获取实时的值。但是多次相同的 `import` 并不会使模块运行多次，模块虽然结果不被缓存，但是实际上还是单例模式运行。
+需要注意的是，ES Module 不会缓存模块的输出，也就是说它不像 CommonJS 一样，模块对外暴露出的方法、变量在第一次运行之后就被缓存。
+ES Module 模块导出的实际上是一个引用，它可以用于获取实时的值，但是多次相同的 `import` 并不会使模块运行多次，模块虽然结果不被缓存，但是实际上还是单例模式运行。
 
 另外，ESModule 加载的模块是只读的，任何赋值行为会导致错误。
 
 *****
 
-导出模块使用 `export` 命令。ES Module 的每个文件就是一个单独的模块，它具备单独的作用域而不会污染全局变量，如果你想将该文件中的某些变量和方法暴露出来作为模块的对外的接口，那么需要使用 `export` 关键字输出它们。
+导出模块使用 `export` 命令。
+ES Module 的每个文件就是一个单独的模块，它具备单独的作用域而不会污染全局变量，如果你想将该文件中的某些变量和方法暴露出来作为模块的对外的接口，那么需要使用 `export` 关键字导出它们。
 
 下面是一个输出模块的例子：
 ``` js
@@ -440,7 +450,8 @@ console.log(example.firstName)
 console.log(example.lastName)
 ```
 
-可以看出，模块导出变量的时候必须有一个名字，引入的时候，要么明确指明引入的名称，要么不分名称地用 `*` 星号全部引入。而实际上模块可以有一个名为 `default` 的默认导出，在导入模块的默认导出时，不需要指定引入的名称。
+可以看出，模块导出变量的时候必须有一个名字，引入的时候，要么明确指明引入的名称，要么不分名称地用 `*` 星号全部引入。
+而实际上模块可以有一个名为 `default` 的默认导出，在导入模块的默认导出时，不需要指定引入的名称。
 
 这种指定变量名引入的方式，还可以支持按需引入功能，配合支持 TreeShaking 的打包工具，还可以删去没有被用到的代码，见下文。
 
@@ -480,7 +491,8 @@ import * as React from 'react'
 import React from 'react'
 ```
 
-如果使用 Typescript，可以编辑 tsconfig.json 设置属性 `compilerOptions.esModuleInterop` 值设为 `true`，这会另 CommonJS 模块的 `module.exports` 当做模块的默认导出，即将 `module.exports` 当做 `export default`。属性 `compilerOptions.allowSyntheticDefaultImports` 决定了自 CommonJS 中导入 `default` 时是否报错，开启了 `esModuleInterop` 后也会默认开启它。
+如果使用 Typescript，可以编辑 tsconfig.json 设置属性 `compilerOptions.esModuleInterop` 值设为 `true`，这会另 CommonJS 模块的 `module.exports` 当做模块的默认导出，即将 `module.exports` 当做 `export default`。
+属性 `compilerOptions.allowSyntheticDefaultImports` 决定了自 CommonJS 中导入 `default` 时是否报错，开启了 `esModuleInterop` 后也会默认开启它。
 
 因为 CommonJS 的导出不是静态的，因此这种方式只能加载 CommonJS 模块的整体，不能指定其中的导出名。
 
@@ -494,7 +506,9 @@ CommonJS 加载 ES Module 模块，不能使用 `require` 而是要使用 `impor
 
 CommonJS 模块和 ES Module 模块会遇到循环加载的问题。
 
-CommonJS 因为模块的输出会被缓存，所以在遇到循环加载会直接从缓存中取出要加载的内容。但是如果循环加载的时候模块没有执行完毕，那么未被执行到的语句也不会运作。一般来说模块对外暴露方法、属性的代码都在最后，即这些类似 `module.exports` 的代码没有被执行到，显然会出错。
+CommonJS 因为模块的输出会被缓存，所以在遇到循环加载会直接从缓存中取出要加载的内容。
+但是如果循环加载的时候模块没有执行完毕，那么未被执行到的语句也不会运作。
+一般来说模块对外暴露方法、属性的代码都在最后，即这些类似 `module.exports` 的代码没有被执行到，显然会出错。
 
 例如模块 A 运行到一半后加载模块 B，于是引擎转而去运行模块 B 的代码了，但是模块 B 执行到一半又需要加载模块 A，于是乎模块 B 只能访问到模块 A 前一半的输出，而 A 后半部分的 `module.exports` 导出的东西 B 自然就无法访问到了，导致 require 出一堆 undefined 。
 
@@ -518,9 +532,10 @@ ES Module 模块导出的只是接口的引用，因此 ES Module 遇到循环�
 
 # 按需引入
 
-对于前端代码而言，因为浏览器通过网络获取 JS 文件，需要耗费带宽和时间，因此可以使用打包工具在导入模块的时候将未用到的代码删去，减少代码包的大小，加快传输速度提高用户体验。这就是按需引入。按需引入通常需要配合打包工具，工具会从入口开始，根据引入到的变量和方法，自动删除未用到的代码。
+对于前端代码而言，因为浏览器通过网络获取 JS 文件，需要耗费带宽和时间，因此可以使用打包工具在导入模块的时候将未用到的代码删去，减少代码包的大小，加快传输速度提高用户体验。这就是按需引入。
+按需引入通常需要配合打包工具，工具会从入口开始，根据引入到的变量和方法，自动删除未用到的代码。
 
-只有打包工具支持 [ TreeShaking](https://webpack.docschina.org/guides/tree-shaking/#mark-the-file-as-side-effect-free)，才能实现按需引入。以下均以使用 Webpack 为例。
+只有打包工具支持 [ TreeShaking](https://webpack.docschina.org/guides/tree-shaking/#mark-the-file-as-side-effect-free)，才能实现按需引入。Webpack 本身就支持这个特性，以下均以使用 Webpack 为例。
 
 首先，使用者需要以按需引入的写法来引入 ES Module 模块：
 
@@ -559,7 +574,8 @@ import omit from 'lodash/omit'
 
 -----
 
-一般来说，库的作者会使用打包工具将库打包成 CommonJS 格式，并在 package.json 的 `'main'` 字段配置好 CommonJS 的入口文件。如果库还提供 ES Module 的引入方式，则还会打包一份 ES Module 格式的源码放在例如名为 esm 的目录下，并在 package.json 的 `'module'` 字段中配置 ES Module 的入口文件。
+一般来说，库的作者会使用打包工具将库打包成 CommonJS 格式，并在 package.json 的 `'main'` 字段配置好 CommonJS 的入口文件。
+如果库还提供 ES Module 的引入方式，则还会打包一份 ES Module 格式的源码放在例如名为 esm 的目录下，并在 package.json 的 `'module'` 字段中配置 ES Module 的入口文件。
 
 对于样式文件，则需要在 package.json 中配置 `'sideEffects'`，用文件通配符的方式把所有样式文件配置为副作用，例如：`"*.less"`、`"**/style/*"`。
 
