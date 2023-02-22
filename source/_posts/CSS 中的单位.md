@@ -1,5 +1,5 @@
 ---
-title: CSS中的单位、函数和@语法
+title: CSS 中的单位
 date: 2018-07-19 11:09:40
 tags: 
 - CSS 
@@ -8,8 +8,6 @@ categories:
 ---
 
 CSS 中的单位非常丰富，涵盖了长度、颜色、角度、时间、频率等，非常实用。一般来说，现在前端开发中比较重要的是长度单位中的 em 和 rem；而 vh、vw 等可以当做相对于屏幕长宽的百分比，效果优秀，可惜 [兼容性不敢恭维](https://caniuse.com/#feat=viewport-units)，用途受限。
-
-更多具体的内容详见下面的正文，本文主要参考了 [CSS 速查](http://css.cuishifeng.cn/) 和 [CSS 手册](https://www.html.cn/book/css/)。
 
 
 

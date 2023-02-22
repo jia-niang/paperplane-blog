@@ -1,5 +1,5 @@
 ---
-title: Web 开发常用 bash 指令
+title: Web 开发常用指令
 date: 2021-08-18 16:43:00
 tags:
 - npm

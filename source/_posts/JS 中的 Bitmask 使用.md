@@ -103,6 +103,26 @@ div.addEventListener('mousedown', e => {
 
 -----
 
+Node.js 中同样有 API 应用到了 Bitmask。举例：
+
+```js
+const fs = require('fs')
+
+// fs.access 方法的第二个参数是 Bitmask 形式
+
+// 验证文件是否存在
+fs.access('package.json', fs.constants.F_OK, err => { })
+// 验证是否可读
+fs.access('package.json', fs.constants.R_OK, err => { })
+// 验证是否可读+可写
+fs.access('package.json', fs.constants.R_OK | fs.constants.W_OK, err => { })
+
+```
+
+
+
+-----
+
 如果想自行设计一个 Bitmask 参数的 API，可以使用以下方式来接收参数：
 
 ```js
