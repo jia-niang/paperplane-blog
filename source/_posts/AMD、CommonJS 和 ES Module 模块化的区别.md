@@ -77,7 +77,7 @@ const mod = require(str)
 
 这里引用网上的一张判断流程图：
 
-![20190223031303189](../images/image-20190223031303189.png)
+![](../images/image-20190223031303189.png)
 
 
 
@@ -185,9 +185,9 @@ for (const key of files) {
 
 ## Node.js 运行模块代码的方式
 
-Node.js 的模块分为2类，内置模块和文件模块：内置模块是由 Node.js 编译出的二进制字节码文件，例如 fs、path 等都是 Node.js 的内置模块，加载速度最快；而文件模块是动态加载的，速度稍慢。这两类模块都会被缓存。
+Node.js 的模块分为两类，内置模块和文件模块：内置模块是由 Node.js 编译出的二进制字节码文件，例如 fs、path 等都是 Node.js 的内置模块，加载速度最快；而文件模块是动态加载的，速度稍慢。这两类模块都会被缓存。
 
-文件模块分为 `.js`、`.node`、`.json `  三种后缀，对于每种后缀 Node.js 的加载方式也有不同：`.js` 后缀的是普通的 CommonJS 文件模块；`.node` 后缀的是通过 C/C++ 编写的插件类的东西，用的也是特殊的加载方式；`.json` 则会读取文件并用 `JSON.parse()` 来解析加载。
+文件模块分为 `.js`、`.node`、`.json`  三种后缀，对于每种后缀 Node.js 的加载方式也有不同：`.js` 后缀的是普通的 CommonJS 文件模块；`.node` 后缀的是通过 C/C++ 编写的插件类的东西，用的也是特殊的加载方式；`.json` 则会读取文件并用 `JSON.parse()` 来解析加载。
 
 可以参考 [阮一峰的文章](http://www.ruanyifeng.com/blog/2015/05/require.html)，源码实现可以参考《深入浅出 Node.js》一书，还有一篇 [社区的博文](https://cnodejs.org/topic/57454824991011691ef17b09)。
 
@@ -272,7 +272,7 @@ requirejs.config({
   }
 })
 ```
-这里的 `shim ` 表示需要适配的模块，`exports` 表示 jQuery 使用变量 `$` 作为暴露出的接口。
+这里的 `shim` 表示需要适配的模块，`exports` 表示 jQuery 使用变量 `$` 作为暴露出的接口。
 
 如果需要适配的模块还依赖于其它模块，例如 jQuery 的 datatable 插件依赖于 jQuery 模块，所以也会产生一个依赖关系。因为 jQuery和 datatable 都不是 AMD 规范的，所以还可以在 require 中定义适配时的依赖关系：
 ``` js
@@ -480,7 +480,7 @@ import * as React from 'react'
 import React from 'react'
 ```
 
-如果使用 Typescript，可以编辑 tsconfig.json 设置属性 `compilerOptions.esModuleInterop` 值设为 `true`，这会另 CommonJS 模块的 `module.exports` 当做模块的默认导出，即将 `module.exports` 当做 `export default`。属性 `compilerOptions.allowSyntheticDefaultImports` 决定了自 CommonJS 中导入 default 时是否报错，开启了 `esModuleInterop` 后也会默认开启它。
+如果使用 Typescript，可以编辑 tsconfig.json 设置属性 `compilerOptions.esModuleInterop` 值设为 `true`，这会另 CommonJS 模块的 `module.exports` 当做模块的默认导出，即将 `module.exports` 当做 `export default`。属性 `compilerOptions.allowSyntheticDefaultImports` 决定了自 CommonJS 中导入 `default` 时是否报错，开启了 `esModuleInterop` 后也会默认开启它。
 
 因为 CommonJS 的导出不是静态的，因此这种方式只能加载 CommonJS 模块的整体，不能指定其中的导出名。
 
