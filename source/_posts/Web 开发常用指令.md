@@ -93,7 +93,7 @@ git config --global --unset https.proxy
 
 
 
-# 终端相关
+# 其他常用指令
 
 ```bash
 # macOS 给 npm 全局包运行权限
@@ -102,6 +102,12 @@ sudo chown -R $USER /usr/local
 # 使用代理
 export http_proxy=http://127.0.0.1:7890
 export https_proxy=http://127.0.0.1:7890
+
+# 打开或编辑 hosts 文件
+# macOS
+sudo vim /etc/hosts
+# Windows
+notepad c:\windows\system32\drivers\etc\hosts
 ```
 
 
