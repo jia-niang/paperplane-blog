@@ -387,7 +387,7 @@ ES Module 规范制定的时候，考虑到了以下因素：
 ES Module 使用 `import` 语法来加载模块。加载整个模块的语法：
 ``` js
 // 引入模块的默认（default）导出
-import _ from 'lodash
+import _ from lodash
 // 可以看做是： import default as _ from 'lodash'
 
 // 引入模块中导出的 omit 变量
