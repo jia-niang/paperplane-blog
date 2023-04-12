@@ -113,9 +113,19 @@ notepad c:\windows\system32\drivers\etc\hosts
 
 
 
-# Windows 遇到 PowerShell 被禁用
+# Windows 疑难问题
 
 ```powershell
+# 遇到 PowerShell 被禁用
 set-ExecutionPolicy RemoteSigned
+
+# 项目启动提示 3000 端口被占用
+# 可以找到占用的进程的 PID：
+netstat -ano | findstr "3000"
+
+# 如果还找不到任何进程，依次执行：
+# 注意需要管理员权限开启终端
+net stop winnat
+net start winnat
 ```
 
