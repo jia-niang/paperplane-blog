@@ -89,6 +89,12 @@ git config --global https.proxy http://127.0.0.1:7890
 # 取消 Git 的代理
 git config --global --unset http.proxy
 git config --global --unset https.proxy
+
+# Windows 克隆仓库行尾换行符一直是 CRLF
+git config --global core.autocrlf false
+
+# 本地 SSH 设置密码，需要去除密码
+ssh-keygen -p
 ```
 
 
