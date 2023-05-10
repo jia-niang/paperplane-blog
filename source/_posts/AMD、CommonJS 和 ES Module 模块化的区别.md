@@ -558,7 +558,15 @@ import { omit } from 'lodash-es'
 
 如果使用了 Webpack 等支持 TreeShaking 的打包工具，package.json 可以带有一个 `sideEffects` 字段表示副作用：
 
-`sideEffects`： 模块中有副作用的文件列表，值可以为 `false` 表示无副作用（等同于没有该字段的情况），或者是一个数组，数组中列出了有副作用的文件列表，支持通配符。对于这些带有副作用的文件，TreeShaking 时不会从它们中删去任何代码。
+字段 `sideEffects`： 
+- 它表示模块中有副作用的文件列表，它的值默认为 `true`，表示所有文件均有副作用；
+- 将它的值改为 `false` 则表示所有文件均无副作用，此时 TreeShaking 将会以最大程度的删减代码；
+- 或者是一个数组，数组中列出了有副作用的文件列表，支持 glob 通配符。对于这些带有副作用的文件，TreeShaking 时不会从它们中删去任何代码。
+
+如果你正在开发一个 polyfill 类的库，例如 `@babel/polyfill`，用法一般是在项目入口直接 `import '@babel/polyfill'`，那么此字段切忌设为 `false`
+，否则入口这一行引入直接被 TreeShaking 掉了。
+
+如果你正在开发一个 UI 组件库，也尽量不要设置这个值为 `false`，否则如果库的使用者没有配好 webpack，则会导致所有样式文件被 TreeShakin 删掉，因为样式文件的写法通常都是 `import './index.scss'`，具体可以参考 `antd` 的配置方式，把所有样式文件保留下来。
 
 -----
 
