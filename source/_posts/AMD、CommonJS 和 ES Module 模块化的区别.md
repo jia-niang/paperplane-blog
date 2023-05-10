@@ -749,7 +749,7 @@ import { omit } from 'lodash-es'
 
 ```json
 {
-  plugins: ['lodash'],
+  "plugins": ["lodash"]
 }
 ```
 
