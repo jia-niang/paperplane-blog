@@ -64,6 +64,9 @@ yarn config set sass-binary-site https://registry.npmmirror.com/node-sass
 # Git 相关
 
 ```bash
+# 生成 SSH RSA 密钥（存储在用户目录下）
+ssh-keygen -t rsa -b 4096 -C "git"
+
 # 配置用户名和邮箱
 # 本项目：
 git config user.name "username"
