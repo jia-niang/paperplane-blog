@@ -159,7 +159,7 @@ canvas_binary_host_mirror=https://registry.npmmirror.com/-/binary/canvas
 ```
 The MIT License (MIT)
 
-Copyright (c) 【开始年份】-present, 你的名字 <【你的邮箱】>
+Copyright (c) 【开始年份】-present, 【你的名字】 <【你的邮箱】>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
