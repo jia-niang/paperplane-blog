@@ -8,12 +8,9 @@ categories:
 - DOC
 ---
 
-# 使用 cnpm
+# 使用 npm
 
 ``` bash
-# 安装 cnpm
-npm i -g cnpm --registry=https://registry.npmmirror.com
-
 # 换淘宝源
 npm config set registry https://registry.npmmirror.com
 # 换回官方源
@@ -95,6 +92,9 @@ git config --global --unset https.proxy
 
 # Windows 克隆仓库行尾换行符一直是 CRLF
 git config --global core.autocrlf false
+
+# Windows 提交代码时自动转为 LF，但检出时不转换
+git config --global core.autocrlf input
 
 # 本地 SSH 设置密码，需要去除密码
 ssh-keygen -p
