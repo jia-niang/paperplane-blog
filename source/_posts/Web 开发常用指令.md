@@ -14,7 +14,7 @@ categories:
 # 换淘宝源
 npm config set registry https://registry.npmmirror.com
 # 换回官方源
-npm config set registry https://registry.yarnpkg.com
+npm config set registry https://registry.npmjs.org
 # 查看当前源
 npm config get registry
 ```
