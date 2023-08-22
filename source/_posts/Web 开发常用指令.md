@@ -136,4 +136,8 @@ netstat -ano | findstr "3000"
 # 注意需要管理员权限开启终端
 net stop winnat
 net start winnat
+
+# Windows 网络问题修复
+# 也可以解决上面找不到占用端口进程的问题
+netsh winsock reset
 ```
