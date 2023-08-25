@@ -414,6 +414,7 @@ tsc --module esnext --outDir es
 
 ```json
 {
+  "plugins": ["@trivago/prettier-plugin-sort-imports"],
   "importOrder": [
     "^@?[a-zA-Z]+.+",
     "^@/(?!.*\\.(css|scss|less)$)",
@@ -426,6 +427,8 @@ tsc --module esnext --outDir es
   "importOrderGroupNamespaceSpecifiers": false
 }
 ```
+
+**注意：如果你用的是 prettier v3，那么必须包含 `"plugins": ["@trivago/prettier-plugin-sort-imports"],` 这一行，v2 版本不需要。**
 
 这个配置可以使你的 `import` 按照类型分组： 直接用包名导入的在最上面，随后是 `@/` 开头的导入，随后是 `./` 和 `../` 开头的导入，而样式表类文件会放在最后面。
 
