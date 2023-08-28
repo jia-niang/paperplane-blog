@@ -13,6 +13,25 @@ categories:
 
 
 
+# 完整项目模板
+
+本文篇幅较长，如果你看不下去或者有较为急迫的需求，可以直接使用以下完整项目模板。
+
+基于 Create-React-App 的模板：
+
+- [`@paperplane/cra-template-mui`](https://www.npmjs.com/package/@paperplane/cra-template-mui)：基于 mui 的前端项目模板；
+- @paperplane/cra-template-antd：（尚未完工）基于 antd 的前端项目模板；
+- @paperplane/cra-template-antd-v4：（尚未完工）基于 antd v4 的前端项目模板；
+- @paperplane/cra-template-umijs：（尚未完工）基于 Umi.js 的前端项目模板。
+
+其他模板：
+
+- project-templates/node-nestjs：（尚未完工）基于 Nest.js 的 Node.js 项目模板；
+- project-templates/hybird-taro：（尚未完工）基于 Taro 的跨端项目模板；
+- project-templates/lib-mono：（尚未完工）monorepo 仓库模板。
+
+
+
 # `.editorconfig` 文件
 
 [EditorConfig](https://editorconfig.org/) 被编辑器广泛支持、面向多种编程语言，所以它提供的配置项（[查看所有](https://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties)）不是特别多。它使用 `.editorconfig` 文件作为配置文件，VSCode 需要先[安装插件](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)。
