@@ -140,4 +140,7 @@ net start winnat
 # Windows 网络问题修复
 # 也可以解决上面找不到占用端口进程的问题
 netsh winsock reset
+
+# 刷新 DNS 缓存，可能会用到
+ipconfig /flushdns
 ```
