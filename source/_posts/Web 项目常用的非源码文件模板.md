@@ -4,7 +4,7 @@ date: 2023-08-14 10:13:00
 tags:
 - Cheatsheet
 - JS
-- Secure
+- Scaffold
 categories:
 - DOC
 ---
