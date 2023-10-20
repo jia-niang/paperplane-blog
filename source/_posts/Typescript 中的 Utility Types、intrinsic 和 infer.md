@@ -29,9 +29,7 @@ categories:
 **字段可空性和访问性处理：**
 
 `Partial<T>`：使对象 `T` 的所有字段变为非必须（可空）；
-
 `Required<T>`：所有字段为必须（不可空）；
-
 `Readonly<T>`：所有字段变为只读（添加 `readonly` 修饰符）。
 
 > 这里的 `Partial` 和 `Required` 用到了 `+?`、`-?` 的[映射属性修饰符语法](https://www.typescriptlang.org/docs/handbook/2/mapped-types.html#mapping-modifiers)。
@@ -50,19 +48,13 @@ categories:
 **类型集合操作：**
 
 `Extract<T, U>`：从集合 `T` 中**选取**符合 `U` 的所有项，用选取的项组成一个新集合；
-
 `Exclude<T, U>`：从集合 `T` 中**删去**符合 `U` 的所有项，用剩余的项组成一个新集合；
-
 `NonNullable<T>`：从集合 `T` 中删去所有 `null` 和 `undefined` 的项，用剩余的项组成一个新集合。
-
-
 
 **对象字段：**
 
 `Pick<T, K>`：从对象 `T` 中**选取**数个符合 `K` 的字段，选取的字段组成一个新对象；
-
 `Omit<T, K>`：从对象 `T` 中**删去**数个符合 `K` 的字段，剩余的字段组成一个新对象；
-
 `Record<K, V>`：得到一个对象，它所有的键都来自于 `K`，所有的值都是来自于 `V`。
 
 >实用类型 `Pick` 就像 `lodash` 的 `_.pick`，而 `Omit` 就像 `_.omit`；
@@ -73,7 +65,6 @@ categories:
 **方法：**
 
 `Parameters<T>`：通常配合 `typeof` 关键字使用，获取方法 `T` 的参数的类型，并组成一个数组返回；
-
 `ReturnType<T>`：通常配合 `typeof` 关键字使用，获取方法 `T` 的返回值类型。
 
 
@@ -81,10 +72,8 @@ categories:
 **面向对象**：
 
 `ConstructorParameters<T>`：同上 `Parameters<T>`，只不过传入的 `T` 需要使用 `typeof` 接构造函数名（也就是类名）；
-
 `InstanceType`：同上 `ReturnType<T>`，只不过传入的 `T` 需要使用 `typeof` 接构造函数名（也就是类名）；
-
-`ThisType<T>`：返回一个对象，这个对象的方法中，`this` 的类型为 `T`。**现在有更好的语法来取代此类型了，举例：**
+`ThisType<T>`：返回一个对象，这个对象的方法中，`this` 的类型为 `T`。**现在有更好的语法来取代他，举例：**
 
 ```typescript
 type User = {
@@ -101,11 +90,12 @@ const user1: ThisType<User> = {
   },
 }
 
-// 第二个对象，必须使用 ThisType<User>，否则下面的 this.age 会提示错误
+// 第二个对象
 const user2 = {
   name: 'user2',
   
   // 注意这里的 this 是一个不存在的参数，它写在这里仅用于表示此方法中 this 的类型
+  // 实际上 sayHello 的方法签名是 ()，不接受任何参数
   sayHello(this: User) {
     return `我叫${this.name}，年龄${this.age}`
   },
@@ -117,11 +107,8 @@ const user2 = {
 **字符串大小写处理：**
 
 `Uppercase<T>`：字符串 `T`  的全大写格式；
-
 `Lowercase<T>`：字符串 `T`  的全小写格式；
-
 `Capitalize<T>`：字符串 `T`  的首字母大写格式；
-
 `Uncapitalize<T>`：字符串 `T`  的首字母小写格式。
 
 
@@ -136,15 +123,15 @@ type ReactAppEnvType<T extends object> = {
 
 // 原始对象
 const envVarObject = {
-  apiRoot: 'https://paperplane.cc/api',
-  openAiKey: '111111111',
+  apiRoot: '',
+  openAiKey: '',
 }
 
 // 经过 ReactAppEnvType 转化后
 // 此对象的键必须使用此格式，更换前缀或大小写都会导致错误
 const reactEnvVarObject: ReactAppEnvType<typeof envVarObject> = {
-  REACT_APP_APIROOT: 'https://paperplane.cc/api',
-  REACT_APP_OPENAIKEY: '111111111',
+  REACT_APP_APIROOT: '',
+  REACT_APP_OPENAIKEY: '',
 }
 ```
 
@@ -162,14 +149,14 @@ type ModelType<T extends object> = T & {
 
 // 原始对象
 const user = {
-  name: 'paperplane',
+  name: '',
 }
 
 // 经过 ModelType 转化后的对象
 // 此对象的键必须使用此格式，更换前缀或大小写都会导致错误
 const userModel: ModelType<typeof user> = {
-  name: 'paperplane',
-  getName: () => 'paperplane',
+  name: '',
+  getName: () => '',
   setName: p => {},
 }
 ```
