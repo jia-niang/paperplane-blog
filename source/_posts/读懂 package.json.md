@@ -325,6 +325,8 @@ import 'core-js'
 
 如果你的包是作为插件或者是作为 UI 组件库来发布，那么这个字段则是至关重要。前端网站项目则无需考虑这个字段。
 
+> 有一种做法是这样：如果打包工具支持配置 `externals` 也就是 “外部依赖”（例如 `rollup` 就支持），那么可以将 `peerDependencies` 的依赖作为外部依赖。
+
 -----
 
 `peerDependenciesMeta` 字段，它是对 `peerDependencies` 的补充说明，它的格式是这样：
