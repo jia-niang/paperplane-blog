@@ -203,8 +203,8 @@ new HtmlWebpackTagsPlugin({
 
 -----
 
-通常来说，preconnect 覆盖了 dns-prefetch 的功能。
-但是考虑到可能有的浏览器不支持 preconnect，所以常见的做法是只要使用了 preconnect 就也一同使用 dns-prefetch。
+通常来说，preconnect 覆盖了 dns-prefetch 的功能，但是后者的兼容性更好，早期的浏览器也能良好的支持。
+所以，很多网站只要使用了 preconnect，也会同时提供一个相同域名的 dns-prefetch，这样遇到低版本浏览器不支持 preconnect 时，也能让 dns-prefetch 兜底。
 
 知乎上有一篇 [文章](https://zhuanlan.zhihu.com/p/358836730) 对 preconnect 和 dns-prefetch 做了测试，可以看出这两者都能明显提升性能，且 preconnect 更加明显。而且 preconnect 和 dns-prefetch 同时开启时，和只开启 preconnect 是没有区别的（2ms 区别应该是误差）。
 
