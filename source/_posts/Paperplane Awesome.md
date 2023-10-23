@@ -192,6 +192,7 @@ Github 使用 GPG 密钥：https://www.zackwu.com/posts/2019-08-04-how-to-use-gp
 canvas 烟花：https://www.kirilv.com/canvas-confetti/
 组件样板：https://webframe.xyz/
 各种 CSS 动效：https://cssfx.netlify.com/ （外网访问）
+各种 CSS 动效：https://animate.style/ （via Janet）
 各种特效工具：https://zhuanlan.zhihu.com/p/34645979
 CSS 渐变实现复杂循环纹理：https://bennettfeely.com/gradients/
 CSS 渐变实现复杂循环纹理：https://projects.verou.me/css3patterns/ （via《CSS 揭秘》）
