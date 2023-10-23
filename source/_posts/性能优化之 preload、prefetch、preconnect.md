@@ -138,6 +138,7 @@ dns-prefetch 我们称为 “DNS 预解析”，**它只适用于存在 CDN 且 
 ![](../images/image-20231023035258180.png)
 
 这里知乎为自己的几个 CDN 域名都做了 dns-prefetch，这样后续浏览时便可以优化连接速度。
+如果需要对 dns-prefetch 的优化进行指标化的度量，[这篇文章](https://www.cythilya.tw/2016/06/25/dns-prefetching/) 有提到各个浏览器查看 DNS 解析性能指标的方式。
 
 可以看出，DNS 预解析是通过在 `<head>` 中放置标签的方式来实现的：
 
