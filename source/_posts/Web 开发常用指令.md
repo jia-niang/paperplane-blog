@@ -125,15 +125,14 @@ notepad c:\windows\system32\drivers\etc\hosts
 # Windows 疑难问题
 
 ```powershell
-# 遇到 PowerShell 被禁用
+# 遇到 PowerShell 被禁用（管理员终端）
 set-ExecutionPolicy RemoteSigned
 
 # 项目启动提示 3000 端口被占用
 # 可以找到占用的进程的 PID：
 netstat -ano | findstr "3000"
 
-# 如果还找不到任何进程，依次执行：
-# 注意需要管理员权限开启终端
+# 如果还找不到任何进程，依次执行（管理员终端）：
 net stop winnat
 net start winnat
 
@@ -143,4 +142,9 @@ netsh winsock reset
 
 # 刷新 DNS 缓存，可能会用到
 ipconfig /flushdns
+
+# 开关虚拟化（管理员终端）
+# 开启虚拟化，可以使用 HyperV、WSL2，关闭虚拟化可以优化性能、运行 XTU
+bcdedit /set hypervisorlaunchtype auto
+bcdedit /set hypervisorlaunchtype off
 ```
