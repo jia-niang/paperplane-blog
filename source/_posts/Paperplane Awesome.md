@@ -204,7 +204,10 @@ CSS 伪元素相册效果： https://designshack.net/articles/css/use-pseudo-ele
 防御性 CSS：https://defensivecss.dev/
 一些 canvas 案例 demo：https://snayan.github.io/canvas-demo/
 使用 canvas 动态绘制线条：https://maxwellito.github.io/vivus/
-鼠标悬停视差效果：https://atroposjs.com/
+鼠标悬停 3D 视差效果：https://atroposjs.com/
+鼠标悬停视差效果：https://matthew.wagerfield.com/parallax/
+类似苹果官网的滚动效果：http://scrollmagic.io/
+滚动视差效果：https://dixonandmoe.com/rellax/
 
 
 
