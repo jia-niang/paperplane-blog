@@ -64,15 +64,15 @@ const _omit = require('lodash/omit')
 
 例如有以下代码：
 ``` js
-const mod = require(str)
+const mod = require("pkg")
 ```
 在执行到这里时，Node.js 会按照以下顺序来尝试加载：
-- 如果 str 是某个已经被缓存的文件模块，那么直接返回之；
-- 如果 str 是某个Node.js 的内置模块名（例如 fs、path），那么直接返回该内置模块；
-- 如果 str 以 `/` 或 `./` 或 `../` 这种相对路径开头：
-    - 有后缀名时，则会将 str 当作文件名来查找；
-    - 没有后缀时，Node.js 会依次添加 `.js ` / `.json` / `.node` 后缀来查找，如果找不到，还会将 str 当做目录，在其下查找 `package.json` / `index.js` / `index.json` / `index.node` 这几个文件（有关 package.json 的引入方式见下文）；
-- 如果 str 为模块名，Node.js 从当前目录下的 node_modules 下查找同名的目录，在其下查找 `package.json` / `index.js` / `index.json` / `index.node` 这几个文件，如果找不到此目录，则会向父级目录递归此流程；
+- 如果 `pkg` 是某个已经被缓存的文件模块，那么直接返回之；
+- 如果 `pkg` 是某个Node.js 的内置模块名（例如 fs、path），那么直接返回该内置模块；
+- 如果 `pkg` 以 `/` 或 `./` 或 `../` 这种相对路径开头：
+    - 有后缀名时，则会将 `pkg` 当作文件名来查找；
+    - 没有后缀时，Node.js 会依次添加 `.js ` / `.json` / `.node` 后缀来查找，如果找不到，还会将 `pkg` 当做目录，在其下查找 `package.json` / `index.js` / `index.json` / `index.node` 这几个文件（有关 package.json 的引入方式见下文）；
+- 如果 `pkg` 为模块名，Node.js 从当前目录下的 node_modules 下查找同名的目录，在其下查找 `package.json` / `index.js` / `index.json` / `index.node` 这几个文件，如果找不到此目录，则会向父级目录递归此流程；
 - 都没找到则会报错。
 
 这里引用网上的一张判断流程图：
@@ -99,7 +99,7 @@ const mod = require(str)
 - **/a/c.js** （如果没找到则将 .js 后缀换成 .json 和 .node 来尝试）
 - **/a/c** （在这个目录内查找 `package.json` / `index.js` / `index.json` / `index.node` 这几个文件）
 
-和上面的方式相比，它不会加入 node_modules 目录，也不会向父级目录递归。
+和上面的方式相比，它不会加入 `node_modules` 目录，也不会向父级目录递归。
 
 
 
@@ -117,7 +117,7 @@ const mod = require(str)
 - 一般只有 JS 算模块，其他的文件格式默认是不支持的，前端如果需要引入图片等非 JS 格式的文件，此时需要借助 Webpack 的相关 Loader 来实现；
 - 前端存在 `window` 等全局对象，这些模块可以直接使用不需要 require；
 - 前端不存在 `process` 等 Node.js 独有的变量，因此例如 `process.env.NODE_ENV` 这种环境变量会被 Webpack 特殊处理；
-- 浏览器也可能使用 `<script>` 引入了例如 jQuery 等其他全局性的模块，这些模块也是可以在 JS 代码中使用的（前提是入口 JS 代码s的 `<script>` 在 HTML 上的位置比这些其他模块更靠后），并不需要写 require，如果写了 require，则通过 Webpack 的 `externals` 配置来处理；
+- 浏览器也可能使用 `<script>` 引入了例如 jQuery 等其他全局性的模块，这些模块也是可以在 JS 代码中使用的（前提是入口 JS 代码的 `<script>` 在 HTML 上的位置比这些其他模块更靠后），并不需要写 require，如果写了 require，则通过 Webpack 的 `externals` 配置来处理；
 - 因为没有用到的文件不会被打包，因此动态 require 时需要额外注意。
 
 -----
