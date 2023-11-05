@@ -114,7 +114,8 @@ Babel 在线转码：https://babeljs.io/repl （建议外网访问）
 
 Cron 解析：https://cron.qqe2.com/ （外网访问）
 正则表达式测试：https://tool.oschina.net/regex
-最好用的正则工具：https://regexr.com/ （支持 PCRE 正则）
+带速查表支持多语言的正则工具：https://regex101.com/ （支持 PCRE 正则）
+带速查表和图示化的正则工具：https://regexr.com/ （支持 PCRE 正则）
 图形化正则：https://jex.im/regulex/
 编码转码工具库：https://www.bejson.com/
 OSChina 的工具库：https://tool.oschina.net/
@@ -541,6 +542,7 @@ Lexical 富文本（前身是 draft.js）：https://lexical.dev/
 xss 预防：https://jsxss.com/zh/index.html
 highlight.js 代码高亮：https://www.npmjs.com/package/highlight.js
 clipboard 剪贴板操作：https://www.npmjs.com/package/clipboard
+package.json 字段排序的 prettier 插件：https://github.com/shellscape/prettier-plugin-package
 
 -----
 
