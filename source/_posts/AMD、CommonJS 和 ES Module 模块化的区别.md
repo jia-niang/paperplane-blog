@@ -280,7 +280,7 @@ requirejs.config({
 这里的 `shim` 表示需要适配的模块，`exports` 表示 jQuery 使用变量 `$` 作为暴露出的接口。
 
 如果需要适配的模块还依赖于其它模块，例如 jQuery 的 datatable 插件依赖于 jQuery 模块，所以也会产生一个依赖关系。
-因为 jQuery和 datatable 都不是 AMD 规范的，所以还可以在 require 中定义适配时的依赖关系：
+因为 jQuery 和 datatable 都不是 AMD 规范的，所以还可以在 require 中定义适配时的依赖关系：
 
 ``` js
 requirejs.config({
@@ -314,7 +314,7 @@ requirejs.config({
 ```
 这里使你可以使用 `jQ` 作为 jQuery 的别名而不用每次都写成复杂的 `'jquery-3.2.1.min'`，而且它给出了两个加载来源，先从 CDN 或者网络上获取文件，如果无法获取才从当前站点路径中获取。
 
-另外可以注意到，加载的多个文件都来源于 ./js/ 路径下，因此可以指定一个基目录，所有加载的文件都来源自该基目录。
+另外可以注意到，加载的多个文件都来源于 `./js/` 路径下，因此可以指定一个基目录，所有加载的文件都来源自该基目录。
 
 指定基目录的方式：
 
@@ -325,7 +325,7 @@ requirejs.config({
     'jQ': ['jquery-3.2.1.min'],
     'V': ['vue.min'],
     'T': ['../test']
-    /* 因为指定基目录为js/，而test不在其中，因此test就要往上走一级了 */
+    /* 因为指定基目录为 js/，而 test 不在其中，因此 test 就要往上走一级了 */
   }
 })
 ```
@@ -437,6 +437,7 @@ export function talkWith () { }
 ```js
 // 引入模块中的变量
 import { firstName, lastName } from 'example'
+
 console.log(firstName)
 console.log(lastName)
 ```
@@ -446,6 +447,7 @@ console.log(lastName)
 ``` js
 // 将模块所有内容整体引入
 import * as example from 'example'
+
 console.log(example.firstName)
 console.log(example.lastName)
 ```
@@ -510,7 +512,7 @@ CommonJS 因为模块的输出会被缓存，所以在遇到循环加载会直�
 但是如果循环加载的时候模块没有执行完毕，那么未被执行到的语句也不会运作。
 一般来说模块对外暴露方法、属性的代码都在最后，即这些类似 `module.exports` 的代码没有被执行到，显然会出错。
 
-例如模块 A 运行到一半后加载模块 B，于是引擎转而去运行模块 B 的代码了，但是模块 B 执行到一半又需要加载模块 A，于是乎模块 B 只能访问到模块 A 前一半的输出，而 A 后半部分的 `module.exports` 导出的东西 B 自然就无法访问到了，导致 require 出一堆 undefined 。
+例如模块 A 运行到一半后加载模块 B，于是引擎转而去运行模块 B 的代码了，但是模块 B 执行到一半又需要加载模块 A，于是乎模块 B 只能访问到模块 A 前一半的输出，而 A 后半部分的 `module.exports` 导出的东西 B 自然就无法访问到了，导致 require 出一堆 `undefined`。
 
 ES Module 模块导出的只是接口的引用，因此 ES Module 遇到循环加载会报出一个变量未定义的错误。
 
@@ -523,8 +525,8 @@ ES Module 模块导出的只是接口的引用，因此 ES Module 遇到循环�
 对于一个模块而言，它的入口在 package.json 中有以下定义方式：
 
 - `main`：使用 CommonJS 方式加载时，模块的入口文件相对路径；
-- `module`： 使用 Module 方式加载时，模块的入口文件相对路径；
-- `jsnext:main`： 曾经的 Module 方式加载的入口路径，现已被 `module` 字段取代，为了兼容性，建议还是保留；
+- `module`： 使用 ES Module 方式加载时，模块的入口文件相对路径；
+- `jsnext:main`： 曾经的 ES Module 方式加载的入口路径，现已被 `module` 字段取代，为了兼容性，建议还是保留；
 - `type`： 取值为 `'commonjs'` （默认）或 `'module'`，它表示 .js 后缀文件的格式是是 CommonJS 还是 ES Module，注意 .mjs 后缀的文件始终会视为是 ES Module 格式，.cjs 后缀的文件始终会视为 CommonJS 格式。
 - `sideEffects`： 只对 Webpack 之类的打包工具有用，用于在 TreeShaking 时指定有副作用的文件，见下文。
 
@@ -554,7 +556,7 @@ import { omit } from 'lodash-es'
 但是，有些模块带有 “副作用”，这些模块导出的内容可能没被使用甚至没有导出任何模块，但是不引入它们会出问题，此时需要进行一些配置：
 
 > 副作用的定义是：对于一个模块文件而言，在导入它时就会直接产生影响，而并不是只在使用到它导出的内容。  
-> 例如样式文件、会修改 window 等全局对象的文件、polyfill 等都属于副作用模块。
+> 例如样式文件、会修改 `window` 等全局对象的文件、polyfill 等都属于副作用模块。
 
 如果使用了 Webpack 等支持 TreeShaking 的打包工具，package.json 可以带有一个 `sideEffects` 字段表示副作用：
 
