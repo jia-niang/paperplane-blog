@@ -828,7 +828,7 @@ module.exports = {
         use: ['style-loader', 'css-loader', {
           loader: 'less-loader',
           options: {
-            additionalData : '@import "~@/styles/global.less";', // 主题、全局变量文件，注意结尾的分号
+            additionalData: '@import "~@/styles/global.less";', // 主题、全局变量文件，注意结尾的分号
             lessOptions: {
               globalVars: {}, // 全局变量，追加到每个文件开头位置
               modifyVars: {}, // 覆盖变量，追加到每个文件末尾位置
