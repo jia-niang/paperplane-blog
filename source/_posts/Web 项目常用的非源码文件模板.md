@@ -20,7 +20,7 @@ categories:
 基于 Create-React-App 的模板：
 
 - [`@paperplane/cra-template-mui`](https://www.npmjs.com/package/@paperplane/cra-template-mui)：基于 mui 的前端项目模板；
-- @paperplane/cra-template-antd：（尚未完工）基于 antd 的前端项目模板；
+- [`@paperplane/cra-template-antd`](https://www.npmjs.com/package/@paperplane/cra-template-antd)：基于 antd 的前端项目模板；
 - @paperplane/cra-template-antd-v4：（尚未完工）基于 antd v4 的前端项目模板；
 - @paperplane/cra-template-umijs：（尚未完工）基于 Umi.js 的前端项目模板。
 
