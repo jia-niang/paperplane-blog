@@ -514,6 +514,7 @@ Websocket 和 Stomp.js 断连问题：https://developers.weixin.qq.com/community
 
 # 通用工具
 
+全局 CSS 重置：https://github.com/sindresorhus/modern-normalize
 lodash 中文文档：https://www.lodashjs.com/
 cnchar 汉字拼音笔画：https://theajack.github.io/cnchar/
 中国省市区 JSON：https://www.npmjs.com/package/china-division
