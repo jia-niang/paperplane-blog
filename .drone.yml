@@ -24,7 +24,7 @@ steps:
         path: /webroot
     commands:
       - mkdir -p /webroot/blog/
-      - rm -rf /webroot/blog/**/*.*
+      - rm -rf /webroot/blog/*
       - cp -rf ./public/* /webroot/blog/
 
 volumes:
