@@ -13,8 +13,8 @@ categories:
 ``` bash
 # 换淘宝源
 npm config set registry https://registry.npmmirror.com
-# 换回官方源
-npm config set registry https://registry.npmjs.org
+# 换回官方源（https://registry.npmjs.org）
+npm config delete registry
 # 查看当前源
 npm config get registry
 ```
@@ -29,8 +29,8 @@ npm i -g yarn
 
 # 换淘宝源
 yarn config set registry https://registry.npmmirror.com
-# 换回官方源
-yarn config set registry https://registry.yarnpkg.com
+# 换回官方源（https://registry.yarnpkg.com）
+yarn config delete registry
 # 查看当前源
 yarn config get registry
 ```
@@ -40,15 +40,17 @@ yarn config get registry
 # 遇到 sass 等库安装失败
 
 ``` bash
-# 推荐：
-# 在项目根目录创建 .npmrc 文件，写入以下内容：
+# node-sass 容易出错，新项目建议换用 sass（也就是 dart-sass）
+# 如果是老项目没法换，以下方法三选一即可：
+
+# 方法 1：在项目根目录创建 .npmrc 文件，写入以下内容：
 # sass_binary_site=https://npmmirror.com/mirrors/node-sass/
 echo "sass_binary_site=https://npmmirror.com/mirrors/node-sass/" >> .npmrc
 
-# 或者用 cnpm 安装：
+# 方法 2：用 cnpm 安装：
 cnpm i sass
 
-# 也可以这样全局设置：
+# 方法 3：这样全局设置：
 # npm
 npm config set sass-binary-site https://registry.npmmirror.com/node-sass
 # yarn
@@ -90,13 +92,13 @@ git config --global https.proxy http://127.0.0.1:7890
 git config --global --unset http.proxy
 git config --global --unset https.proxy
 
-# Windows 克隆仓库行尾换行符一直是 CRLF
+# Windows 克隆仓库行尾换行符一直是 CRLF（安装 Git 的时候有个选项）
 git config --global core.autocrlf false
 
-# Windows 提交代码时自动转为 LF，但检出时不转换
+# Windows 提交代码时自动转为 LF，但检出时不转换（安装 Git 的时候有个选项）
 git config --global core.autocrlf input
 
-# 本地 SSH 设置密码，需要去除密码
+# 本地 SSH 设置了密码，需要去除密码
 ssh-keygen -p
 ```
 
@@ -115,8 +117,8 @@ export https_proxy=http://127.0.0.1:7890
 # 打开或编辑 hosts 文件
 # macOS
 sudo vim /etc/hosts
-# Windows
-# 注意编码必须是 ANSI，不能使用 UTF-8 等
+# Windows（推荐使用 PowerToys 来管理 hosts）
+# 注意编码必须是 ANSI，不能使用 UTF-8 等格式
 notepad c:\windows\system32\drivers\etc\hosts
 ```
 
