@@ -81,7 +81,7 @@ git config user.email
 # 代码有多个远程仓库
 git remote add 名称 地址
 
-# 为一个远程仓库添加多个 url
+# 为一个仓库添加多个远程 url，自动向多个 url 推代码
 git remote set-url --add 名称 地址
 
 # 给 Git 设置代理
