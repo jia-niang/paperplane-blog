@@ -211,6 +211,7 @@ CSS 伪元素相册效果： https://designshack.net/articles/css/use-pseudo-ele
 滚动视差效果：https://dixonandmoe.com/rellax/
 各种 Checkbox：https://getcssscan.com/css-checkboxes-examples （拉到最底下还有其他的）
 各种 3D 按钮：https://csspro.com/css-3d-buttons?ref=beautifulboxshadow-bottom （拉到最底下还有其他的）
+基于 tailwindcss 的纯标签组件库：https://sailboatui.com/
 
 
 
