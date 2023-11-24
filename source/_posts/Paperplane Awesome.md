@@ -185,6 +185,7 @@ Git commit 书写建议：https://www.ruanyifeng.com/blog/2016/01/commit_message
 standard-version 使用规范的 Git 提交来生成改动日志：https://www.npmjs.com/package/standard-version
 一款漂亮的 Hexo 主题：https://github.com/chaooo/hexo-theme-BlueLake
 Github 使用 GPG 密钥：https://www.zackwu.com/posts/2019-08-04-how-to-use-gpg-on-github/
+Github 团队项目贡献者 README 展示工具：https://allcontributors.org/
 
 
 
