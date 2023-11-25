@@ -125,6 +125,7 @@ OSChina 的工具库：https://tool.oschina.net/
 文件格式互转：https://convertio.co/zh/
 草料二维码：https://mh.cli.im/
 在线数学公式编辑：https://www.mathcha.io/ （知乎的也不错）
+批量文件重命名：https://webrename.cn/
 
 
 
