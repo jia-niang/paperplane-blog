@@ -13,7 +13,7 @@ categories:
 先说结论：这几种方式都可以提高网站的浏览体验，减少用户等待资源加载的时间。
 具体来说：
 
-- preload、prefetch 都是为了提前加载资源，以减少用户后续浏览时的资源下载时间，两者选用一个即可；前者会令浏览器尽快加载资源（但主 chunk 中不起效），后者则是尝试在闲时自动后台下载；
+- preload、prefetch 都是为了提前加载资源，以减少用户后续浏览时的资源下载时间，两者选用一个即可；前者会令浏览器尽快加载资源，后者则是尝试在闲时自动后台下载；Webpack 支持这两种优化手段，可以通过特定的代码注释来开启；
 - dns-prefetch、preconnect 都是只在资源和主域名不同的场景下用于加速浏览器连接的，两者选用一个即可；前者预解析其他域名的 DNS，后者则更激进，还会对其他域名预先建立 TCP、TLS 握手等。
 
 如果你读过 [《特殊的代码注释》](https://paperplane.cc/p/f5ed8e85faac/) 这一篇博文，你可能对 preload 和 prefetch 比较熟悉。
@@ -84,6 +84,9 @@ const AboutPage2 = loadable(() => import(/* webpackPrefetch: true */ '@/pages/ab
 这个标签的作用是提示浏览器：用户将来可能需要某些资源，所以浏览器可以在网络空闲时在后台默默加载好这些资源。[MDN 文档说明](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel/prefetch)。
 浏览器会以较低的优先级尝试后台加载这些资源，并短时间缓存。
 
+> 理论上来说，网站所需的大多数 JS 文件都可以添加到这个标签中，小型或静态网站甚至可以直接把这个标签写死进 HTML 里。
+> Webpack 则更为智能，只需要按照上面说的格式对需要 prefetch 的模块添加对应的注释，打包时便会生成代码，根据用户访问的页面来动态的向 `<head>` 里面添加 prefetch 标签。
+
 以商店网站来举例，具体流程是这样的：
 
 ![](../images/image-20231023033735424.png)
@@ -101,15 +104,27 @@ const AboutPage2 = loadable(() => import(/* webpackPrefetch: true */ '@/pages/ab
 ```
 
 preload 标签的作用是提示浏览器：用户很快就要用到某些资源，浏览器会以较高的优先级去加载这些资源。[MDN 文档说明](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel/preload)。
+
+> 和前面说的一样，小型或静态网站可以直接把这个标签写死在 HTML 里。
+> Webpack 也会根据注释和页面加载情况动态的添加 preload 标签。
+
 以商店网站来举例，流程是这样的：
 
 ![](../images/image-20231023034732544.png)
 
-preload 和 prefetch 有一个巨大的区别：**在主 chunk 中，任何 preload 都是无法生效的**，它只能在其它异步加载的 chunk 中才能正常生效。
-例如主 chunk 页面 A 异步加载 B，B 异步加载 C，且都使用 preload 来加载，此时 B 是无法被 preload 的，但是 C 可以。Github 上有很多人对此有疑问：[链接1](https://github.com/webpack/webpack/issues/8342#issuecomment-437659472)、[链接2](https://github.com/webpack/webpack/issues/7920)。
+Webpack 在动态设置 preload 和 prefetch 标签时，行为上有一个巨大的区别：
 
-这里解释一下原因：preload 的代码会在页面 A 刚开始被装载时便会插入 `<link>` 标签，所以实际上页面 B 的资源下载是和页面 A 同步进行的。**这意味着在页面 A 的前一个页面，便已被注入了 Webpack 的预加载代码逻辑了**。
-而如果页面 A 本身就被打包在主 chunk 里，因为主 chunk 必定首先加载，没有比它更前的页面了，**那么实际上并没有一个时机来为 B 放置 preload 的标签，所以此时 preload 是无法生效的**。
+- 设置 prefetch 标签的时机是在当前页面加载完成后；
+- 设置 preload 标签的时机非常早，当前页面刚开始加载的一瞬间，其他模块的 preload 标签便已经被设置好了。
+
+从上面的第二条行为可以看出，主 chunk 中所有的 preload 其实都是无效的。
+举例：主 chunk 页面 A 异步加载 B，B 异步加载 C，且都使用 preload 来加载，此时 B 是无法被 preload 的，但是 C 可以。
+
+原因：
+preload 的代码会在页面 B 刚开始被装载时便会设置 C 的 preload 标签，所以实际上页面 C 的资源下载是和页面 B 同步进行的。**这意味着在页面 B 的前一个页面（也就是 A），便已被注入了 Webpack 的预加载代码逻辑了**。
+而换做是页面 A，它本身就被打包在主 chunk 里，主 chunk 必定首先加载，没有比它更前的页面了，**那么实际上并没有一个时机来为 B 放置 preload 的标签，所以此时 B 的 preload 是无法生效的**。
+
+Github 上同样有很多人对此有疑问：[链接1](https://github.com/webpack/webpack/issues/8342)、[链接2](https://github.com/webpack/webpack/issues/7920)。
 
 如果真想实现主 chunk 引入其它模块的 preload，则需要 Webpack 分析所有主 chunk 用到的 preload 加载的资源，并提前注入到 HTML 文件的 `<head>` 里，这也需要 [html-webpack-plugin](https://github.com/jantimon/html-webpack-plugin) 插件来与之配合，通过 [插件作者的回复](https://github.com/jantimon/html-webpack-plugin/issues/1150) 来看，目前看来这个功能并没有任何计划提供支持。
 
