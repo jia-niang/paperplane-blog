@@ -545,6 +545,7 @@ JSONPath：https://github.com/JSONPath-Plus/JSONPath
 Lerna 用于 monorepo：https://lerna.js.org/
 workbox 用于 PWA：https://developer.chrome.com/docs/workbox/
 Lexical 富文本（前身是 draft.js）：https://lexical.dev/
+Minditor 富文本由国人开发且功能不错：https://minditor.dev/
 xss 预防：https://jsxss.com/zh/index.html
 highlight.js 代码高亮：https://www.npmjs.com/package/highlight.js
 clipboard 剪贴板操作：https://www.npmjs.com/package/clipboard
