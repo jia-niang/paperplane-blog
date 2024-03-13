@@ -48,6 +48,8 @@ Hexo 博文的渲染与普通 Markdown 略有不同，目前有以下区别：
 - `JS`
 - `CSS`
 - `HTML`
+- `DevOps`
+- `Docker`
 
 **标签 tags：**
 
