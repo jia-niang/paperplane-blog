@@ -4,11 +4,20 @@
     <a href="<%- url_for(post.prev.path) %>" id="article-nav-newer" class="article-nav-link-wrap">
       <div class="article-nav-title">上一篇：<%= post.prev.title %></div>
     </a>
+  <% } else { %>
+    <span id="article-nav-newer" class="article-nav-link-wrap" style="cursor: default;">
+      <div class="article-nav-title">已是最早的一篇</div>
+    </span>
   <% } %>
+
   <% if (post.next){ %>
     <a href="<%- url_for(post.next.path) %>" id="article-nav-older" class="article-nav-link-wrap">
       <div class="article-nav-title">下一篇：<%= post.next.title %></div>
     </a>
+  <% } else { %>
+    <span id="article-nav-older" class="article-nav-link-wrap" style="cursor: default;">
+      <div class="article-nav-title">已是最新的一篇</div>
+    </span>
   <% } %>
 </nav>
 <% } %>
