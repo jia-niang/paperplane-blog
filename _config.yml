@@ -12,7 +12,7 @@ language: zh-CN
 timezone: 'Asia/Shanghai'
 
 # URL
-url: http://paperplane.cc
+url: https://paperplane.cc
 permalink: p/:hash/
 permalink_defaults:
 pretty_urls:
@@ -107,3 +107,14 @@ deploy:
   type: ''
 
 # disqus_shortname: paperplane-cc
+
+
+sitemap:
+  path: 
+    - sitemap.xml
+    - sitemap.txt
+  template: ./sitemap_template.xml
+  template_txt: ./sitemap_template.txt
+  rel: true
+  tags: true
+  categories: true
