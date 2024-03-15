@@ -210,7 +210,8 @@ function generateUlid() {
 
 实现 monotonic （单调性）的版本：
 
-为了保证同一毫秒内生成的多个 ULID 为单调递增，我们需要使用计数器变量来记录上一次生成的时间戳和随机数，ULID 规范允许我们使用上一次随机数的值加 1 来作为新的 ID，为了方便本次就使用这种方法，实际实现可以不遵循这个加 1 的规则。
+为了保证同一毫秒内生成的多个 ULID 为单调递增，我们需要使用计数器变量来记录上一次生成的时间戳和随机数，ULID 规范允许我们使用上一次随机数的值加 1 来作为新的 ID。
+本次代码演示为了简化，使用这种简单的随机数加 1 来实现单调 ULID。实际生产环境中，建议改为加一个随机整数。
 
 此时，生成随机数的函数便需要添加一个时间戳作为参数，同时还需要额外 2 个外部的变量用于记录信息：
 
@@ -224,6 +225,7 @@ let lastRandomBinary = ''
 function generateRandomSuffix(ts = +new Date()) {
   if (ts === lastTs) {
     // 如果与上一次生成发生在同一毫秒，此时直接将上次随机数结果加 1 返回
+    // 这个实现方式比较简单，也可以将 “+ 1n” 修改为加上一个随机整数
     const newRandomBinary = (BigInt(`0b${lastRandomBinary}`) + 1n).toString(2)
     lastRandomBinary = newRandomBinary
 
