@@ -126,10 +126,11 @@ Windows 配置文件：
 
 （Windows 和 macOS 如果安装了 Docker Desktop，可以直接在设置界面找到 “Docker Engine” 配置项修改）
 
-修改配置文件后，需要重启 Docker 来使配置生效。此处给出 Linux 上的指令：
+修改配置文件后，需要重启 Docker 来使配置生效（Docker Desktop 退出重新打开）：
 
 ```bash
-sudo systemctl restart docker
+sudo systemctl daemon-reload
+sudo systemctl restart docker.service
 ```
 
 -----
