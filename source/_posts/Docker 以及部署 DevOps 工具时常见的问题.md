@@ -114,19 +114,25 @@ sudo docker ps -aq | xargs docker inspect --format='{{.LogPath}}' | xargs trunca
 官网文档：https://docs.docker.com/reference/cli/dockerd/#daemon-configuration-file
 可以看到在不同操作系统下，可以使用的字段有所不同。
 
-Linux 和 macOS 编辑配置文件：
+Linux 编辑配置文件：
 
 ```bash
 sudo vim /etc/docker/daemon.json
+```
+
+macOS 编辑配置文件：
+
+```bash
+sudo vim ~/.docker/daemon.json
 ```
 
 Windows 配置文件：
 使用 WSL 时优先在 `%userprofile%\.docker\daemon.json`；
 未使用 WSL 时优先在 `%programdata%\docker\config\daemon.json`。
 
-（Windows 和 macOS 如果安装了 Docker Desktop，可以直接在设置界面找到 “Docker Engine” 配置项修改）
+（Windows 和 macOS 如果安装了 Docker Desktop，可以直接在设置界面找到 “Docker Engine” 配置项修改，这个入口其实就是在编辑 `daemon.json`）
 
-修改配置文件后，需要重启 Docker 来使配置生效（Docker Desktop 退出重新打开）：
+修改配置文件后，需要重启 Docker 来使配置生效（Docker Desktop 选择 “Restart”）：
 
 ```bash
 sudo systemctl daemon-reload
