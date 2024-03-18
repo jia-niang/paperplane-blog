@@ -8,14 +8,14 @@ categories:
 
 持续更新 WSL 相关的问题。注意本文所提到的 WSL 实际上都是 WSL2，它和 WSL1 的区别可见文末；此外，本文默认使用 Ubuntu 作为 WSL 实例，它可以从 [Microsoft 商店](https://www.microsoft.com/store/productId/9PDXGNCFSCZV?ocid=pdpshare) 中直接下载安装。
 
-推荐使用微软的官方中文文档来进行 WSL 的 [安装](https://learn.microsoft.com/zh-cn/windows/wsl/install) 和 [配置](https://learn.microsoft.com/zh-cn/windows/wsl/wsl-config)，这个配置页面建议使用英文版本，因为中文版会把一些指令、配置关键字也机翻成英文。
+推荐使用微软的官方文档来进行 WSL 的 [安装](https://learn.microsoft.com/zh-cn/windows/wsl/install) 和 [配置](https://learn.microsoft.com/zh-cn/windows/wsl/wsl-config)，这个配置页面建议使用英文版本，因为中文版会把一些指令、配置关键字也机翻成英文。
 
 
 
 # 运行报错解决
 
 此部分内容转载自 [名实合为](https://blog.mjyai.com/)，原文链接：https://blog.mjyai.com/2020/06/01/win10-wsl2-ubuntu/ （作者：mjy）。
-这些内容我自己遇到过也实践过，可以奏效。
+文中提到的问题，我自己也遇到过，经过这些解决方案的实践，结果证明可以奏效。
 
 -----
 
