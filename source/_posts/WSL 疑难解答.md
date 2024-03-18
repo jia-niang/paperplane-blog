@@ -35,7 +35,7 @@ Press any key to continue...
 
 **原因1，LxssManager 服务未正常运行：**
 
-此时已管理员身份运行终端，重启服务：
+此时以管理员身份运行终端，重启服务：
 
 ```bash
 sc stop LxssManager
