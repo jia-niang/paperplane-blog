@@ -3,6 +3,7 @@
 
 .archives
   clearfix()
+  margin-bottom: -15px
 
 .archive-year-wrap
   margin-bottom: 1em
@@ -15,8 +16,21 @@
 
 .archive-article-inner
   @extend $block
+  position: relative
   padding: 10px
+  padding-left: 22px
   margin-bottom: 15px
+  &:before
+    content: ''
+    position: absolute
+    top: 0px
+    bottom: 0px
+    left: 0px
+    width: 12px
+    border-left: 12px solid transparent;
+    border-radius: 2px 0 0 2px
+    box-sizing: border-box
+    background: linear-gradient(white, white) padding-box, repeating-linear-gradient(-45deg, #c0332f 0, #c0332f 12.5%, color-letter-white 0, color-letter-white 25%, #356daa 0, #356daa 37.5%, color-letter-white 0, color-letter-white 50%) 0 / 50px 50px
 
 .archive-article-title
   text-decoration: none
@@ -37,6 +51,9 @@
   line-height: 1em
   display: inline-block
   width: 90px
+  @media mq-mobile
+    display: block
+    margin-bottom: 6px
 
 .homepage-title
   display: inline-block
