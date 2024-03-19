@@ -54,12 +54,12 @@ categories:
 
 **首先，网站必须实现了 OpenSearch。**
 
-首先，你访问的网站即使有搜索栏，它也必须得实现 OpenSearch，才能开启 Tab 键搜索功能。
+你访问的网站即使有搜索栏，它也必须得实现 OpenSearch，才能开启 Tab 键搜索功能。
 举个例子，淘宝、npm、Github 均实现了 OpenSearch，但是京东、Bilibili 没有实现 OpenSearch，所以这些网站没有 Tab 键搜索功能。
 
 有的网站会在门户页部署大量内容，尤其是电商，因为这关系到广告点击收入，所以这些网站可能会不提供 OpenSearch，从而 “迫使” 用户必须从首页进入搜索，增加广告的曝光量。
 
-当然，OpenSearch 规范也是需要严格遵守的，知乎无法使用 Tab 键搜索，但它部署了 OpenSearch 的 xml 文件，我认为是因为文件内容有误，导致知乎的 OpenSearch 不被浏览器读取。
+当然，OpenSearch 规范也是需要严格遵守的，知乎无法使用 Tab 键搜索，但它部署了 OpenSearch 的 xml 文件，我认为是配置文件内容有误，导致知乎的 OpenSearch 不被浏览器读取。
 
 -----
 
@@ -122,7 +122,7 @@ OpenSearch 规定，如果一个网站想实现快捷搜索功能，需要在 `<
 
 对于这些配置，可参考官方文档 [Chromium 的 “Tab 键搜索” 文档](https://www.chromium.org/tab-to-search/) 其中编号为 1 的项，对于这个 xml 文件支持的所有键值配置，可以参考 [OpenSearch 描述文件 1.1 版本草案](https://github.com/dewitt/opensearch/blob/master/opensearch-1-1-draft-6.md)。
 
-此外，只有用户访问不带子路径的网址（通常就是首页，例如 `example.com` 而不是 `example.com/xxx`）时，浏览器才会为其激活快捷搜索，如果用户从来没有访问过首页，那么就无法使用快捷激活。
+此外，只有用户访问不带子路径的网址（通常就是首页，例如 `example.com` 而不是 `example.com/xxx`）时，浏览器才会为其激活快捷搜索，如果用户从来没有访问过首页，那么就无法激活快捷搜索。
 
 -----
 
@@ -144,7 +144,6 @@ OpenSearch 规定，如果一个网站想实现快捷搜索功能，需要在 `<
     TEST
   </body>
 </html>
-
 ```
 
 然后创建一个 `opensearch.xml` 文件，填入以下内容：
@@ -167,7 +166,7 @@ OpenSearch 规定，如果一个网站想实现快捷搜索功能，需要在 `<
 127.0.0.1 test.local
 ```
 
-我们使用 `test.local` 来代替 `localhost` 域名，因为后者这个域名会被浏览器特殊处理。
+我们使用 `test.local` 来代替 `localhost` 域名，因为后者会被浏览器特殊处理，无法激活快捷搜索。
 之后使用 Edge 浏览器访问 `http://test.local` 即可。
 
 通过 `serve` 的控制台输出，可以看出浏览器自动读取了 OpenSearch 的描述文件：
@@ -245,4 +244,4 @@ HTML 结构要求是这样的：
 
 ![](../images/image-20240317122615672.png)
 
-快捷搜索规则被成功添加了。
+快捷搜索规则被成功添加了；不过这种方式添加的搜索引擎，不能指定名称，浏览器会使用域名来作为其名称。
