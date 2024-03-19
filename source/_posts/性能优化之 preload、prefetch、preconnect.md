@@ -28,17 +28,18 @@ preload 表示 “预加载”，prefetch 表示 “预获取”。
 
 SPA 站点的特点就是会代码打包，这样才能提供更好的体验。但如果把全站的 JS、CSS 打包在一起，首屏加载会很久，所以我们会进行 “代码分割” ，按照一定的模块划分来对代码进行拆分成多个 chunk（代码块），部分页面是只有用户访问到时才会尝试加载，这样就可以大大减少首屏的加载时间。
 
-例如，商店页面可以只把首页单独做成一个 chunk，而用户、订单、购物车页都分割出去，用户访问时再去加载。
+例如，商店页面可以只把首页单独做成一个 chunk，而用户、订单、购物车页都分割出去，等到用户访问时再去加载。
 
 Webpack 本身支持代码分割，此时会注入代码，在用户浏览时会根据用户的访问情况自动加载用到的 chunk。具体语法是这样：
 
 ```typescript
 // 以下以商店页面的 “关于” 页举例
 
-// 不使用代码分割，直接把关于页和首页打包在一起
+// 不使用代码分割，直接把 “关于” 页和首页打包在一起
 import AboutPage from '@/pages/about'
 
-// 使用代码分割，把关于页分出去。这里的 loadable 来自 @loadable/component
+// 使用代码分割，把 “关于” 页分割出去，不要一次性加载
+import loadable from '@loadable/component'
 const AboutPageAsync = loadable(() => import('@/pages/about'))
 ```
 
@@ -48,13 +49,13 @@ const AboutPageAsync = loadable(() => import('@/pages/about'))
 
 **目的和原理：**
 
-继续上面的例子：商店页面可以只把首页单独做成一个 chunk，而用户、订单、购物车页都分割出去，用户访问时再去加载。
+继续上面的例子：商店页面可以只把首页单独做成一个 chunk，而用户、订单、购物车页都分割出去，等到用户访问时再去加载。
 而如果用户浏览首页时，点击了购物车链接，那么浏览器加载购物车页面的资源，这也需要加载时间，会造成短暂的延时从而影响用户体验。
 
-我们想要在用户浏览过程中，浏览器在后台把某些页面的资源加载完毕，用户后续点击链接便可以瞬间跳转过去，无需等待资源加载。
+**我们想要在用户浏览过程中，浏览器在后台把某些页面的资源加载完毕，用户后续点击链接便可以瞬间跳转过去，无需等待资源加载。**
 这便是 “预加载” 或者说 “预获取” 资源。
 
-Webpack 给我们提供了简便的配置 preload 和 prefetch 的方式，我们只需要在 `import()` 中添加特定的注释即可：
+Webpack 给我们提供了简便的配置 preload 和 prefetch 的方式，我们只需要在 `import()` 函数括号中添加特定的注释即可：
 
 ```typescript
 // 这个关于页会被预加载
@@ -67,7 +68,7 @@ const AboutPage2 = loadable(() => import(/* webpackPrefetch: true */ '@/pages/ab
 放置 `/* webpackPreload: true */` 注释开启某个模块的预加载；
 放置 `/* webpackPrefetch: true */` 注释开启某个模块的预获取。
 
-只要使用了这些功能，Webpack 便会在打包的产物中注入对应的代码，使得我们在浏览网站的过程中自动预加载或预获取一些资源代码。
+只要使用了这些功能，Webpack 便会在打包的产物中注入对应的代码，使得我们在浏览网站的过程中自动预加载或预获取一些模块的代码。
 
 -----
 
@@ -77,7 +78,7 @@ const AboutPage2 = loadable(() => import(/* webpackPrefetch: true */ '@/pages/ab
 
 ```html
 <head>
-  <link rel="prefetch" as="script" href="模块文件名.js">
+  <link rel="prefetch" as="script" href="模块B的文件.js">
 </head>
 ```
 
@@ -99,7 +100,7 @@ const AboutPage2 = loadable(() => import(/* webpackPrefetch: true */ '@/pages/ab
 
 ```html
 <head>
-  <link rel="preload" as="script" href="模块文件名.js">
+  <link rel="preload" as="script" href="模块B的文件.js">
 </head>
 ```
 
@@ -115,7 +116,7 @@ preload 标签的作用是提示浏览器：用户很快就要用到某些资源
 Webpack 在动态设置 preload 和 prefetch 标签时，行为上有一个巨大的区别：
 
 - 设置 prefetch 标签的时机是在当前页面加载完成后；
-- 设置 preload 标签的时机非常早，当前页面刚开始加载的一瞬间，其他模块的 preload 标签便已经被设置好了。
+- 而设置 preload 标签的时机非常早，当前页面刚开始加载的一瞬间，其他模块的 preload 标签便已经被设置好了。
 
 从上面的第二条行为可以看出，主 chunk 中所有的 preload 其实都是无效的。
 举例：主 chunk 页面 A 异步加载 B，B 异步加载 C，且都使用 preload 来加载，此时 B 是无法被 preload 的，但是 C 可以。
