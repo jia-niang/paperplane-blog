@@ -1,5 +1,5 @@
 ---
-title: Web 开发者的优良习惯
+title: 优化自己的 Web 开发体验
 date: 2024-02-21 21:40:00
 tags: 
 - JS
@@ -8,11 +8,11 @@ categories:
 - JS
 ---
 
-持续更新，记录多年 Web 开发中，经验的积累带来的优良习惯。
+持续更新，记录 Web 和 Node.js 开发中经验技巧，优化开发体验。
 
 
 
-# JS 标准库中有哪些坑
+# 避开 JS 标准库中的坑
 
 **`encodeURIComponent()` 不符合 RFC 3986 规范，它转码的字符不全：**
 
@@ -135,7 +135,7 @@ parseFloat === Number.parseFloat // true
 
 
 
-# 很少用的 `void` 关键字
+# 尝试 `void` 关键字
 
 这个关键字很少见，甚至很多人从业多年几乎一次都没用过。
 
