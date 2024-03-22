@@ -14,7 +14,11 @@ categories:
 
 # 避开 JS 标准库中的坑
 
-**`encodeURIComponent()` 不符合 RFC 3986 规范，它转码的字符不全：**
+本章节部分节选自我之前写的博文 [《Javascript 标准库备忘》](https://paperplane.cc/p/460edd6d8f27/)。
+
+
+
+## `encodeURIComponent()` 不符合规范，它转码的字符不全
 
 JS 的 `encodeURIComponent()` 函数不会对 `!'*()` 这五个字符转码；不符合规范。示例：
 
@@ -47,9 +51,9 @@ decodeURIComponent('%21%27%28%29%2a')
 
 可以看到 `decodeURIComponent()` 可以正常解码，不需要修复。
 
------
 
-**在中国时区，传仅含日期的字符串调用 `new Date()`，时间是早 8 点而不是 0 点：**
+
+## 在中国时区，传仅含日期的字符串调用 `new Date()`，时间是早 8 点而不是 0 点
 
 如果使用的日期字符串仅包含日期不包含时间，那么创建出的 `Date` 对象是相对于世界时 0 时的地区时。
 例如，中国是 GMT+8 时区，所以时间就是早上 8 点。
@@ -75,16 +79,16 @@ new Date(2024, 0, 1)
 
 或者使用 `dayjs` 等库，它们不会有这个问题。
 
------
 
-**不能用 `number.toFixed()` 来四舍五入：**
+
+## 不能用 `number.toFixed()` 来四舍五入
 
 老生常谈的问题了，它既不是四舍五入，也不是银行家算法四舍六入。
 实际开发中建议用 `lodash` 的 `_.round()`。
 
------
 
-**JS 的按位运算是基于 32 位有符号整数来取结果的：**
+
+## JS 的按位运算是基于 32 位有符号整数来取结果的
 
 举例：
 
@@ -106,11 +110,11 @@ new Date(2024, 0, 1)
 2 ** 33 // 结果：8589934592
 ```
 
------
 
-**`Number.isNaN()` 和全局的 `isNaN()` 存在区别；`isFinite()` 也是：**
 
-如下：
+## `Number.isNaN()` 和全局的 `isNaN()` 存在区别
+
+具体关系如下：
 
 ```js
 isNaN === Number.isNaN       // false
@@ -128,10 +132,6 @@ parseFloat === Number.parseFloat // true
 - `Number.isNaN()` 只在传入 `±NaN` 时返回 `true`，除此之外一切输入均返回 `false`。
 
 对于 `isFinite()` 而言也一样，全局的会尝试把输入转化为数值，而 `Number` 上的方法只要输入的不是数值，统一返回 `false`。
-
------
-
-（本章节部分节选自我之前写的博文 [《Javascript 标准库备忘》](http://localhost:4000/p/460edd6d8f27/)。）
 
 
 
