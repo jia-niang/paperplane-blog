@@ -52,19 +52,14 @@ JSON5 支持注释和尾缀逗号的 JSON 格式：https://json5.org/
 
 阮一峰： http://www.ruanyifeng.com/
 张鑫旭： https://www.zhangxinxu.com/
-CodePlayer： https://codeplayer.vip/
 风动之石：https://blog.windstone.cc/
 TooBug：https://www.toobug.net/
 一像素：https://www.cnblogs.com/onepixel/
-
------
-
-**以下是很久不活跃的：**
-
 羡澈： http://zhangwenli.com/
 紫云飞：https://www.cnblogs.com/ziyunfei/ （作者在知乎活跃）
 迷渡 justjavac： https://justjavac.com/ （作者在知乎活跃）
 司徒正美：https://www.cnblogs.com/rubylouvre/ （博主已去世 R.I.P）
+二丫讲梵：https://wiki.eryajf.net/ （顶级 DevOps）
 
 -----
 
@@ -229,6 +224,7 @@ Vue 2 使用 CDN 以及区分环境：https://www.jianshu.com/p/9d6c1efebcd9
 深入理解 Typescript：https://jkchao.github.io/typescript-book-chinese/
 阮一峰 Flex 布局： https://www.ruanyifeng.com/blog/2015/07/flex-grammar.html
 阮一峰 Grid 布局： http://www.ruanyifeng.com/blog/2019/03/grid-layout-tutorial.html
+Flex 和 Grid 讲解和演示：https://linxz.github.io/flex_learn_manual/
 简单有深度的前端面试题：https://www.cnblogs.com/hzg1981/p/5718157.html
 实现 “查看全部” 效果：https://wintc.top/article/58
 H5 唤起 App 的方案：https://github.com/suanmei/callapp-lib/issues/1
