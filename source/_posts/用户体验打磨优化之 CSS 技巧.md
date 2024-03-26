@@ -172,6 +172,25 @@ categories:
 
 
 
+# CSS 属性 `pointer-events: none`
+
+此属性表示哪些元素可以成为鼠标事件的目标，它的默认值是 `auto`；设为 `none` 后，会使得元素无法成为任何鼠标事件的目标。
+实际上，这个 `none` 值的作用很大，它可以做到：
+
+- 使元素无法触发鼠标点击、悬停、拖拽等事件，按钮、输入框等控件也无法使用；
+- 类似于 `:hover` 这种 CSS 伪类选择器也不会被触发；
+- 在这个元素上的点击操作等鼠标事件，都会穿透这个元素，在其 z 轴下层元素上触发；
+- 甚至 F12 浏览器开发工具也不能选中这些元素。
+
+不过，即使设置了这个属性，元素中的文本仍可以被选中，如果不想让文本被选中，可以配合 `user-select: none;` 属性一同使用。
+
+这个属性的使用场合如下：
+
+- **弹窗、抽屉的过渡动画期间，可以给元素放置这个属性，避免在动画播放期间被用户触发控件；**
+- 画图类页面中，可用于实现 “网格辅助线”；编辑器类页面，可以用于实现 “输入预测”。
+
+
+
 # 模态框原来应该这样写
 
 模态框（Modal 或 Dialog）不同于其他元素，它是一种需要覆盖全屏的组件。实现它，需要考虑一些额外的因素：
@@ -204,11 +223,11 @@ import FocusTrap from 'focus-trap-react'
 function Modal() {
   return (
     <FocusTrap>
-  		<div class="modal">
+      <div class="modal">
         模态框内容
         <button>确定</button>
-  		</div>
-		</FocusTrap>
+      </div>
+    </FocusTrap>
   )
 }
 ```
@@ -251,6 +270,10 @@ body {
 此外，还可以使用 `scrollbar-gutter` 为滚动条留出 “装订线”，避免滚动条的出现和消失引起页面发生跳动，[MDN 文档](https://developer.mozilla.org/en-US/docs/Web/CSS/scrollbar-gutter)。
 
 还可以使用 `overscroll-behavior-y: contain;` 来避免模态框导致的滚动穿透，[MDN 文档](https://developer.mozilla.org/zh-CN/docs/Web/CSS/overscroll-behavior)。
+
+-----
+
+结合上一条技巧，我们可以在模态框出现和消失时的过渡动画添加 `pointer-events: none` 属性，避免在过渡动画期间被误操作。
 
 
 
