@@ -98,8 +98,8 @@ categories:
   // 也可以指定半径
   @include expandClickArea(40px);
 
-  // 如果当前元素是 static 定位，那么需要用这个
-  @expandClickAreaRel();
+  // 如果当前元素是 static 定位，那么需要用这个 Rel 后缀的
+  @include expandClickAreaRel();
 }
 ```
 
