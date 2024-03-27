@@ -80,7 +80,7 @@ ports:
 
 **我的 Docker 日志太多，把磁盘占满了：**
 
-此日志清理命令为转载，原文链接：https://blog.csdn.net/qq165285727/article/details/132557787，应该是网上最好的方法了。
+此日志清理命令为转载，原文链接：https://blog.csdn.net/qq165285727/article/details/132557787 ，应该是网上最好的方法了。
 指令如下：
 
 ```bash
