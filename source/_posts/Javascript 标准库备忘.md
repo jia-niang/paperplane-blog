@@ -114,7 +114,7 @@ function fixedEncodeURIComponent (str) {
 
 `[ ].slice(start = 0, [end = this.length])`：选取从开头到结尾下标的元素组成新数组并返回；参数可以为负数
 
-`[ ].indexOf(item, [fromIndex = 0])`：返回给定元素在数组中首次出现的下标位置，找不到则返回 -1
+`[ ].indexOf(item, [fromIndex = 0])`：返回给定元素在数组中首次出现的下标位置，找不到则返回 `-1`
 
 `[ ].lastIndexOf(item, [fromIndex = this.length - 1])`：同上，但返回在数组末次出现的下标位置
 
@@ -138,7 +138,7 @@ function fixedEncodeURIComponent (str) {
 
 `[ ].find(fn, [thisArg])`：从数组中找到并返回首个执行回调返回 `true` 的值，找不到则返回 `undefined`
 
-`[ ].findIndex(fn, [thisArg])`：同上，但是返回值是找到的元素的下标，找不到则返回 -1
+`[ ].findIndex(fn, [thisArg])`：同上，但是返回值是找到的元素的下标，找不到则返回 `-1`
 
 以上方法均会跳过数组中的空位，且其回调函数的参数均是 `fn(current, index, array)`，三个参数依次表示当前元素值、当前元素下标、原数组。
 
@@ -178,11 +178,11 @@ function fixedEncodeURIComponent (str) {
 
 `'str'.includes(str, [index = 0])`：判断字符串是否包含并返回布尔值 
 
-`'str'.indexOf(str, [index = 0])`：查找并返回另一个字符串首次出现的下标，找不到则返回 -1
+`'str'.indexOf(str, [index = 0])`：查找并返回另一个字符串首次出现的下标，找不到则返回 `-1`
 
 `'str'.lastIndexOf(str, [index = this.length - 1])`：同上，从尾部查找
 
-`'str'.search(reg)`：查找并返回首次匹配正则表达式的下标，查找不到则返回 -1
+`'str'.search(reg)`：查找并返回首次匹配正则表达式的下标，查找不到则返回 `-1`
 
 `'str'.match(reg)`：查找并返回匹配捕获正则表达式的值，是一个数组，未匹配则返回 `null`
 
@@ -597,7 +597,7 @@ Math.random() < 0.15
 
 `now.getTime()` `now.setTime()`：设置或获取时间戳，它是自 1970 年开始至今的毫秒数
 
-**以上的 get、set 方法均有对应的 setUTC、getUTC 前缀的版本，表示以世界时为标准**  
+**以上的 getXxx、setXxx 方法均有对应的 setUTCXxx、getUTCXxx 前缀的版本，表示以世界时为标准**  
 
 -----
 
@@ -975,7 +975,7 @@ with (b) {
 
 -----
 
-`WeakSet.prototype`只具有以下方法：`weakSet.add(item)` `weakSet.delete(item)` `weakSet.has(item)` `weakSet.clear()`
+`WeakSet.prototype` 只具有以下方法：`weakSet.add(item)` `weakSet.delete(item)` `weakSet.has(item)` `weakSet.clear()`
 
 
 
@@ -1147,7 +1147,7 @@ const iteratorObject = {
 
 **JS 原生的迭代行为：**
 
-每次执行迭代均会生成一个迭代器对象，JS 会不断地调用它的 `next()` 方法，直到迭代完毕；如果且仅当迭代**提前结束**，例如 `for` 循环中使用 `break` 或**抛出错误**，JS 会调用其 `return()` 方法。
+每次执行迭代均会生成一个迭代器对象，JS 会不断地调用它的 `next()` 方法，直到迭代完毕；仅当迭代**提前结束时**，例如 `for` 循环中使用 `break` 或**抛出错误**，JS 会调用其 `return()` 方法。
 
 **手动迭代的调用方式：**
 
