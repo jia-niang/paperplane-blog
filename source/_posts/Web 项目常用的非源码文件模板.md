@@ -331,7 +331,6 @@ canvas_binary_host_mirror=https://registry.npmmirror.com/-/binary/canvas
     "src"
   ]
 }
-
 ```
 
 其中 `paths` 字段要和 webpack 的 `alias` 配置保持一致。
