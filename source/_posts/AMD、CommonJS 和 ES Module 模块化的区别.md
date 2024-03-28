@@ -71,7 +71,7 @@ const mod = require("pkg")
 - 如果 `pkg` 是某个Node.js 的内置模块名（例如 fs、path），那么直接返回该内置模块；
 - 如果 `pkg` 以 `/` 或 `./` 或 `../` 这种相对路径开头：
     - 有后缀名时，则会将 `pkg` 当作文件名来查找；
-    - 没有后缀时，Node.js 会依次添加 `.js ` / `.json` / `.node` 后缀来查找，如果找不到，还会将 `pkg` 当做目录，在其下查找 `package.json` / `index.js` / `index.json` / `index.node` 这几个文件（有关 package.json 的引入方式见下文）；
+    - 没有后缀时，Node.js 会依次添加 `.js` / `.json` / `.node` 后缀来查找，如果找不到，还会将 `pkg` 当做目录，在其下查找 `package.json` / `index.js` / `index.json` / `index.node` 这几个文件（有关 package.json 的引入方式见下文）；
 - 如果 `pkg` 为模块名，Node.js 从当前目录下的 node_modules 下查找同名的目录，在其下查找 `package.json` / `index.js` / `index.json` / `index.node` 这几个文件，如果找不到此目录，则会向父级目录递归此流程；
 - 都没找到则会报错。
 
@@ -194,14 +194,14 @@ Node.js 的模块分为两类，内置模块和文件模块：内置模块是由
 
 可以参考 [阮一峰的文章](http://www.ruanyifeng.com/blog/2015/05/require.html)，源码实现可以参考《深入浅出 Node.js》一书，还有一篇 [社区的博文](https://cnodejs.org/topic/57454824991011691ef17b09)。
 
-当加载 .js 后缀的模块时，Node.js 会使用 fs 来读取该文件，并将其内容放置于一个封闭的匿名函数中，形如：
+当加载 .js 后缀的模块时，Node.js 会读取该文件，并将其内容放置于一个封闭的匿名函数中，形如：
 
 ``` js
 (function (exports, require, module, __filename, __dirname) {
   /* 加载的模块的代码在这里执行 */
 })
 ```
-运行这一段代码使用的是 vm 原生模块中的 `vm.runInThisContext()` 方法，代码是在方法体内运行的，因此不会污染全局作用域。
+运行这一段代码使用的是 `vm` 原生模块中的 `vm.runInThisContext()` 方法，代码是在方法体内运行的，因此不会污染全局作用域。
 可以看做是把加载的模块的代码复制到这个方法体内执行，Node.js 会在运行时计算出 `__filename` 和 `__dirname` 等参数的值，并传给这个方法，也会以参数的形式提供 `require` 方法。
 
 
@@ -364,7 +364,6 @@ ES Module 已经被最新的浏览器支持，需要使用  `<script type="modul
 ES Module 规范制定的时候，考虑到了以下因素：
 
 - Node.js 端和浏览器端可以使用同一种语法加载和定义，无需修改；
-
 - 出于上一条的原因，CommonJS 中的 `require`、`module`、`exports` 变量均无法使用；
 - 因为 ES Module 和新的 ECMA 规范版本发布时间基本一致，因此要支持新的语法，要能落实严格模式，明确定义顶层作用域的 `this`；
 - 模块应该能令编辑器进行静态分析，例如支持代码提示。
@@ -373,9 +372,8 @@ ES Module 规范制定的时候，考虑到了以下因素：
 
 出于这些原因，ES Module 的模块化具备以下特点：
 
-- 模块默认是严格模式；
+- 模块默认是严格模式；也因此顶层作用域的 `this` 始终为 `undefined`；
 - 模块内没有 `require`、`module`、`exports` 等属于 CommonJS 的变量；
-- 顶层作用域的 `this` 始终为 `undefined`，浏览器端和 Node.js 端要做到统一；
 - 模块在书写引入代码时就会被解析，支持静态分析，支持代码提示；
 - 出于上一条原因，ES Module 使用的 `import` 引入语句无法使用拼接字符串等动态调用方式，导出的内容也需要写成静态的；
 - 不同于 CommonJS，ESModule 模块不会被缓存运行结果。
@@ -613,7 +611,7 @@ import { ConfigProvider, Button } from 'antd'
 // 国际化语言包，通过源码目录的方式引入
 import zhCN from 'antd/lib/locale/zh_CN'
 
-// 【注意！】这里引入了所有的样式，但样式没有实现按需引入
+// 【注意！】这里引入了全部组件的样式，这并没有做到按需引入
 import 'antd/dist/antd.css'
 
 const App: React.FC = () => {
