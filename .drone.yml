@@ -8,7 +8,7 @@ steps:
   - name: build
     image: node:14
     volumes:
-      - name: npmcache
+      - name: yarncache
         path: /usr/local/share/.cache/yarn
     commands:
       - yarn config set registry https://registry.npmmirror.com
@@ -30,10 +30,10 @@ steps:
 volumes:
   - name: webroot
     host:
-      path: /home/ubuntu/www
-  - name: npmcache
+      path: ~/www
+  - name: yarncache
     host:
-      path: /home/ubuntu/npmcache
+      path: ~/.yarncache
 
 trigger:
   branch:
