@@ -30,10 +30,10 @@ steps:
 volumes:
   - name: webroot
     host:
-      path: ~/www
+      path: /root/www
   - name: yarncache
     host:
-      path: ~/.yarncache
+      path: /root/.yarncache
 
 trigger:
   branch:
