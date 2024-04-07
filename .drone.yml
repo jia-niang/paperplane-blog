@@ -11,14 +11,13 @@ steps:
       - name: yarncache
         path: /usr/local/share/.cache/yarn
     commands:
-      - yarn config set registry https://registry.npmmirror.com
       - yarn
       - yarn build
     environment:
       CI: false
 
   - name: deploy
-    image: node:14
+    image: ubuntu:22.04
     volumes:
       - name: webroot
         path: /webroot
