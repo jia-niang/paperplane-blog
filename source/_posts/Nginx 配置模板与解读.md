@@ -42,6 +42,21 @@ server {
 
 # 开启 HTTP2
 
+新版本：
+
+```nginx
+server {
+  # ...
+  listen 80;
+  listen 443 ssl;
+  http2 on; # ← 新写法
+}
+```
+
+-----
+
+之前的版本：
+
 ```nginx
 server {
   # ...
@@ -50,7 +65,7 @@ server {
 }
 ```
 
-这个写法和 HTTP1.1 的写法完全不同。
+写法和 HTTP1.1 的写法完全不同。
 
 
 
@@ -148,6 +163,17 @@ location @website-name {
 ```
 
 其中 `@website-name` 可以自定义，在两段配置中保持一致即可。
+
+
+
+# 全局禁用 HTML 文件缓存
+
+```nginx
+location ~* \.(?:html?)$ {
+  add_header Cache-Control "no-cache";
+  # ...
+}
+```
 
 
 
