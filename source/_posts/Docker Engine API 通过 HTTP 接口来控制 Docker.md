@@ -148,3 +148,19 @@ services:
 
 从配置文件中可以看出，启动容器后提供指令，使得其中的程序将 `2375` 端口的 tcp 连接转发到 `docker.sock`；而又配置了 `volumes` 卷映射，将宿主机的 `docker.sock` 透传给容器，所以 tcp 连接被直接发送到了宿主机的 Docker 服务上。
 如果需要绑定到宿主机的端口上，则可以使用 `ports` 端口映射。
+
+-----
+
+注意，上面例子中，`bobrik/socat` 这个镜像版本太旧，现在可能已经无法拉取。
+可以改用 `paperplanecc/socat` 这个镜像，这是我按照它的 [源代码](https://github.com/bobrik/docker-socat/blob/master/Dockerfile) 构建而来的。
+
+也可以自己构建，此处给出 Dockerfile 文件：
+
+```dockerfile
+FROM alpine:3.1
+
+RUN apk --update add socat
+
+ENTRYPOINT ["socat"]
+```
+
