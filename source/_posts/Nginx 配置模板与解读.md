@@ -166,17 +166,6 @@ location @website-name {
 
 
 
-# 全局禁用 HTML 文件缓存
-
-```nginx
-location ~* \.(?:html?)$ {
-  add_header Cache-Control "no-cache";
-  # ...
-}
-```
-
-
-
 # 禁用 SourceMap
 
 暴露 SourceMap 是极度危险的行为，其他人可以很容易的获得网站源码。
@@ -289,6 +278,20 @@ location ~* \.(gif|jpg|jpeg|png|bmp|webp)$ {
   if ($invalid_referer) {
     return 403;
   }
+}
+```
+
+
+
+# 验证 UA
+
+```nginx
+location / {
+  if ($http_user_agent !~* "(Mozilla|Chrome)") {
+    return 404;
+  }
+  
+  # ...
 }
 ```
 
