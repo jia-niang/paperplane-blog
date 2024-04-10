@@ -110,8 +110,19 @@ deploy:
   prefix: paperplane-blog
   endpoint: https://cos.ap-hongkong.myqcloud.com
   skip_html: true
-  skip_fonts: true
+  # skip_fonts: true
   skip_exist: true
+
+cdn:
+  enable: true
+  base: https://cdn.paperplane.cc/paperplane-blog/
+  tags:
+    'img[src]':
+      attribute: src
+      callback: > 
+        function(imgSrc) {
+          return imgSrc.replace('//cdn.paperplane.cc/images', '//cdn.paperplane.cc/paperplane-blog/images')
+        }
 
 # disqus_shortname: paperplane-cc
 
