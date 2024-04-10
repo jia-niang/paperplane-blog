@@ -111,7 +111,7 @@ deploy:
   endpoint: https://cos.ap-hongkong.myqcloud.com
   skip_html: true
   # skip_fonts: true
-  skip_exist: true
+  # skip_exist: true
 
 cdn:
   enable: true
