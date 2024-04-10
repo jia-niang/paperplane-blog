@@ -6,7 +6,7 @@ workspace:
 
 steps:
   - name: build
-    image: node:14
+    image: node:14.21.3
     volumes:
       - name: yarncache
         path: /usr/local/share/.cache/yarn
@@ -15,10 +15,6 @@ steps:
       - yarn build
     environment:
       CI: false
-      AWS_ACCESS_KEY_ID:
-        from_secret: COS_SECRET_ID
-      AWS_SECRET_ACCESS_KEY:
-        from_secret: COS_SECRET_KEY
 
   - name: deploy
     image: ubuntu:22.04
@@ -29,6 +25,16 @@ steps:
       - mkdir -p /webroot/blog/
       - rm -rf /webroot/blog/*
       - cp -rf ./public/* /webroot/blog/
+
+  - name: deploy-cdn
+    image: node:14.21.3
+    commands:
+      - yarn deploy
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: COS_SECRET_ID
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: COS_SECRET_KEY
 
 volumes:
   - name: webroot
