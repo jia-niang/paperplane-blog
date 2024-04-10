@@ -1,6 +1,5 @@
 {
   "name": "paperplane-blog",
-  "version": "0.0.1",
   "private": true,
   "scripts": {
     "dev": "hexo server",
@@ -13,6 +12,7 @@
     "version": "6.3.0"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.552.0",
     "hexo": "^6.3.0",
     "hexo-generator-archive": "^2.0.0",
     "hexo-generator-category": "^2.0.0",

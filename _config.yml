@@ -104,13 +104,19 @@ theme: landscape
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
-  type: ''
+  type: s3
+  bucket: paperplane-cdn-1253277322
+  region: ap-hongkong
+  prefix: paperplane-blog
+  endpoint: https://cos.ap-hongkong.myqcloud.com
+  skip_html: true
+  skip_fonts: true
+  skip_exist: true
 
 # disqus_shortname: paperplane-cc
 
-
 sitemap:
-  path: 
+  path:
     - sitemap.xml
     - sitemap.txt
   template: ./sitemap_template.xml

@@ -15,6 +15,10 @@ steps:
       - yarn build
     environment:
       CI: false
+      AWS_ACCESS_KEY_ID:
+        from_secret: COS_SECRET_ID
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: COS_SECRET_KEY
 
   - name: deploy
     image: ubuntu:22.04
