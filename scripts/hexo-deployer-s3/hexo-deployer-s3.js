@@ -1,5 +1,6 @@
 const fs = require('fs')
 const path = require('path')
+const mime = require('mime')
 const { S3Client, PutObjectCommand, ListObjectsCommand } = require('@aws-sdk/client-s3')
 
 async function hexoDeployerS3(args) {
@@ -52,6 +53,7 @@ async function hexoDeployerS3(args) {
         Bucket: args.bucket,
         Body: fs.readFileSync(localPath),
         Key: s3Path,
+        ContentType: mime.getType(localPath),
       }
 
       const uploadCommand = new PutObjectCommand(uploadParams)
