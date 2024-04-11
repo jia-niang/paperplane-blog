@@ -22,6 +22,7 @@ categories:
 - [`@paperplane/cra-template-mui`](https://www.npmjs.com/package/@paperplane/cra-template-mui)：基于 mui 的前端项目模板；
 - [`@paperplane/cra-template-antd`](https://www.npmjs.com/package/@paperplane/cra-template-antd)：基于 antd 的前端项目模板；
 - @paperplane/cra-template-antd-v4：（尚未完工）基于 antd v4 的前端项目模板；
+- @paperplane/cra-template-tdesign：（尚未完工）基于 TDesign 的前端项目模板；
 - @paperplane/cra-template-umijs：（尚未完工）基于 Umi.js 的前端项目模板。
 
 其他模板：
@@ -281,7 +282,6 @@ canvas_binary_host_mirror=https://registry.npmmirror.com/-/binary/canvas
   "files": [
   ]
 }
-
 ```
 
 
@@ -950,6 +950,8 @@ module.exports = {
 使用 `react-app-rewired` 时，还可以配合 `customize-cra` 一同使用，极大程度减少配置代码量。
 **但是需要注意的是，这两个包已经很久没有维护了，现在比较推荐 `craco`。**
 
+-----
+
 使用 `react-app-rewired` 的方法：
 
 - 安装 `react-app-rewired`；
@@ -1251,6 +1253,61 @@ module.exports = {
       jQuery: '$',
     }),
   ),
+}
+```
+
+
+
+# Tailwindcss 配置
+
+安装 `tailwindcss`，然后创建文件 `tailwind.config.js`，写入以下内容：
+
+```js
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: ['./src/**/*.{js,jsx,ts,tsx}'],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+```
+
+然后，在 CSS 目录中创建一个 `tailwind.css` 文件（不推荐用 `.less` 或 `.scss` 后缀），写入以下内容：
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+然后，在项目入口 `index.js` 文件中添加一行：
+
+```js
+import '@/styles/tailwind.css'
+```
+
+-----
+
+此外，推荐安装 `prettier-plugin-tailwindcss` 插件，它可以在格式化代码时，自动对类名进行排序。
+安装后，请修改 `prettier` 的配置文件，添加：
+
+```json
+{
+  "plugins": ["prettier-plugin-tailwindcss"],
+}
+```
+
+-----
+
+注意，Tailwindcss 自带了一套 CSS 重置规则。如果你使用类似 `mui` 等自带全局 CSS 的工具，建议在 `tailwindcss.config.js` 中配置：
+
+```js
+module.exports = {
+  // ...
+  corePlugins: {
+    preflight: false,
+  },
 }
 ```
 
