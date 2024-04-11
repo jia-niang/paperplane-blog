@@ -947,7 +947,8 @@ module.exports = {
 
 因为 cra 项目自带了一套 webpack 和 babel 配置，启动指令会使用 `react-scripts`，自带的配置就集成在这个包里面，所以必须使用例如 `react-app-rewired` 或 `craco` 这类工具来替换掉启动指令里面的 `react-scripts`，并提供一份它们约定的配置文件，这样能对 webpack 和 babel 进行定制。
 
-**注意 `react-app-rewired` 已经很久没有维护了，现在比较推荐 `craco`。但是，`react-app-rewired` 的优势在于，它可以配合 `customize-cra` 使用，这可以极大程度简化配置的代码量。**
+使用 `react-app-rewired` 时，还可以配合 `customize-cra` 一同使用，极大程度减少配置代码量。
+**但是需要注意的是，这两个包已经很久没有维护了，现在比较推荐 `craco`。**
 
 使用 `react-app-rewired` 的方法：
 
@@ -1001,6 +1002,30 @@ module.exports = override()
 
 可以理解为，这个 `override()` 方法用于整合用户定制的配置。
 实际上，`customize-cra` 提供了大量的 API 用来修改 webpack、babel 等配置。下面会给出各种定制需求的样板代码。
+
+>实际上，`customize-cra` 提供的 API，格式大致都类似于：
+>
+>```js
+>pluginConfig => config => {
+>  // ...
+>  return config
+>}
+>```
+>
+>也就是提供一个配置项，返回一个类似于 “管道” 或者是 “tap 操作” 的函数，使用用户的配置项对 webpack 配置进行 “加工”。
+>所以如果有特殊的配置，必须自己写，可以这样写：
+>
+>```js
+>module.exports = {
+>  webpack: override(
+>    config => {
+>      // ↑ 这个 config 参数就是 webpack 的配置
+>      //   可以自行对它进行一些定制操作
+>      return config
+>    }
+>  ),
+>}
+>```
 
 -----
 
@@ -1112,23 +1137,45 @@ module.exports = {
 }
 ```
 
-如果是 less，还提供了 `addLessLoader()` 这个 API 来快速配置：
+这是 less 的配置模板：
 
 ```js
-const { override, addLessLoader } = require('customize-cra')
+const { override, addWebpackModuleRule } = require('customize-cra')
 
 module.exports = {
   webpack: override(
-    addLessLoader({
-      additionalData: '@import "~@/styles/global.less";',
-      lessOptions: {
-        globalVars: {},
-        modifyVars: {},
-      },
-    }),
+    addWebpackModuleRule({
+      test: /\.less$/i,
+      use: ['style-loader', 'less-loader', {
+          loader: 'less-loader',
+          options: {
+            additionalData: '@import "~@/styles/global.less";',
+          },
+      }],
+    })
   ),
 }
 ```
+
+> 如果是**早期**的 `less-loader` 版本，还可以使用 `addLessLoader()` 这个 API 来快速配置 less：
+>
+> ```js
+> const { override, addLessLoader } = require('customize-cra')
+> 
+> module.exports = {
+>   webpack: override(
+>     addLessLoader({
+>       additionalData: '@import "~@/styles/global.less";',
+>       lessOptions: {
+>         globalVars: {},
+>         modifyVars: {},
+>       },
+>     }),
+>   ),
+> }
+> ```
+>
+> **注意，这个 API 内部做了一些配置，和近期版本的 less-loader 不兼容，新版本已经无法使用了，因此不推荐这个 API。**
 
 -----
 
