@@ -196,9 +196,9 @@ jQuery 现在已经几乎不再用了，但是它的 API 设计值得学习。�
 
 **内容操纵：**
 
-- **a.html([v])** 取值赋值html内容，可用回调f(index,html)
-- **a.text([v])** 取值赋值text内容(text不包含子元素的标签文本)，对xml也有效，可用回调
-- **a.val([v])** 表单取值赋值value
+- **a.html([v])** 取值赋值 HTML 内容，可用回调 `f(index,html)`
+- **a.text([v])** 取值赋值 `textContent` 内容，这不包含子元素的标签文本，对 XML 也有效，也可使用回调
+- **a.val([v])** 表单取值赋值
 
 **数据值属性：**
 
@@ -212,7 +212,7 @@ jQuery 现在已经几乎不再用了，但是它的 API 设计值得学习。�
 **样式控制：**
 
 - **a.css()** 设置或获取 CSS 属性值，可用键值对对象，jQuery 会自动添加诸如 `-webkit-` 前缀
-- **$.cssHooks()** 自行设定 CSS 钩子，例如可以为一些属性设置 getter 和 setter
+- **$.cssHooks()** 自行设定 CSS 钩子，例如可以为一些属性设置 Getter 和 Setter
 
 **位置操控：**
 
@@ -433,7 +433,7 @@ jQuery 现在已经几乎不再用了，但是它的 API 设计值得学习。�
 - **$.grep(arr, fn)** 用回调过滤数组，回调参数 **(index, item)**，返回 `false` 时将过滤掉元素
 - **$.makeArray(obj)** 对象转换为数组，可以用于将 jQuery 选择元素转为数组
 - **$.map(arr|obj, fn)** 对对象或数组的每个成员调用 `fn` 回调，返回值形成一个新数组或对象；返回 `null` 的成员将被移除
-- **$.inArray(v, arr [, fromIndex])** 在数组 `arr` 中查找 `v` 的位置，`fromIndex` 默认为 0 表示搜寻起始，找不到返回 `-1`
+- **$.inArray(v, arr [, fromIndex])** 在数组 `arr` 中查找 `v` 的位置，`fromIndex` 默认为 `0` 表示搜寻起始，找不到返回 `-1`
 - **$.merge(fir, sec)** 将第二个数组上的内容接在第一个数组后面
 - **$.uniqueSort(arr)** 排序并移除重复的数组内容
 
