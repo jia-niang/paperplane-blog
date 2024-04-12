@@ -533,9 +533,9 @@ excel 显示：https://github.com/jspreadsheet/ce
 操作和生成 excel 文件：https://sheetjs.com/
 pdf.js 前端渲染 PDF：https://www.npmjs.com/package/pdfjs-dist
 docx-preview 前端渲染 word：https://www.npmjs.com/package/docx-preview
-LocalStorage 管理：https://www.npmjs.com/package/store
+LocalStorage 管理：https://www.npmjs.com/package/store2
 Cookies 管理：https://www.npmjs.com/package/js-cookie
-扩充 jQuery 的库：https://licia.liriliri.io/
+Licia 有四百种工具函数的库：https://licia.liriliri.io/
 stateshot 实现撤销与重做功能：https://github.com/gaoding-inc/stateshot
 JSONPath：https://github.com/JSONPath-Plus/JSONPath
 Lerna 用于 monorepo：https://lerna.js.org/
@@ -560,7 +560,7 @@ three.js 实现 3D 图形与动画：https://threejs.org/
 流程图工具 bpmn.io：https://bpmn.io/toolkit/bpmn-js/
 简单流程图工具：https://github.com/maxGraph/maxGraph
 2D 地图工具：https://leafletjs.com/
-基于 jQuery 的动效库：http://velocityjs.org/
+API 和 jQuery 相似的动效库：http://velocityjs.org/
 使用 canvas 动态绘制线条：https://maxwellito.github.io/vivus/
 html2canvas 生成分享图海报：https://html2canvas.hertzen.com/
 鼠标悬停视差效果：https://atroposjs.com/
