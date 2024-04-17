@@ -37,7 +37,7 @@ steps:
         from_secret: COS_SECRET_KEY
 
   - name: baidu-push
-    image: ubuntu:22.04
+    image: curlimages/curl
     failure: ignore
     commands:
       - cd ./public
