@@ -41,7 +41,7 @@ steps:
     failure: ignore
     commands:
       - cd ./public
-      - curl -H 'Content-Type:text/plain' --data-binary @sitemap.txt "http://data.zz.baidu.com/urls?site=https://paperplane.cc&token=${BAIDU_ZHANZHANG_TOKEN}"
+      - curl -s -H 'Content-Type:text/plain' --data-binary @sitemap.txt "http://data.zz.baidu.com/urls?site=https://paperplane.cc&token=$BAIDU_ZHANZHANG_TOKEN"
     environment:
       BAIDU_ZHANZHANG_TOKEN:
         from_secret: BAIDU_ZHANZHANG_TOKEN
