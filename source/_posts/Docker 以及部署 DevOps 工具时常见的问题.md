@@ -328,8 +328,11 @@ sudo adduser git
 
 # 为 git 用户创建一个 SSH 密钥对
 sudo -u git ssh-keygen -t rsa -b 4096 -C "Gitea Host Key"
+```
 
-# 创建一个可执行文件
+然后，创建一个可执行文件：
+
+```bash
 sudo vim /usr/local/bin/gitea
 ```
 
@@ -351,6 +354,10 @@ sudo echo "$(cat /home/git/.ssh/id_rsa.pub)" >> /home/git/.ssh/authorized_keys
 
 # 查看并记住 git 用户的用户 ID （左）、用户组 ID（右）
 sudo vim /etc/passwd
+
+# 此步骤非必须
+# 如果你担心 git 用户密码泄露被人登录，可以删去它的密码
+sudo vim /etc/shadow # 把密码的哈希字符串改为 “*”
 ```
 
 完成以上步骤后，便可以准备启动 Gitea 容器。
