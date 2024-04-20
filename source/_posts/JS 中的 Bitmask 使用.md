@@ -54,7 +54,7 @@ button.addEventListener(
 
 -----
 
-目前 WebAPI 中还是存在一些使用 Bitmask 的 API 的，例如 [document.createNodeIterator(...)](https://developer.mozilla.org/zh-CN/docs/Web/API/Document/createNodeIterator)：
+目前 WebAPI 中还是存在一些使用 Bitmask 的 API 的，例如 [document.createNodeIterator(...)](https://developer.mozilla.org/en-US/docs/Web/API/Document/createNodeIterator)：
 
 ```js
 // 下面是 DOM 中预定义好的参数，此处只是列举一下

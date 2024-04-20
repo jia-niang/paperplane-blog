@@ -238,7 +238,7 @@ function fixedEncodeURIComponent (str) {
 
 `'str'.normalize(opt = 'NFC')`：按照 unicode 正规化方式处理字符串并返回，参数还可选 `NFD`、`NFKC`、`NFKD`
 
-`'str'.localeCompare(str, [loacl,] [opt])`：用于字符串本地化排序，返回数字；参见 MDN 上的 [相关介绍](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/localeCompare)
+`'str'.localeCompare(str, [loacl,] [opt])`：用于字符串本地化排序，返回数字；参见 MDN 上的 [相关介绍](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/localeCompare)
 
 -----
 
@@ -464,7 +464,7 @@ function fixedEncodeURIComponent (str) {
 
 `num.toPrecision(n)`：返回数值以 `n` 位有效数字表示的**字符串**，如果给的有效数字位数小于整数部分的位数则会使用科学计数法，如有效数字位数不足则使用数字 0 来补足，使用 `Number.prototype.toFixed()` 来进行小数近似值计算
 
-`num.toLocaleString(option)`：以本地化形式返回数值的**字符串**结果，可以配置显示货币样式、千分符样式等，参考 [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Number/toLocaleString)
+`num.toLocaleString(option)`：以本地化形式返回数值的**字符串**结果，可以配置显示货币样式、千分符样式等，参考 [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toLocaleString)
 
 
 
