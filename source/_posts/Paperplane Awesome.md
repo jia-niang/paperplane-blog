@@ -16,12 +16,12 @@ Devdocs： http://devdocs.io/
 Web.dev：https://web.dev/?hl=zh-cn
 真正的 w3school：https://www.w3schools.com/
 印记中文： https://www.docschina.org/
-MDN： https://developer.mozilla.org/zh-CN/docs/Web
+MDN： https://developer.mozilla.org/en-US/docs/Web
 现代 Javascript 教程：https://zh.javascript.info/
 Javascript 基础（网道）： https://wangdoc.com/javascript/
 Typescript 基础（网道）：https://wangdoc.com/typescript/
 WebAPI（网道）： https://wangdoc.com/webapi/
-WebAPI（MDN）：https://developer.mozilla.org/zh-CN/docs/Web/API
+WebAPI（MDN）：https://developer.mozilla.org/en-US/docs/Web/API
 JS Api 全解析：https://js.yanceyleo.com/
 Node.js 官方文档： https://nodejs.cn/api/
 npm 官方文档：https://docs.npmjs.com/
@@ -29,9 +29,9 @@ ES6： https://es6.ruanyifeng.com/
 阮一峰的早期 Node.js API 文档： https://javascript.ruanyifeng.com/nodejs/basic.html
 学习 HTTP/3 协议： https://http3-explained.haxx.se/zh/
 学习 HTTP/1、2 协议： https://github.com/bagder/http2-explained
-CSS（MDN）： https://developer.mozilla.org/zh-CN/docs/Web/Guide/CSS
-HTML（MDN）：https://developer.mozilla.org/zh-CN/docs/Web/HTML
-HTTP（MDN）：https://developer.mozilla.org/zh-CN/docs/Web/HTTP
+CSS（MDN）： https://developer.mozilla.org/en-US/docs/Web/Guide/CSS
+HTML（MDN）：https://developer.mozilla.org/en-US/docs/Web/HTML
+HTTP（MDN）：https://developer.mozilla.org/en-US/docs/Web/HTTP
 所有 HTTP 头： https://zh.wikipedia.org/wiki/HTTP%E5%A4%B4%E5%AD%97%E6%AE%B5 （外网访问）
 
 -----

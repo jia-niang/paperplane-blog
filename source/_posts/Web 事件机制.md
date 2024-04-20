@@ -38,12 +38,12 @@ W3C 为了避免冲突，于是将事件分为3个阶段：**事件先是从捕�
 
 当然，如果你在某个元素上绑定了监听器，那么**这个元素自身上触发的事件一定会触发这个监听器，无论它监听哪一个阶段**，因为这个元素为事件的目标，不存在冒泡还是捕获。
 
-具体如何绑定监听器，可以向下继续阅读。另外，可以在 MDN 找到有关 [事件类别参考](https://developer.mozilla.org/zh-CN/docs/Web/Events) 以及 [事件对象的介绍](https://developer.mozilla.org/zh-CN/docs/Web/API/Event)，在阮一峰所编写的网道 Web 教程也有 [事件相关的介绍](http://wangdoc.com/javascript/events/eventtarget.html)。
+具体如何绑定监听器，可以向下继续阅读。另外，可以在 MDN 找到有关 [事件类别参考](https://developer.mozilla.org/en-US/docs/Web/Events) 以及 [事件对象的介绍](https://developer.mozilla.org/en-US/docs/Web/API/Event)，在阮一峰所编写的网道 Web 教程也有 [事件相关的介绍](http://wangdoc.com/javascript/events/eventtarget.html)。
 
 
 
 # Web 事件简介
-事件分为资源事件、网络事件、表单事件、鼠标键盘事件、媒体事件等多种类别，一部分事件被写入了 Web 规范当中，这些事件被称为标准事件。在 [MDN 事件参考](https://developer.mozilla.org/zh-CN/docs/Web/Events) 中可以查看所有事件以及标准事件。
+事件分为资源事件、网络事件、表单事件、鼠标键盘事件、媒体事件等多种类别，一部分事件被写入了 Web 规范当中，这些事件被称为标准事件。在 [MDN 事件参考](https://developer.mozilla.org/en-US/docs/Web/Events) 中可以查看所有事件以及标准事件。
 
 所有事件对象都继承自 `Event` 类，具体还有几种类型，例如关系到鼠标点击的 `MouseEvent` 事件类型等，其他资源也有可能生成事件，例如视频播放暂停、网页动画的开始结束等。除了这些方式以外，JS 代码也可以创建、派发、捕获事件。
 

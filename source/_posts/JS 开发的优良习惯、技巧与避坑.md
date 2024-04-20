@@ -1,5 +1,5 @@
 ---
-title: 良好的 JS 开发习惯以优化开发体验
+title: JS 开发的优良习惯、技巧与避坑
 date: 2024-02-21 21:40:00
 tags: 
 - JS
@@ -10,7 +10,7 @@ categories:
 - JS
 ---
 
-持续更新，记录 Web 和 Node.js 开发中经验技巧，优化开发体验。
+持续更新，记录 Web 和 Node.js 开发中经验技巧，优化开发体验，避免踩坑。
 
 
 
@@ -26,7 +26,7 @@ categories:
 
 - 自行开发工具函数；
 
-- 使用原生 [URLSearchParams](https://developer.mozilla.org/zh-CN/docs/Web/API/URLSearchParams) 对象，为了避免环境不支持可以考虑引入 polyfill；
+- 使用原生 [URLSearchParams](https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams) 对象，为了避免环境不支持可以考虑引入 polyfill；
 - 使用 [qs](https://www.npmjs.com/package/qs) 和 [query-string](https://www.npmjs.com/package/query-string) 这类工具。
 
 此时面临选型，首先排除自行开发，因为性价比太低；然后经过分析，原生的 `URLSearchParams` 支持功能太少，例如不支持数组、不支持快捷解析出布尔值或数值，还需要做一次类型转换等。
@@ -147,7 +147,7 @@ Docker 的官方镜像的 [README 文件](https://github.com/nodejs/docker-node/
 
 # 对象存储都使用 S3 API 并带上 MIME
 
-对于 Node.js 开发者而言，开发中肯定会接触到对象存储。
+对于 Node.js 开发者而言，开发中肯定会接触到对象存储；对前端开发者而言，也会有上传 CDN 等操作，可能也会用到对象存储。
 一般来说，我们会使用供应商提供的对象存储 SDK 来进行文件上传、下载等操作。
 
 目前，亚马逊云对象存储 S3 的 API 已经成为各家厂商普遍兼容的标准，国内几乎所有的云服务供应商都兼容 S3 API 来访问他们的对象存储服务。
@@ -213,8 +213,8 @@ await s3Client.send(uploadCommand)
 
 -----
 
-使用这类对象存储上传文件时，要注意尽量带上文件的 [MIME 类型](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Basics_of_HTTP/MIME_Types)。
-可以看到 MIME 有 [很多种](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types)，一般可以根据文件扩展名来判断，直接使用类似于 `mime` 这类包即可。
+使用这类对象存储上传文件时，要注意尽量带上文件的 [MIME 类型](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_Types)。
+可以看到 MIME 有 [很多种](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types)，一般可以根据文件扩展名来判断，直接使用类似于 `mime` 这类包即可。
 
 不提供 MIME 类型时，对象存储服务有可能会赋予默认的 MIME 类型 `application/octet-stream`，它表示是二进制数据。
 
