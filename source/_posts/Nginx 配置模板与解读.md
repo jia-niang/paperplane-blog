@@ -335,7 +335,29 @@ proxy_read_timeout 90;
 # 将请求发送给服务的超时时间
 proxy_send_timeout 90;
 
-#与服务简历 TCP 连接的超时时间
+#与服务建立 TCP 连接的超时时间
 proxy_connect_timeout 90;
 ```
 
+
+
+# 身份认证
+
+配置 nginx：
+
+```nginx
+location / {
+  # 这个字符串是提示语，可以自行修改
+  auth_basic "Restricted Area";
+  auth_basic_user_file /path/to/your/app.htpasswd;
+}
+```
+
+此时需要提供一个 `.htpasswd` 的用户名密码文件，这个文件需要使用 `httpd` 指令来生成。
+此处给出使用 Docker 来生成的指令：
+
+```bash
+docker run --rm --entrypoint htpasswd httpd -Bbn <用户名> <密码> ./nginx.htpasswd
+```
+
+运行后会写入到当前目录的 `nginx.htpasswd` 文件中，会自动删除容器，没有其他副作用。
