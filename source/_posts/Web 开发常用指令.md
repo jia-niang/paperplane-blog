@@ -150,3 +150,5 @@ ipconfig /flushdns
 bcdedit /set hypervisorlaunchtype auto
 bcdedit /set hypervisorlaunchtype off
 ```
+
+WSL 用户需要注意，上面的网络相关的指令，执行后可能导致 WSL 无法联网，甚至重开也不行， 必须重启电脑。
