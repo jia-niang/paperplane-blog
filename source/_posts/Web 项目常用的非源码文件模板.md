@@ -288,7 +288,7 @@ canvas_binary_host_mirror=https://registry.npmmirror.com/-/binary/canvas
 
 # `tsconfig.json` 模板
 
-给 Typescript 提供配置，注意这个配置会直接影响到代码编译输出或者运行的结果，建议配合 [配置文档](https://www.typescriptlang.org/tsconfig) 进行定制。
+给 TypeScript 提供配置，注意这个配置会直接影响到代码编译输出或者运行的结果，建议配合 [配置文档](https://www.typescriptlang.org/tsconfig) 进行定制。
 
 适用于 Web 前端的配置：
 

@@ -37,7 +37,7 @@ UUID 会记录其版本号、变体类型，它们被放置在 ID 字符串中�
 
 通过上述规范，可以发现 UUID 的一些特点：无序导致它无法用做数据库索引；虽然是由16进制数字字符组成，但包含连字符 `-` 可能会阻碍一些应用场景。
 
-对于 Javascript 开发者，可以使用 [uuid](https://github.com/uuidjs/uuid) 这个 npm 包来生成各种版本的 UUID。
+对于 JavaScript 开发者，可以使用 [uuid](https://github.com/uuidjs/uuid) 这个 npm 包来生成各种版本的 UUID。
 
 -----
 
@@ -80,7 +80,7 @@ model User {
 雪花 ID 依次由毫秒级时间戳、机器 ID、序号组成，所以它也具备了 CUID 所具备的一些特性。雪花 ID 也可以用于主键，且因为它仅包含纯数字的缘故，它可被安全的用在很多地方。
 
 Twitter、Instagram、Discord 等多家公司使用雪花 ID 来作为用户 ID、帖子 ID。
-对于 Javascript 开发者而言，可以使用 [flake-idgen](https://www.npmjs.com/package/flake-idgen) 这个 npm 包来生成雪花 ID。
+对于 JavaScript 开发者而言，可以使用 [flake-idgen](https://www.npmjs.com/package/flake-idgen) 这个 npm 包来生成雪花 ID。
 
 -----
 
@@ -104,7 +104,7 @@ ULID 的 [规格说明](https://github.com/ulid/spec) 描述了这个随机 ID �
 - ULID 不依据设备或运行环境的指纹，这可能会导致多台机器在同一时间生成相同的 ID，所以建议使用 ULID 时配套使用安全的随机数发生器的结果作为种子而不是时间戳（例如可以使用 `crypto.getRandomValues()`，Node.js 需导入 `crypto` 包并使用 `crypto.webcrypto.getRandomValues()`，如果 Node.js 版本比较旧，可以使用 `crypto.randomBytes()`）；或者，也可以把运行环境指纹也混入种子中；
 - ULID 仅由毫秒级时间戳和随机数组成，没有计数器，这导致如果在同一毫秒中生成多个 ID，它们的有序性无法保证；ULID 推荐实现一种 monotonic （单调性）的功能，允许用户在同一毫秒内中生成多个不同的 ID 且保证时间上有序，推荐的做法是把随机数部分加 1，目前常用的 ULID 库都实现了。
 
-对于 Javascript 开发者而言，常用这两个包来生成 ULID，它们都支持 Node.js 和现代浏览器：
+对于 JavaScript 开发者而言，常用这两个包来生成 ULID，它们都支持 Node.js 和现代浏览器：
 
 - [ulid](https://github.com/ulid/javascript)，提供了直接生成和工厂模式，支持使用自定义随机数来源，它还提供了 `detectPrng()` 用于从当前环境中探测更安全的随机数发生器，可以避免分布式部署场景使用 ULID 导致随机数碰撞；
 - [id128](https://github.com/aarondcohen/id128)，较为全面的工具，它不使用 `Math.random()` 而是实用更高安全级别的随机数来源，除了提供 ULID 外还提供了 UUID 的生成、ID 间的判别和比较函数。
