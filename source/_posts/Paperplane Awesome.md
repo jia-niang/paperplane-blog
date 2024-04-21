@@ -17,9 +17,9 @@ Web.dev：https://web.dev/?hl=zh-cn
 真正的 w3school：https://www.w3schools.com/
 印记中文： https://www.docschina.org/
 MDN： https://developer.mozilla.org/en-US/docs/Web
-现代 Javascript 教程：https://zh.javascript.info/
-Javascript 基础（网道）： https://wangdoc.com/javascript/
-Typescript 基础（网道）：https://wangdoc.com/typescript/
+现代 JavaScript 教程：https://zh.javascript.info/
+JavaScript 基础（网道）： https://wangdoc.com/javascript/
+TypeScript 基础（网道）：https://wangdoc.com/typescript/
 WebAPI（网道）： https://wangdoc.com/webapi/
 WebAPI（MDN）：https://developer.mozilla.org/en-US/docs/Web/API
 JS Api 全解析：https://js.yanceyleo.com/
@@ -99,7 +99,7 @@ Nginx 图形化配置：https://nginxconfig.io/
 CodeSandBox：https://codesandbox.io/ （建议外网访问）
 CodePen：https://codepen.io/pen/ （建议外网访问）
 国产代码沙箱 RunJS：https://runjs.work/
-Typescript 在线转码：https://www.typescriptlang.org/play
+TypeScript 在线转码：https://www.typescriptlang.org/play
 Babel 在线转码：https://babeljs.io/repl （建议外网访问）
 测试网站的浏览器兼容情况：https://browsershots.org/
 
@@ -221,7 +221,7 @@ Vue 2 设计揭秘与源码拆解：https://github.com/HcySunYang/vue-design （
 简单的从零搭建一个 Vue 2 SPA 项目：https://segmentfault.com/a/1190000014324125
 Vue 2 的自带的 Webpack 配置：https://blog.csdn.net/hongchh/article/details/55113751
 Vue 2 使用 CDN 以及区分环境：https://www.jianshu.com/p/9d6c1efebcd9
-深入理解 Typescript：https://jkchao.github.io/typescript-book-chinese/
+深入理解 TypeScript：https://jkchao.github.io/typescript-book-chinese/
 阮一峰 Flex 布局： https://www.ruanyifeng.com/blog/2015/07/flex-grammar.html
 阮一峰 Grid 布局： http://www.ruanyifeng.com/blog/2019/03/grid-layout-tutorial.html
 Flex 和 Grid 讲解和演示：https://linxz.github.io/flex_learn_manual/

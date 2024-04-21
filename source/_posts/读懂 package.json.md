@@ -211,7 +211,7 @@ categories:
 
 -----
 
-`typings` 字段，如果这个包自身带有 Typescript 类型定义，此字段为类型定义的 .d.ts 入口文件。
+`typings` 字段，如果这个包自身带有 TypeScript 类型定义，此字段为类型定义的 .d.ts 入口文件。
 
 -----
 
@@ -309,7 +309,7 @@ import 'core-js'
 开发时，两部分依赖项都需安装，而部署时只需要安装 `dependencies` 的部分。
 
 如果你的项目是作为 npm 包发布的，那么你需要将项目中用到的依赖放到 `dependencies`，例如 `antd` 用到了 `moment` 和 `lodash`，所以必须有这两个依赖包，否则运行时会报错；
-而只在开发过程中需要用的依赖，例如 `eslint` 和 `prettier` 这种源码处理工具，以及 `@types/*` 这种 Typescript 类型定义文件，都放在 `devDependencies`，只有 `antd` 的开发维护人员需要用到这些，作为使用者我们是不需要这些依赖的。
+而只在开发过程中需要用的依赖，例如 `eslint` 和 `prettier` 这种源码处理工具，以及 `@types/*` 这种 TypeScript 类型定义文件，都放在 `devDependencies`，只有 `antd` 的开发维护人员需要用到这些，作为使用者我们是不需要这些依赖的。
 
 如果你的项目是作为前端网站项目，它往往是从源码编译为静态资源，在这个过程中需要用到 `typescript`、`webpack`、`babel` 等工具，如果没有这些工具，构建过程可能会直接报错终止；
 而编译完成的产物就是一堆静态的 HTML、JS、CSS 文件，部署时只需复制到服务器的部署目录即可。

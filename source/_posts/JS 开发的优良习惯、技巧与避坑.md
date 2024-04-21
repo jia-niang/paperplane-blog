@@ -287,7 +287,7 @@ const someFunc = () => {}
 
 - `function` 声明的函数是有 “名字” 的函数，`const` 定义的是一个箭头函数，打印输出时是没有名字的；在特定的调试场合，`function` 函数更容易定位到位置；
 - 只有 `function` 写法的函数可以使用 `arguments` 参数；
-- 如果使用 Typescript，只有使用 `function` 关键字声明的函数支持函数重载（这时也正好会需要用到 `arguments` 参数）；
+- 如果使用 TypeScript，只有使用 `function` 关键字声明的函数支持函数重载（这时也正好会需要用到 `arguments` 参数）；
 - `function` 写法可以把方法返回值类型也放在开头；对于异步函数而言，通过 `async function` 可以一眼认出这是异步函数；`const` 写法的函数没有这么直观；
 - `function` 可以被 JS 引擎自动 “提升”，对代码放置的先后位置不敏感，比如我们可以把工具类的函数放到文件最尾部，避免影响业务代码的阅读。
 
@@ -366,7 +366,7 @@ void function () { console.log('hello') }()
 # 避开 JS 标准库中的坑
 
 开发时养成习惯，避免撞到这些坑。
-本章节部分节选自我之前写的博文 [《Javascript 标准库备忘》](https://paperplane.cc/p/460edd6d8f27/)。
+本章节部分节选自我之前写的博文 [《JavaScript 标准库备忘》](https://paperplane.cc/p/460edd6d8f27/)。
 
 
 

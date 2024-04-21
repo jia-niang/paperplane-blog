@@ -1,5 +1,5 @@
 ---
-title: Javascript 标准库备忘
+title: JavaScript 标准库备忘
 date: 2018-04-11 15:01:40
 tags:
 - JS
