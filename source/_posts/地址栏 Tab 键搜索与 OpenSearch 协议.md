@@ -151,7 +151,7 @@ OpenSearch 规定，如果一个网站想实现快捷搜索功能，需要在 `<
 ```xml
 <?xml version="1.0"?>
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
-  <ShortName>Paperplane</ShortName>
+  <ShortName>PaperPlane</ShortName>
   <Description>我是描述</Description>
   <Url type="text/html" method="get" template="http://test.local/?q={searchTerms}"/>
 </OpenSearchDescription>
