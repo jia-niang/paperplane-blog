@@ -1,5 +1,5 @@
 ---
-title: Paperplane Awesome
+title: PaperPlane Awesome
 date: 2020-01-01 12:00:00
 tags: 
 categories: 

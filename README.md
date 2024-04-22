@@ -1,4 +1,4 @@
-# Paperplane Blog
+# PaperPlane Blog
 
 # 简介
 

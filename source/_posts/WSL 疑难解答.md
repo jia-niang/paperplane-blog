@@ -229,7 +229,7 @@ chmod 600 ~/.ssh/*
 SSH 的密钥权限尽量设置为 `600`（也就是 `-rw-------`），过高的权限会导致 SSH 报错提示。
 
 在 WSL 实例里开发，可以直接在 WSL 的实例中安装 Node.js 等环境；
-更推荐的做法是，把运行环境放在 Docker 镜像里，随项目提供 Docker Compose 配置和 Dockerfile，这样在 VS Code 连接 WSL 后，可以直接运行 `docker compose up` （此时不需要 `-d` 参数）来启动项目。目前 Paperplane 的大部分项目均使用这种开发方式。
+更推荐的做法是，把运行环境放在 Docker 镜像里，随项目提供 Docker Compose 配置和 Dockerfile，这样在 VS Code 连接 WSL 后，可以直接运行 `docker compose up` （此时不需要 `-d` 参数）来启动项目。目前 PaperPlane 的大部分项目均使用这种开发方式。
 
 
 
