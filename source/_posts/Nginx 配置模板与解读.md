@@ -357,7 +357,8 @@ location / {
 此处给出使用 Docker 来生成的指令：
 
 ```bash
-docker run --rm --entrypoint htpasswd httpd -Bbn <用户名> <密码> ./nginx.htpasswd
+docker run --rm --entrypoint htpasswd httpd -Bbn <用户名> <密码>
 ```
 
-运行后会写入到当前目录的 `nginx.htpasswd` 文件中，会自动删除容器，没有其他副作用。
+运行后会输出用户名和哈希过的密码，可以将它追加到 `.htpasswd` 文件中。
+这段指令执行后，会自动删除 Docker 容器，没有其他副作用。
