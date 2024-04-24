@@ -152,7 +152,7 @@ services:
 -----
 
 注意，上面例子中，`bobrik/socat` 这个镜像版本太旧，现在可能已经无法拉取。
-可以改用 `paperplanecc/socat` 这个镜像，这是我按照它的 [源代码](https://github.com/bobrik/docker-socat/blob/master/Dockerfile) 构建而来的。
+可以改用 [`paperplanecc/docker-api`](https://hub.docker.com/r/paperplanecc/docker-api) 这个镜像，这是我按照它的 [源代码](https://github.com/bobrik/docker-socat/blob/master/Dockerfile) 构建而来的。
 
 也可以自己构建，此处给出 Dockerfile 文件：
 
