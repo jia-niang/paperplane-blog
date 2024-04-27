@@ -251,7 +251,7 @@ location /api/ {
 
 ```nginx
 location /path-a/ {
-  alias /home/root/web-a/;
+  root /home/root/web-a/;
 }
 
 location /path-b/ {
