@@ -129,7 +129,7 @@ logging:
 
 ```yaml
 environment:
-  - TZ=Asia/Shanghai # 只配这一条，就能解决大多数问题
+  TZ: Asia/Shanghai # 只配这一条，就能解决大多数问题
 volumes:
   - /etc/timezone:/etc/timezone:ro
   - /etc/localtime:/etc/localtime:ro
@@ -173,6 +173,29 @@ ports:
   - '443:443'
   - '2222:22'
 ```
+
+
+
+# 哪种写法声明 `environment` 更好
+
+Docker Compose 有两种声明 `environment` 的写法，分别是对象写法和数组写法。
+
+对象写法：
+
+```yaml
+environment:
+  TZ: Asia/Shanghai
+```
+
+数组写法：
+
+```yaml
+environment:
+	- TZ=Asia/Shanghai
+```
+
+两种写法没有区别，也谈不上谁好谁坏。
+如果非得分个优劣，我觉得对象写法比较好，因为 IDE 可以给出文本高亮，便于区分键和值。
 
 
 
