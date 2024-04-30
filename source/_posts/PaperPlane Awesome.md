@@ -341,6 +341,9 @@ Primer Design（Github）：https://primer.style/design/
 Semantic UI：https://semantic-ui.com/
 Blueprint UI：https://blueprintjs.com/
 Chakra UI：https://chakra-ui.com/
+React Suite：https://rsuitejs.com/zh/ （嗨普智能）
+Radix UI：https://www.radix-ui.com/ （无样式 UI，兼容 Next.js）
+Shadcn：https://ui.shadcn.com/ （基于 Radix UI，还有 Vue 版本）
 
 -----
 
@@ -408,6 +411,8 @@ Vuetify（也是 Material 风格）：https://vuetifyjs.com/zh-Hans/ （含移�
 Quasar（也是 Material 风格）https://quasar.dev/
 Hey UI：https://v2.heyui.top/
 Lay UI Vue：http://www.layui-vue.com/
+Radix UI Vue：https://www.radix-vue.com/
+Shadcn UI Vue：https://www.shadcn-vue.com/ （兼容 Nuxt.js）
 
 -----
 
@@ -548,6 +553,7 @@ xss 预防：https://jsxss.com/zh/index.html
 highlight.js 代码高亮：https://www.npmjs.com/package/highlight.js
 clipboard 剪贴板操作：https://www.npmjs.com/package/clipboard
 package.json 字段排序的 prettier 插件：https://github.com/shellscape/prettier-plugin-package
+object-code 获取对象的哈希：https://www.npmjs.com/package/object-code
 
 -----
 
