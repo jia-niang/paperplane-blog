@@ -172,7 +172,7 @@ location @website-name {
 
 **如果你使用 create-react-app，推荐在打包时添加 `GENERATE_SOURCEMAP=false` 环境变量（或者写入 .env 文件中） ，这样就不会生成 SourceMap 了。或者是通过 CI/CD 配置，拷贝文件时跳过 .map 文件。**
 
-如果使用必须使用 Nginx 配置，可以这样配置：
+如果必须使用 Nginx 配置，可以这样配置：
 
 ```nginx
 location ~* \.map$ {
@@ -251,7 +251,7 @@ location /api/ {
 
 ```nginx
 location /path-a/ {
-  alias /home/root/web-a/;
+  root /home/root/web-a/;
 }
 
 location /path-b/ {
