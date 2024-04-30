@@ -124,7 +124,7 @@ OSChina 的工具库：https://tool.oschina.net/
 
 
 
-# 设计工具
+# 设计工具与素材
 
 **素材库：**
 
@@ -135,7 +135,7 @@ Emoji 高清图：https://emojipedia.org/apple
 免费图库索引：https://www.yuque.com/ruanyf/weekly/free-photos
 SVG 图标库1：https://leungwensen.github.io/svg-icon/
 SVG 图标库2：https://icomoon.io/app/#/select
-免费透明 PNG 和 SVG：https://seeklogo.com/ （外网访问）
+免费透明 PNG 和 SVG 的 Logo：https://seeklogo.com/ （外网访问）
 各种循环图库索引：https://desdev.tools/tools/categories/textures-patterns/
 
 -----
