@@ -124,7 +124,7 @@ OSChina 的工具库：https://tool.oschina.net/
 
 
 
-# 设计相关
+# 设计工具
 
 **素材库：**
 
@@ -135,6 +135,7 @@ Emoji 高清图：https://emojipedia.org/apple
 免费图库索引：https://www.yuque.com/ruanyf/weekly/free-photos
 SVG 图标库1：https://leungwensen.github.io/svg-icon/
 SVG 图标库2：https://icomoon.io/app/#/select
+免费透明 PNG 和 SVG：https://seeklogo.com/ （外网访问）
 各种循环图库索引：https://desdev.tools/tools/categories/textures-patterns/
 
 -----
@@ -185,7 +186,7 @@ Github 团队项目贡献者 README 展示工具：https://allcontributors.org/
 
 
 
-# 特效样板代码
+# 特效和样式库
 
 canvas 烟花：https://www.kirilv.com/canvas-confetti/
 组件样板：https://webframe.xyz/
@@ -209,6 +210,7 @@ CSS 伪元素相册效果： https://designshack.net/articles/css/use-pseudo-ele
 各种 Checkbox：https://getcssscan.com/css-checkboxes-examples （拉到最底下还有其他的）
 各种 3D 按钮：https://csspro.com/css-3d-buttons?ref=beautifulboxshadow-bottom （拉到最底下还有其他的）
 基于 tailwindcss 的纯标签组件库：https://sailboatui.com/
+光标移动特效：https://tholman.com/cursor-effects/ （同 the-pattern-library 作者）
 
 
 
