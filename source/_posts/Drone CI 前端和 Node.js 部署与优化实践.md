@@ -55,10 +55,10 @@ COPY dist/ /usr/share/nginx/html/
 
 ```nginx
 server {
-    listen       80;
-    server_name  _;
-    index  index.html index.htm;
-    root   /usr/share/nginx/html;
+  listen 80;
+  server_name  _;
+  index index.html index.htm;
+  root /usr/share/nginx/html;
 
 	location / {
 		try_files $uri $uri/ /index.html =404;
@@ -146,9 +146,8 @@ services:
   drone-runner-docker:
   image: drone/drone-runner-docker
   container_name: drone-runner-docker
-  volumes: # 注意 ↓ 这一行
+  volumes: # ↓ 注意这一行
     - /var/run/docker.sock:/var/run/docker.sock
-  # ...
 ```
 
 我们需要把宿主机的 Docker UNIX Socket 暴露给 Runner，因为构建流程中的每一步都是跑在 Docker 容器中的，这些容器需要 Runner 自行去拉取，**此时 Runner 就会使用宿主机的 Docker 来进行拉取镜像操作**；
