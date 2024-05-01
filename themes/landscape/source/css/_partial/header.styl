@@ -2,34 +2,28 @@
   height: banner-height
   position: relative
 
-#header-outer
-  height: 100%
-  position: relative
-
-#header-inner
-  position: relative
-  overflow: hidden
-
-#banner
-  position: absolute
-  top: 0
+#header-wrapper
+  position: fixed
   left: 0
-  width: 100%
-  height: 100%
-  background-size: cover
+  right: 0
+  top: 0
+  background: hsla(0, 0%, 100%, .8);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 1
 
 #header-title
-  text-align: left
-  height: logo-size
-  position: absolute
-  top: 50%
-  left: 0
-  margin-top: logo-size * -0.2
+  display: flex
+  align-items: center
+  height: banner-height
 
-#logo-wrap,#subtitle-wrap
-  padding-left: 15px
-  @media mq-mobile
-    text-align: center
+@media mq-tablet
+  #header-title
+    justify-content: center
+
+@media mq-mobile
+  #header-title
+    justify-content: center
 
 $logo-text
   text-decoration: none
@@ -44,52 +38,6 @@ $logo-text
   letter-spacing: 2px
   font-weight: normal
   padding-left: 3px
-
-#subtitle
-  @extend $logo-text
-  font-size: subtitle-size
-  line-height: subtitle-size
-  letter-spacing: 1px
-
-#subtitle-wrap
-  margin-top: subtitle-size
-
-#main-nav
-  float: left
-  margin-left: -15px
-
-$nav-link
-  float: left
-  color: #444
-  opacity: 0.8
-  text-decoration: none
-  text-shadow: 0 1px rgba(0, 0, 0, 0.2)
-  transition: opacity 0.2s
-  display: block
-  padding: 20px 15px
-  &:hover
-    opacity: 1
-
-.nav-icon
-  @extend $nav-link
-  font-family: font-icon
-  text-align: center
-  font-size: font-size
-  width: font-size
-  height: font-size
-  padding: 20px 15px
-  position: relative
-  cursor: pointer
-
-.main-nav-link
-  @extend $nav-link
-  letter-spacing: 1px
-  @media mq-mobile
-    display: none
-
-#sub-nav
-  float: right
-  margin-right: -15px
 
 #nav-rss-link
   &:before

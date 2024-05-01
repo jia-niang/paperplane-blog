@@ -467,16 +467,22 @@ $article-gallery-ctrl
   right: 0
   position: fixed
   display: flex
-  justify-content: center
+  justify-content: start
   .at-container
     min-width: 220px
   .at-title
     color: #666
     font-size: 20px
     padding-bottom: 10px
+    cursor: pointer
+    &:hover::after
+      content: '(点击回到顶部)'
+      font-size: 16px
+      padding-left: 12px
   .at-scroll
     overflow-y: auto
     max-height: calc(100vh - 100px - 20px - 40px - 20px)
+    padding-right: 15px
     &::-webkit-scrollbar
       width: 4px;
       height: 4px
