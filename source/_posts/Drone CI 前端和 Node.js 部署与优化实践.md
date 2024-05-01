@@ -60,9 +60,9 @@ server {
   index index.html index.htm;
   root /usr/share/nginx/html;
 
-	location / {
-		try_files $uri $uri/ /index.html =404;
-	}
+  location / {
+    try_files $uri $uri/ /index.html =404;
+  }
 }
 ```
 
@@ -144,23 +144,25 @@ Drone Docker Runner 的 Docker Compose 配置文件通常是这样：
 ```yaml
 services:
   drone-runner-docker:
-  image: drone/drone-runner-docker
-  container_name: drone-runner-docker
-  volumes: # ↓ 注意这一行
-    - /var/run/docker.sock:/var/run/docker.sock
+    image: drone/drone-runner-docker
+    container_name: drone-runner-docker
+    volumes: # ↓ 注意这一行
+      - /var/run/docker.sock:/var/run/docker.sock
 ```
 
-我们需要把宿主机的 Docker UNIX Socket 暴露给 Runner，因为构建流程中的每一步都是跑在 Docker 容器中的，这些容器需要 Runner 自行去拉取，**此时 Runner 就会使用宿主机的 Docker 来进行拉取镜像操作**；
-而且 Drone 的配置文件中支持将宿主机的目录映射到构建过程中，而 Runner 本身也是一个容器，它不可能越过 Docker 直接把宿主机的文件直接挂在到另一个容器。
+上面的配置中，最引人注目是就是注释特别标注那一行。可以看出，我们把宿主机的 Docker UNIX Socket 暴露给了 Runner，这便给了 Runner 访问宿主机上 Docker 的能力。这是为了什么？
+原因是，因为构建流程中的每一步都是跑在 Docker 容器中的，第一次运行时，Runner 必须自行去拉取这些容器，**此时 Runner 就会使用宿主机的 Docker 来进行拉取镜像操作**；而且 Drone 的配置文件中支持将宿主机的目录映射到构建过程中，而 Runner 本身也是一个容器，它不可能越过 Docker 直接把宿主机的文件直接挂在到另一个容器。
 
 因此，Runner 必须能访问宿主机的 Docker，通过它来完成镜像拉取、目录挂载等操作。
 
-注意上面加粗的一句话，Drone Docker Runner 运行时，每一步所使用的镜像，都是由宿主机的 Docker 来拉取的。这些镜像会被存储在宿主机上，可以直接通过 `docker images` 看到。也正因如此，后续构建操作便不再需要重新拉取一遍镜像了。
+注意上面加粗的一句话，Drone Docker Runner 运行时，每一步所使用的镜像，都是由宿主机的 Docker 来拉取的。这些镜像会被存储在宿主机上，可以直接通过 `docker images` 看到。也正因如此，从第二次 CI/CD 开始便不再需要重新拉取一遍镜像了。
 
 Drone Docker Runner 本身运行在容器中，和宿主机是隔离的，但是它可以让宿主机为自己拉取镜像。
-这便给了我们启发：**虽然构建的容器和宿主机是隔离的，但是可以通过上面这种方式，把构建镜像的 Docker 守护进程换成宿主机的 Docker，这样镜像构建好后，对于宿主机而言直接就是可用状态了，运行它即完成了部署。**
+这给了我们启发：**虽然构建的容器和宿主机是隔离的，但是可以通过上面这种方式，把构建镜像的 Docker 守护进程换成宿主机的 Docker，这样镜像构建好后，对于宿主机而言直接就是可用状态了，运行它即完成了部署。**
 
-而 `docker:dind` 这个 Drone 镜像就可以帮我们实现这一点，它提供另一个能运行在 Docker 容器里的 Docker 环境，我们可以使用 `docker build` 等命令，但只要我们把 `/var/run/docker.sock` 这个文件替换成宿主机的，那么 Docker 相关的操作就都会由宿主机来完成。
+而 `docker:dind` 这个 Drone 镜像就可以帮我们在 CI/CD 的过程中也实现同样的效果，它提供另一个能运行在 Docker 容器里的 Docker 环境，令我们可以使用 `docker build` 等命令，但只要我们把 `/var/run/docker.sock` 这个文件替换成宿主机的，那么 Docker 相关的操作就都会由宿主机来完成。
+可以这样认为，我们使用 Docker in Docker 的思路模拟了 Drone Docker Runner 的运行方式。
+
 给出一个实例 `.drone.yml`：
 
 ```yaml
@@ -179,10 +181,11 @@ volumes:
       path: /var/run/docker.sock
 ```
 
-这里可以看到，我们通过 `volumes` 机制来把宿主机的 `/var/run/docker.sock` 挂载到 DinD 容器中同样的位置，这样在 DinD 容器中执行的 Docker 命令，都会发生在宿主机的 Docker 守护进程上面。
+这里可以看到，我们通过 `volumes` 配置来把宿主机的 `/var/run/docker.sock` 挂载到 DinD 容器中同样的位置，这样在 DinD 容器中执行的 Docker 命令，都会发生在宿主机的 Docker 守护进程上面。
 这个构建步骤完成后，宿主机的镜像列表中便会出现构建好的 `example/example:example` 镜像，此时直接运行它即可。
 
-这种方式速度快，具备隔离性，如果构建机和部署机是同一台，那么推荐这种方式。
+这种方式速度快，且同样具备了隔离性，可以看做是跳过了网络传输步骤的基于推送和拉取镜像的 CI/CD 方式。
+如果构建机和部署机是同一台，那么非常推荐这种方式。
 
 
 
@@ -257,9 +260,9 @@ npm 通常缓存目录位于：`~/.npm`。
 
 本段内容受腾讯 AlloyTeam 的一篇 [博文](https://mp.weixin.qq.com/s/QfHHJnzD4vhenjFcFSNMhQ) 的启发，强烈建议阅读。
 
-Docker 镜像的产生需要通过 [Dockerfile](https://docs.docker.com/reference/dockerfile/) 来声明制作镜像的步骤，Dockerfile 是一个记录镜像制作过程中运行命令的文件，我们在 `docker build` 的时候会依次执行其中的命令，大部分步骤可以产生 “Layer”，或者叫 “层”。例如，执行 `RUN` 会产生 Layer，执行 `COPY` 把源码拷贝到镜像中，也会产生 Layer。
+Docker 镜像的产生需要通过 [Dockerfile](https://docs.docker.com/reference/dockerfile/) 来声明制作镜像的步骤。Dockerfile 是一个记录镜像制作过程中需要执行的操作的文件，我们在 `docker build` 的时候会依次执行其中的操作，大部分操作都可以产生 “Layer”，或者叫 “层”。例如，执行 `RUN` 会产生 Layer，执行 `COPY` 把源码拷贝到镜像中，也会产生 Layer。
 
-只有层机制还不够，Docker 会记录每次操作的哈希；构建镜像时，如果本地已有某个哈希值的 Layer，直接复用这一 Layer 即可，构建步骤就可以瞬间完成；推送镜像到仓库时，如果镜像仓库已有相同哈希值的 Layer，那么便可以跳过上传步骤，节约大量的网络传输流量。
+只有 Layer 的机制还不够，Docker 还会记录每次操作的哈希；构建镜像时，如果本地已有某个哈希值的 Layer，直接复用这一 Layer 即可，构建步骤就可以瞬间完成；推送镜像到仓库时，如果镜像仓库已有相同哈希值的 Layer，那么便可以跳过上传步骤，节约大量的网络传输流量。
 
 我们发现，只要保证 Layer 可以被复用，构建速度和上传速度都可以极大程度的加速。
 这里还是以 `paperplane-api` 的流水线举例，可以看到大部分步骤都被缓存了，构建步骤瞬间完成：
@@ -269,11 +272,10 @@ Docker 镜像的产生需要通过 [Dockerfile](https://docs.docker.com/referenc
 但是，想复用 Layer 的机制，需要满足这样的条件：
 
 - 对于任何 Dockerfile 指令而言，**必须它之前的所有 Layer 都已使用缓存，它才能应用缓存**；
-- 通过 `ADD` 或 `COPY` 向镜像中添加文件时，文件的内容和没有任何变化时，才能应用缓存。
+- 通过 `ADD` 或 `COPY` 向镜像中添加文件时，文件的内容和没有任何变化时，这一 Layer 的哈希才会不变，这样才能应用缓存。
 
 这两点机制是 Docker 用于在多次构建镜像时保证镜像的一致性的。但这些机制也给我们利用缓存机制提出了考验。
-
-通过上面的规则，可以得出一些结论：
+可以发现：
 
 - **如果某一步完全没办法缓存，为了防止它影响后面步骤的缓存，我们需要尽量把这个步骤移至最尾部执行；例如把项目源码 `COPY` 进镜像，每次构建时项目源码肯定是发生过改动的，这一步肯定无法缓存，所以 `yarn build` 类似的指令在最后执行；**
 - **安装依赖时 `yarn` 指令必须要有 `package.json` 和 `yarn.lock`，而这两个文件一般来说不会特别频繁的修改，我们可以先只把这两个文件 `COPY` 到镜像，然后执行 `RUN yarn` 安装；这样一来，如果依赖项没有发生过任何变动，`COPY` 操作和 `RUN yarn` 的哈希值都没有变化，这两个 Layer 可以应用缓存，从而使得安装依赖的步骤瞬间完成。**
@@ -302,8 +304,8 @@ CMD [ "yarn", "start:prod" ]
 
 -----
 
-既然层存在缓存机制，如果某一步操作和之前所有操作的哈希都已存在，那么这些操作便可以复用缓存，这虽然可以加快我们的构建速度，但也存在一些问题：
-如果 Dockerfile 中需要执行一些带有副作用的命令，例如如果要 `curl` 发送一个请求，Docker 并不知道这一步有副作用，只要命令不被修改，这一步骤就会被缓存，后续就被跳过执行了，请求也就不再会被发出。
+Layer 的缓存机制固然好，但使用它时也需要注意一些问题：
+如果 Dockerfile 中需要执行一些带有副作用的操作，例如如果要 `curl` 发送一个请求，Docker 并不知道这一步有副作用，只要命令不被修改，这一步骤就会被缓存，后续就被跳过执行了，请求也就不再会被发出。
 
 同样，使用 [Prisma](https://www.prisma.io/) 等工具也会存在这种问题：
 在 CI/CD 流程中，因为要在部署之前把数据库结构同步成最新代码的版本，我们需要为 Prisma 的 `migrate deploy` 操作单独准备一个步骤，通常把即将生产部署的镜像修改 `command` 启动命令并运行一次即可，因为生产部署的镜像中包含了最终的数据库结构、数据库连接配置，以及 npm 依赖项；
