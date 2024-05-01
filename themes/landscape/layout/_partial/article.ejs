@@ -29,6 +29,16 @@
           <%- post.content %>
         <% } %>
       </div>
+      <% if(!post.no_toc) { %>
+        <div id="article-toc">
+          <div class="at-container">
+            <div class="at-title">本文目录</div>
+            <div class="at-scroll">
+              <%- toc(page.content, { max_depth: 2, list_number: false }) %>
+            </div>
+          </div>
+        </div>
+      <% } %>
       <footer class="article-footer <%= !index ? '' : 'homepage' %>">
         <div>
           <!-- <a data-url="<%- post.permalink %>" data-id="<%= post._id %>" data-title="<%= post.title %>" class="article-share-link"><%= __('share') %></a> -->

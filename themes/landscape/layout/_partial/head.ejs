@@ -37,6 +37,12 @@
       s.parentNode.insertBefore(hm, s);
     })();
   </script>
+  <script>
+    function setupCursorEffects() {
+      new cursoreffects.fairyDustCursor()
+    }
+  </script>
+  <script defer async src="/js/cursor-effects.js" onload="setupCursorEffects()"></script>
   <%- open_graph({twitter_id: theme.twitter, fb_admins: theme.fb_admins, fb_app_id: theme.fb_app_id}) %>
   <% if (config.feed) { %>
     <%- feed_tag() %>

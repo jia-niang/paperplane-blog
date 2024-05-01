@@ -10,6 +10,7 @@
           <% if (theme.sidebar && theme.sidebar !== 'bottom'){ %> <%- partial('_partial/sidebar',
           null, {cache: !config.relative_link}) %> <% } %>
         </div>
+        <%- partial('_partial/website-index') %>
         <!-- <%- path.trim().startsWith('p/') ? partial('_partial/footer', null, {cache: !config.relative_link}) : null %> -->
       </div>
     </div>

@@ -457,3 +457,59 @@ $article-gallery-ctrl
   &:before
     content: "\f054"
     right: 15px*/
+
+#article-toc
+  position: fixed
+  padding: 0 20px
+  box-sizing: border-box
+  top: banner-height + 20px
+  left: calc(50vw + 460px)
+  right: 0
+  position: fixed
+  display: flex
+  justify-content: center
+  .at-container
+    min-width: 220px
+  .at-title
+    color: #666
+    font-size: 20px
+    padding-bottom: 10px
+  .at-scroll
+    overflow-y: auto
+    max-height: calc(100vh - 100px - 20px - 40px - 20px)
+    &::-webkit-scrollbar
+      width: 4px;
+      height: 4px
+      background-color: #eee;
+      border-radius: 2px
+    &::-webkit-scrollbar-thumb
+      background-color: #ccc;
+      border-radius: 2px
+    &::-webkit-scrollbar-track
+      background-color: transparent;
+      border-radius: 2px;
+  .toc
+    display: block
+  .toc-item
+    white-space: nowrap
+    overflow: hidden
+    text-overflow: ellipsis
+  .toc-link
+    text-decoration: none
+    font-size: 14px
+  .toc-link,.toc-text
+    &:hover
+      color: #666 !important
+  .toc-level-1
+    color: #888
+    .toc-link,.toc-text
+      color: #888
+  .toc-level-2
+    padding-left: 10px
+    color: #aaa
+    .toc-link,.toc-text
+      color: #aaa
+
+@media mq-tablet
+  #article-toc
+    display: none
