@@ -1,6 +1,7 @@
 <article id="<%= post.layout %>-<%= post.slug %>" class="h-entry article article-type-<%= post.layout %>" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-post">
     <div class="article-inner">
+      <img src="/css/images/postmark.png" class="article-postmark" />
       <%- partial('post/gallery') %>
       <% if (post.link || post.title){ %>
         <header class="article-header">
@@ -12,8 +13,8 @@
         <%- partial('post/category') %>
         <% if (post.comments && theme.valine.enable && theme.valine.appId && theme.valine.appKey ){ %>
           <a href="<%- url_for(post.path) %>#comments" class="article-comment-link">
-            <span class="post-comments-count valine-comment-count" data-xid="<%- url_for(post.path) %>" itemprop="commentCount"></span>
             <%= __('comment') %>
+            <span class="post-comments-count valine-comment-count" data-xid="<%- url_for(post.path) %>" itemprop="commentCount"></span>
           </a>
         <% } %>
       </div>

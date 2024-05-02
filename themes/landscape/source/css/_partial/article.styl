@@ -14,6 +14,17 @@
     box-shadow: none
     margin: -1px
     background-image: url('../css/images/absurdity.png')
+    position: relative
+    .article-postmark
+      height: 200px
+      position: absolute
+      transform: rotate(30deg)
+      right: -20px
+      top: 0
+
+@media mq-mobile
+  .article-postmark
+    display: none
 
 .article-inner
   @extend $block
@@ -22,22 +33,21 @@
 .article-meta
   clearfix()
   font-size: 1em
-  padding: 12px 0 12px
+  padding: 8px 0
   margin: 0 article-padding
   position: relative
   border-bottom: 1px solid #ddd
   border-top: 1px solid #ddd
+  line-height: 1.3em
   font-family: font-serif
 
 .article-date
   @extend $block-caption
-  float: left
   margin-bottom: 0
 
 .article-category
   position: relative
-  float: left
-  line-height: 1em
+  line-height: inherit
   color: #ccc
   text-shadow: 0 1px #fff
   margin-left: 16px
@@ -46,14 +56,15 @@
     content: ''
     position: absolute
     top: 0
-    bottom: 0
+    height: 1em
     left: 0
     width: 1px
     border-right: 1.5px solid #ddd
 
 .article-category-link
   @extend $block-caption
-  margin: 0 12px 1em
+  line-height: inherit
+  margin: 0 12px 0
   &:first-of-type
     margin-left: 0
 
@@ -61,16 +72,22 @@
   padding: 26px article-padding
 
 .article-title
-  text-align: center
   text-decoration: none
+  max-width: 660px
+  max-width: calc(100% - 180px)
   font-size: 2em
   font-weight: bold
   color: color-default
-  line-height: line-height-title
+  line-height: 1.5em
   transition: color 0.2s
   font-family: font-serif
   a&:hover
     color: color-link
+
+@media mq-mobile
+  .article-title
+    text-align: center
+    max-width: 100%
 
 .article-entry
   @extend $base-style
@@ -254,13 +271,20 @@
 
 .article-comment-link
   @extend $block-caption
-  float: right
   text-shadow: 0 1px #fff
   text-decoration: none
-  display: none
+  position: relative
+  margin-left: 0
   margin-bottom: 0
-  @media mq-normal
-    display: inline-block
+  padding-left: 16px
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    height: 1em
+    left: 0
+    width: 1px
+    border-right: 1.5px solid #ddd
 
 #article-nav
   position: relative
