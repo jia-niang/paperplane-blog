@@ -34,10 +34,18 @@ $logo-text
 #logo
   @extend $logo-text
   font-size: logo-size
-  line-height: logo-size
   letter-spacing: 2px
   font-weight: normal
-  padding-left: 3px
+
+#logo-img
+  height: 40px
+  width: 40px
+  vertical-align: baseline
+  margin-bottom: -6px
+
+@media mq-mobile
+  #logo-img
+    display: none
 
 #nav-rss-link
   &:before

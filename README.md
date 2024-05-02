@@ -37,6 +37,18 @@ Hexo 博文的渲染与普通 Markdown 略有不同，目前有以下区别：
 
 此后，便可以直接向文档中粘贴图片，图片会自动变成 Markdown 标记，文件会被自动放到 /sorce/images 里。
 
+# 二次开发指南
+
+因为模板中用到了 ejs、stylus，所以需要安装对应的 VSCode 插件。
+
+使用 `Ctrl` + `P` 快捷键（macOS 则是 `Command` + `P`），依次输入以下命令安装插件：
+
+```bash
+ext install sysoev.language-stylus
+ext install j69.ejs-beautify
+ext install digitalbrainstem.javascript-ejs-support
+```
+
 # 文章属性
 
 每篇博文 md 文档最开头的一块内容即是文章属性。文章默认必须标题、日期、分类、标签这四个属性。
@@ -44,11 +56,13 @@ Hexo 博文的渲染与普通 Markdown 略有不同，目前有以下区别：
 ## 配置
 
 目前支持以下配置项：
+
 - `no_toc: true` 关闭此篇文章的目录功能
 
 ## 分类
 
 分类 `categories` 只能单选。目前支持以下分类：
+
 - `DOC` 纯技术文档分类
 - `JS`
 - `CSS`
@@ -60,6 +74,7 @@ Hexo 博文的渲染与普通 Markdown 略有不同，目前有以下区别：
 ## 标签
 
 标签 `tags` 可以多选。目前支持以下标签：
+
 - 以上所有 `categories` 均可当做标签使用
 - `TS`
 - `Node`
