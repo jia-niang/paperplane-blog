@@ -56,6 +56,9 @@ JSON5 支持注释和尾缀逗号的 JSON 格式：https://json5.org/
 TooBug：https://www.toobug.net/
 一像素：https://www.cnblogs.com/onepixel/
 羡澈： http://zhangwenli.com/
+颜海镜：https://yanhaijing.com/
+PHODAL：https://www.phodal.com/
+Alili：https://alili.tech/
 紫云飞：https://www.cnblogs.com/ziyunfei/ （作者在知乎活跃）
 迷渡 justjavac： https://justjavac.com/ （作者在知乎活跃）
 司徒正美：https://www.cnblogs.com/rubylouvre/ （博主已去世 R.I.P）
