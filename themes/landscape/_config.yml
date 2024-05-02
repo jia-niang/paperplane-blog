@@ -60,5 +60,5 @@ valine:
   pageSize: 10 # comment list page size
   avatar: retro # gravatar style https://valine.js.org/#/avatar
   lang: zh-cn # i18n: zh-cn/en
-  placeholder: '欢迎友好讨论~' # valine comment input placeholder(like: Please leave your footprints )
+  placeholder: '你的回信：__' # valine comment input placeholder(like: Please leave your footprints )
   guest_info: nick,mail # valine comment header info
