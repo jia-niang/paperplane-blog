@@ -30,7 +30,7 @@
         <% } %>
       </div>
       <% if(!post.no_toc) { %>
-        <div id="article-toc">
+        <nav id="article-toc">
           <div class="at-container">
             <div class="at-title" onclick="window.scrollTo({ top: 0 })">
               <%= post.title %>
@@ -39,7 +39,7 @@
               <%- toc(page.content, { max_depth: 2, list_number: false }) %>
             </div>
           </div>
-        </div>
+        </nav>
       <% } %>
       <footer class="article-footer <%= !index ? '' : 'homepage' %>">
         <%- partial('post/tag') %>

@@ -1,12 +1,20 @@
 .archives-wrap
   margin: block-margin 0
+  &:last-child
+    margin-bottom: 100px
 
 .archives
   clearfix()
   margin-bottom: -15px
 
 .archive-year-wrap
-  margin-bottom: 1em
+  padding: 9px 0
+  margin-bottom: 9px
+  position: sticky
+  top: banner-height
+  left: 0
+  z-index: 1
+  background: hsla(0, 0%, 100%, .9);
 
 .archive-year
   @extend $block-caption
