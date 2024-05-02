@@ -39,7 +39,7 @@ async function hexoDeployerS3(args) {
         continue
       } else if (args.skip_html && localPath.endsWith('.html')) {
         continue
-      } else if (args.skip_fonts && /\.(eot|ttf|woff|woff2)$/.test(localPath)) {
+      } else if (args.skip_fonts && /\.(eot|ttf|otf|woff|woff2)$/.test(localPath)) {
         continue
       }
 

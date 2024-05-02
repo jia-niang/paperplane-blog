@@ -9,12 +9,13 @@
   top: 0
   background: hsla(0, 0%, 100%, .9);
   z-index: 10
+  height: banner-height
 
 #header-title
   display: flex
   align-items: center
   height: banner-height
-
+  
 @media mq-tablet
   #header-title
     justify-content: center
@@ -23,17 +24,15 @@
   #header-title
     justify-content: center
 
-$logo-text
+#logo
   text-decoration: none
   color: #444
-  font-weight: 300
+  font-weight: normal
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3)
-
-#logo
-  @extend $logo-text
   font-size: logo-size
   letter-spacing: 2px
-  font-weight: normal
+  font-family: font-serif
+  line-height: 1em
 
 #logo-img
   height: 40px
@@ -95,7 +94,7 @@ $logo-text
   top: 50%
   right: 10px
   margin-top: -7px
-  font: 13px font-icon
+  font: 13px
   border: none
   background: none
   color: #bbb
