@@ -2,19 +2,17 @@
 <html lang="zh-CN">
 <%- partial('_partial/head') %>
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <%- partial('_partial/header', null, {cache: !config.relative_link}) %>
-      <div class="outer">
-        <main id="main"><%- body %></main>
-        <% if (theme.sidebar && theme.sidebar !== 'bottom'){ %>
-        <%- partial('_partial/sidebar', null, {cache: !config.relative_link}) %>
-        <% } %>
-      </div>
-      <%- partial('_partial/website-index') %>
-      <%- partial('_partial/after-footer') %>
+<body class="scroll-fix-container">
+  <div id="layout-container" class="scroll-fix-inner">
+    <%- partial('_partial/header', null, {cache: !config.relative_link}) %>
+    <div class="outer">
+      <main id="main"><%- body %></main>
+      <% if (theme.sidebar && theme.sidebar !== 'bottom'){ %>
+      <%- partial('_partial/sidebar', null, {cache: !config.relative_link}) %>
+      <% } %>
     </div>
+    <%- partial('_partial/website-index') %>
+    <%- partial('_partial/after-footer') %>
   </div>
 </body>
 
