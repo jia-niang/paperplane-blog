@@ -39,7 +39,7 @@
       <% if(!post.no_toc) { %>
         <nav id="article-toc">
           <div class="at-container">
-            <div class="at-title" onclick="window.scrollTo({ top: 0 })">
+            <div class="at-title" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
               <%= post.title %>
             </div>
             <div class="at-scroll">
@@ -47,6 +47,15 @@
             </div>
           </div>
         </nav>
+        <script>
+          document.querySelectorAll('#article-toc .toc-item>.toc-link').forEach(el => {
+            el.addEventListener('click', e => {
+              e.preventDefault()
+              const titleId = decodeURIComponent(el.getAttribute('href'))
+              document.querySelector(titleId).scrollIntoView({ behavior: 'smooth' });
+            })
+          })
+        </script>
       <% } %>
       <footer class="article-footer <%= !index ? '' : 'homepage' %>">
         <%- partial('post/tag') %>
