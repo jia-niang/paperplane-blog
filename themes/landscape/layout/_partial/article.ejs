@@ -14,8 +14,14 @@
         <% if (post.comments && theme.valine.enable && theme.valine.appId && theme.valine.appKey ){ %>
           <a href="<%- url_for(post.path) %>#comments" class="article-comment-link">
             <%= __('comment') %>
-            <span class="post-comments-count valine-comment-count" data-xid="<%- url_for(post.path) %>" itemprop="commentCount"></span>
+            <span class="post-comments-count valine-comment-count" data-xid="<%- url_for(post.path) %>" itemprop="commentCount">...</span>
           </a>
+          <script>
+            document.querySelector('.article-comment-link').addEventListener('click', function (e) {
+              e.preventDefault()
+              document.querySelector('#comments').scrollIntoView({ behavior: 'smooth' });
+            })
+          </script>
         <% } %>
       </div>
       <div class="e-content article-entry" itemprop="articleBody">
