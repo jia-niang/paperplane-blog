@@ -444,15 +444,19 @@ Daruk 基于 koa 的 IoC 开发工具：https://darukjs.com/
 **常用工具：**
 
 强大的 ORM 工具 Prisma：https://prisma.yoga/
+Prisma 配合 Nest.js：https://www.npmjs.com/package/nestjs-prisma
+Prisma 软删除：https://www.npmjs.com/package/prisma-soft-delete-middleware
 单文件数据库 LowDB：https://github.com/typicode/lowdb
 mysql 数据库连接：https://github.com/mysqljs/mysql
 mongoose 连接 MongoDB 和 ORM：https://www.npmjs.com/package/mongoose
 MongoDB 的 JS 驱动：https://mongodb.github.io/node-mongodb-native/
 MongoDB 的查询：https://www.mongodb.com/docs/manual/crud/
+Redis SDK：https://www.npmjs.com/package/ioredis
 代码操作 Git：https://github.com/steveukx/git-js
 代码操作 SSHKey：https://www.npmjs.com/package/sshpk
 yargs 用于开发 CLI 工具：https://yargs.js.org/
 prompts 提供 CLI 交互式选单：https://www.npmjs.com/package/prompts
+@inquirer/prompts 和 Vue-cli 同款交互式 CLI：https://www.npmjs.com/package/@inquirer/prompts
 chalk 控制台输出美化：https://www.npmjs.com/package/chalk
 简单微服务：https://www.npmjs.com/package/micro
 canvas：https://www.npmjs.com/package/canvas
@@ -466,6 +470,7 @@ polyfill.io 根据 UA 自动切换垫片：https://polyfill.io/
 pm2：https://github.com/Unitech/pm2
 nodemon 可以看作简化版 pm2：https://nodemon.io/
 restify 像 koa 一样的 RESTful API 工具：http://restify.com/
+获取 mime 类型用于上传对象存储：https://www.npmjs.com/package/mime
 
 -----
 
@@ -557,6 +562,8 @@ highlight.js 代码高亮：https://www.npmjs.com/package/highlight.js
 clipboard 剪贴板操作：https://www.npmjs.com/package/clipboard
 package.json 字段排序的 prettier 插件：https://github.com/shellscape/prettier-plugin-package
 object-code 获取对象的哈希：https://www.npmjs.com/package/object-code
+axios 重试插件：https://www.npmjs.com/package/axios-retry
+前后端通用的 axios 缓存插件：https://www.npmjs.com/package/axios-cache-interceptor
 
 -----
 
