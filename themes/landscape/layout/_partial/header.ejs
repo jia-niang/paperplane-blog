@@ -2,11 +2,21 @@
   <div id="header-wrapper" class="scroll-fix-inner">
     <div id="header-inner" class="outer">
       <div id="header-title">
-        <a href="<%- url_for() %>" id="logo">
+        <a href="<%- url_for() %>" id="header-title-txt">
           <%= config.title %>
-          <img id="logo-img" src="/css/images/shooting-star.a.png" alt="🌠" />
+          <img id="header-title-icon" src="/css/images/shooting-star.a.png" alt="🌠" />
         </a>
       </div>
+
+      <nav id="header-links">
+        <span class="link-current">·Blog</span>
+        <a href="https://git.paperplane.cc/jia-niang/paperplane-blog">动态</a>
+        <a href="https://github.com/jia-niang/paperplane-blog">Github</a>
+        <a href="https://drone.paperplane.cc/jia-niang/paperplane-blog">流水线</a>
+        <a href="https://app.paperplane.cc/">工具箱</a>
+        <a href="https://careerintlinc-tech-share.paperplane.cc/">CITech</a>
+        <a href="https://gpt.paperplane.cc/">GPT</a>
+      </nav>
     </div>
   </div>
 </header>

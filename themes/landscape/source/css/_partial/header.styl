@@ -14,9 +14,12 @@
 
 #header-inner
   transition: all 0.2s ease-out
+  height: banner-height
+  display: flex
+  align-items: center
 
 #header-title
-  display: flex
+  display: inline-flex
   align-items: center
   height: banner-height
   
@@ -28,7 +31,7 @@
   #header-title
     justify-content: center
 
-#logo
+#header-title-txt
   text-decoration: none
   color: #444
   font-weight: normal
@@ -38,14 +41,52 @@
   font-family: font-serif
   line-height: 1em
 
-#logo-img
+#header-title-icon
   height: 40px
   width: 40px
   vertical-align: baseline
   margin-bottom: -6px
 
 @media mq-mobile
-  #logo-img
+  #header-title-icon
+    display: none
+
+#header-links
+  display: inline-flex
+  align-items: center
+  font-family: font-serif
+  margin-left: 30px
+  height: banner-height
+  a,span
+    line-height: 1.2em
+    margin-right: 18px
+    text-decoration: none
+    color: inherit
+    position: relative
+    &.link-current
+      cursor: default
+      font-weight: bold
+      &:hover::after
+        opacity: 0;
+    &::after
+      border-bottom: 1px solid currentColor;
+      bottom: 0;
+      content: "";
+      height: 0;
+      left: 0;
+      opacity: 0;
+      position: absolute;
+      right: 0;
+      transition: all .2s linear;
+    &:hover::after
+      opacity: 1;
+
+@media mq-mobile
+  #header-links
+    display: none
+
+@media mq-tablet
+  #header-links
     display: none
 
 #nav-rss-link
