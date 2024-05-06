@@ -51,17 +51,19 @@ ext install digitalbrainstem.javascript-ejs-support
 
 # 文章属性
 
-每篇博文 md 文档最开头的一块内容即是文章属性。文章默认必须标题、日期、分类、标签这四个属性。
+每篇博文 md 文档最开头的一块内容即是 [文章属性](https://hexo.io/zh-cn/docs/front-matter)。文章必须具有标题、日期、分类、标签这四个属性。
 
 ## 配置
 
-目前支持以下配置项：
+除了官方文档默认的属性外，本博客系统额外扩展了以下配置项：
 
 - `no_toc: true` 关闭此篇文章的目录功能
 
 ## 分类
 
-分类 `categories` 只能单选。目前支持以下分类：
+分类 `categories` 一般是单选的；提供多个值时会变为父子关系，例如提供 `- A` 和 `- B` 会变为 `A/B`；如果一定要多选，格式需要形如 `- [A]` 和 `- [B]`。
+
+目前支持以下分类：
 
 - `DOC` 纯技术文档分类
 - `JS`
@@ -73,7 +75,7 @@ ext install digitalbrainstem.javascript-ejs-support
 
 ## 标签
 
-标签 `tags` 可以多选。目前支持以下标签：
+标签 `tags` 可以多选，且它没有顺序和层次性。目前支持以下标签：
 
 - 以上所有 `categories` 均可当做标签使用
 - `TS`
