@@ -10,13 +10,29 @@
   
   .vpower
     display: none
+  .vrow
+    padding-top: 10px
+    padding-bottom: 0
   .vheader .vinput
     font-size: 16px
     padding: 0 5px 5px
   .veditor.vinput
     font-family: font-sans
     font-size: 16px
+    min-height: 5em
   .vsubmit.vbtn
     width: 150px
     font-size: 16px
     letter-spacing: 5px
+  .vsys
+    display: none
+  .vempty
+    display: none !important;
+    text-align: left
+    color: transparent;
+    user-select: none;
+    padding: 10px 0
+    &::before
+      content: '暂无回信';
+      user-select: default;
+      color: #888;
