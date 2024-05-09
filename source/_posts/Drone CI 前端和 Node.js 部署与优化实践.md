@@ -22,7 +22,9 @@ categories:
 
 Drone 采用的是类似 k8s 的架构，其自身负责提供网站 UI 界面、提供 API 以及触发发起或停止构建操作，类似于 k8s 的 Master 节点；而具体运行构建任务的则是交给各种 Drone Runner 来负责，类似于 k8s 的 Worker 节点。
 
-Runner 有很多种类：在 Docker 中构建、通过 SSH 执行命令、直接在本机执行命令等。各个 Runner 通过 RPC 连接到 Drone，负责执行 Drone 分配的构建任务。通常来说 99% 的使用场景都是 Docker Runner，本文也以此为基础。
+Runner 有很多种类：在 Docker 中构建的 Docker Runner、通过 SSH 执行命令的 SSH Runner、直接在本机执行命令的 Exec Runner 等。
+各个 Runner 通过 RPC 连接到 Drone，负责执行 Drone 分配的构建任务。
+通常来说 99% 的使用场景都是 Docker Runner，本文也以此为基础。
 
 -----
 
@@ -40,7 +42,7 @@ Runner 有很多种类：在 Docker 中构建、通过 SSH 执行命令、直接
 # 纯前端项目的部署方式
 
 之前说过，前端项目可以通过 `scp` 或 `rsync` 的方式拷贝静态资源来部署。
-还有一种方式就是打包成 Docker 镜像，一般会这样做：
+还有一种方式就是打包成 Docker 镜像，此时一般会这样做：
 
 提供一个 Dockerfile 文件：
 
@@ -85,7 +87,7 @@ server {
 如何把镜像从构建的服务器传递到部署的服务器，并执行后续的部署指令；以及构建和部署是同一台服务器时，怎样做最为方便，这便是本文的核心主旨。
 
 本文只考虑基于 Docker 镜像构建和部署的场景。使用 Docker 镜像，可以保证运行环境的一致性，且这样还能做到服务器上多个不同 Node.js 版本的项目共存，甚至衍生出滚动更新（不停机升级）等很多玩法。
-如果使用服务供应商的云原生服务，或者使用 k8s，打包 Docker 镜像就是必须的选择。
+如果使用服务供应商的云原生服务，或者使用 k8s，那么打包 Docker 镜像就是必须的选择。
 
 
 
@@ -119,7 +121,7 @@ server {
 ## 导出镜像为文件并在部署机上导入
 
 Docker 提供了 [`docker image save`](https://docs.docker.com/reference/cli/docker/image/save/) 命令，用于将某个镜像保存为文件；
-随后，可以使用 [`docker image load`](https://docs.docker.com/reference/cli/docker/image/load/) 命令，指定一个文件把它加载还原为镜像。
+随后可使用 [`docker image load`](https://docs.docker.com/reference/cli/docker/image/load/) 命令，指定一个文件把它加载还原为镜像。
 
 这便给我们提供了在两台服务器之间传递 Docker 镜像的方式。构建机把镜像导出为文件后，通过 `scp` 等方式发送给部署机，然后通过 SSH 连接到部署机执行部署命令，加载文件，取得镜像，然后运行新的镜像。
 
@@ -203,8 +205,8 @@ volumes:
 
 这个项目是一个最终打包为 Docker 镜像并在本机部署的 Node.js 后端项目，还使用到了 Prisma 做 ORM。
 
-为什么 Docker 容器构建速度可以有这么大的优化？
-除去 clone 操作的耗时，原先超过四分钟的步骤，可以优化到只花费 30 秒钟，速度可以优化到 8 倍。这便是本文接下来讲到的 CI/CD 速度优化的内容。
+除去 clone 操作的耗时，原先超过四分钟的步骤，可以优化到只花费 30 秒钟，速度可以优化到 8 倍。
+这便是本文接下来讲到的 CI/CD 速度优化的内容。
 
 
 
