@@ -202,6 +202,10 @@ ipconfig /flushdns
 # 编辑 hosts，注意编码必须是 ANSI，不能使用 UTF-8 等格式
 #（推荐使用 PowerToys 来管理 hosts）
 notepad c:\windows\system32\drivers\etc\hosts
+
+# 解除 Windows 系统对 FTP 传输速度的限制
+netsh int tcp set global autotuninglevel=restricted
+netsh interface tcp set heuristics disabled
 ```
 
 
