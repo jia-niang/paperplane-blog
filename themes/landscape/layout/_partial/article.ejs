@@ -8,6 +8,15 @@
           <%- partial('post/title', {class_name: 'p-name article-title'}) %>
         </header>
       <% } %>
+      <%
+        const hexPath = post.path.split('/')[1]
+        let num = Number('0x' + hexPath)
+        let shorts = ''
+        do {
+          shorts = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_'[num % 64] + shorts
+          num = Math.floor(num / 64)
+        } while (num > 0)
+      %>
       <div class="article-meta">
         <%- partial('post/date', {class_name: 'article-date', date_format: null}) %>
         <%- partial('post/category') %>
@@ -23,6 +32,9 @@
             })
           </script>
         <% } %>
+        <span id="article-shorts">
+          p01.cc/b/<%= shorts %>
+        </span>
       </div>
       <div class="e-content article-entry" itemprop="articleBody">
         <% if (post.excerpt && index){ %>
@@ -59,7 +71,7 @@
       <% } %>
       <footer class="article-footer <%= !index ? '' : 'homepage' %>">
         <%- partial('post/tag') %>
-        <% if (!index){ %>
+        <% if (!index) { %>
           <%- partial('post/nav') %>
         <% } %>
       </footer>

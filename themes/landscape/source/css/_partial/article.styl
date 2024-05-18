@@ -1,3 +1,22 @@
+$article-meta
+  text-decoration: none
+  color: color-grey
+  line-height: 1em
+  text-shadow: 0 1px #fff
+  font-weight: bold
+  padding: 0 12px
+  position: relative
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: -1px
+    height: 1em
+    border-right: 1.5px solid #ddd
+  &:first-child
+    &:before
+      border-right: none
+
 .article
   margin-top: 10px
 
@@ -43,31 +62,17 @@
   font-family: font-serif
 
 .article-date
-  @extend $block-caption
-  margin-bottom: 0
+  @extend $article-meta
+  padding-left: 0
 
 .article-category
+  @extend $article-meta
   position: relative
-  line-height: inherit
-  color: #ccc
-  text-shadow: 0 1px #fff
-  margin-left: 16px
-  padding-left: 16px
-  &:before
-    content: ''
-    position: absolute
-    top: 0
-    height: 1em
-    left: 0
-    width: 1px
-    border-right: 1.5px solid #ddd
 
 .article-category-link
-  @extend $block-caption
   line-height: inherit
-  margin: 0 12px 0
-  &:first-of-type
-    margin-left: 0
+  text-decoration: none
+  color: color-grey
 
 .article-header
   padding: 26px article-padding
@@ -272,21 +277,10 @@
     content: "#"
 
 .article-comment-link
-  @extend $block-caption
-  text-shadow: 0 1px #fff
-  text-decoration: none
-  position: relative
-  margin-left: 0
-  margin-bottom: 0
-  padding-left: 16px
-  &:before
-    content: ''
-    position: absolute
-    top: 0
-    height: 1em
-    left: 0
-    width: 1px
-    border-right: 1.5px solid #ddd
+  @extend $article-meta
+
+#article-shorts
+  @extend $article-meta
 
 #article-nav
   position: relative
