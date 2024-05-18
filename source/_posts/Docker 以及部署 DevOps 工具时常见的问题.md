@@ -218,6 +218,38 @@ sudo docker ps -aq | xargs docker inspect --format='{{.LogPath}}' | xargs trunca
 
 
 
+# 查看 Docker 占用的磁盘空间
+
+执行命令：
+
+```bash
+docker system df
+```
+
+可以输出 Docker 镜像、容器、卷、构建缓存等所占用的磁盘空间。
+其中，容器、卷占用的空间肯定无法释放，除非清理日志，但是日志一般也清理不了多少空间出来。所以我们主要清理镜像、构建缓存所占用的空间。
+
+被容器使用中镜像无法删除，未被任何容器使用的镜像可以删除：
+
+```bash
+# 列出所有镜像，可以查看它们的占用空间
+docker images
+# 删除指定 id 或 tag 的镜像，被任何容器使用到的镜像无法删除
+docker rmi <镜像id>
+
+# 快速删除所有无标签的镜像
+docker image prune
+```
+
+构建缓存也可以清理：
+
+```bash
+# 清理未使用的构建缓存
+docker builder prune
+```
+
+
+
 # 服务监听不到流量
 
 有可能是因为服务绑定的地址不对，如果监听 `127.0.0.1` 无法成功，可以试试 `0.0.0.0`，反之亦然；
