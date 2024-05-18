@@ -146,7 +146,7 @@ ULID 的 [规格说明](https://github.com/ulid/spec) 描述了这个随机 ID �
 实现 Base32 编码：
 
 ```javascript
-/** 将一个由 0、1 组成的字符串当做二进制数值，进行 Crockford 的 Base32 编码 */
+/** 将一个由 0、1 组成的字符串当做二进制数值，进行 Base32 编码 */
 function binaryStringToBase32Encode(binaryString) {
   const alphabet = '0123456789ABCDEFGHJKMNPQRSTVWXYZ'
 
@@ -166,6 +166,8 @@ function binaryStringToBase32Encode(binaryString) {
   return result
 }
 ```
+
+> 真正的 Base32 Crockford 编码还包含了末尾一位校验码，我们这里使用简化版的 “32 进制” 编码方式并使用 Crockford 编码的字母表，而并不是真正的 Base32 Crockford 编码。
 
 接下来可以实现前 10 字符长度（48 比特位）的时间戳生成器：
 
