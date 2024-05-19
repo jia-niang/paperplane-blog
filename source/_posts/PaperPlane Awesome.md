@@ -345,8 +345,8 @@ Semantic UI：https://semantic-ui.com/
 Blueprint UI：https://blueprintjs.com/
 Chakra UI：https://chakra-ui.com/
 React Suite：https://rsuitejs.com/zh/ （嗨普智能）
-Radix UI：https://www.radix-ui.com/ （无样式 UI，兼容 Next.js）
-Shadcn：https://ui.shadcn.com/ （基于 Radix UI，还有 Vue 版本）
+Shadcn：https://ui.shadcn.com/ （无需安装，粘贴源码即可使用）
+Radix UI：https://www.radix-ui.com/ （分离样式的 UI 库，兼容 Next.js）
 
 -----
 
@@ -414,8 +414,8 @@ Vuetify（也是 Material 风格）：https://vuetifyjs.com/zh-Hans/ （含移�
 Quasar（也是 Material 风格）https://quasar.dev/
 Hey UI：https://v2.heyui.top/
 Lay UI Vue：http://www.layui-vue.com/
-Radix UI Vue：https://www.radix-vue.com/
-Shadcn UI Vue：https://www.shadcn-vue.com/ （兼容 Nuxt.js）
+Shadcn UI Vue：https://www.shadcn-vue.com/ （无需安装）
+Radix UI Vue：https://www.radix-vue.com/ （兼容 Nuxt.js）
 
 -----
 
