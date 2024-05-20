@@ -2,7 +2,7 @@
   "name": "paperplane-blog",
   "private": true,
   "scripts": {
-    "dev": "hexo server",
+    "dev": "hexo clean && hexo server",
     "build": "hexo generate",
     "clean": "hexo clean",
     "deploy": "hexo deploy",
