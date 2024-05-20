@@ -33,7 +33,7 @@
           </script>
         <% } %>
         <span id="article-shorts">
-          p01.cc/b/<%= shorts %>
+          p01.cc/b/<%= shorts %>/
         </span>
       </div>
       <div class="e-content article-entry" itemprop="articleBody">
@@ -69,12 +69,12 @@
           })
         </script>
       <% } %>
-      <footer class="article-footer <%= !index ? '' : 'homepage' %>">
+      <div class="article-footer <%= !index ? '' : 'homepage' %>">
         <%- partial('post/tag') %>
         <% if (!index) { %>
           <%- partial('post/nav') %>
         <% } %>
-      </footer>
+      </div>
     </div>
   </div>
 </article>

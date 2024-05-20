@@ -3,37 +3,40 @@ $article-meta
   color: color-grey
   line-height: 1em
   text-shadow: 0 1px #fff
-  font-weight: bold
   padding: 0 12px
   position: relative
+  vertical-align: middle;
   &:before
     content: ''
     position: absolute
     top: 0
     left: -1px
-    height: 1em
+    height: 1.2em
     border-right: 1.5px solid #ddd
   &:first-child
     &:before
       border-right: none
 
 .article
-  margin-top: 10px
+  margin-top: 30px
+  background: repeating-linear-gradient(-45deg, #c0332f 0, #c0332f 12.5%, color-letter-white 0, color-letter-white 25%, #356daa 0, #356daa 37.5%, color-letter-white 0, color-letter-white 50%) 0 / 6em 6em
+  box-shadow: 0px 0px 5px 1px #ccc;
+  border-radius: 4px
+  overflow: hidden
+  box-sizing: border-box
 
 .article-post
+  margin: 9px
+  background: #fff
   border-radius: 3px
-  box-shadow: 0px 0px 4px 2px #bbb;
-  border: 0.7em solid transparent;
-  box-sizing: border-box
-  background: linear-gradient(white, white) padding-box, repeating-linear-gradient(-45deg, #c0332f 0, #c0332f 12.5%, color-letter-white 0, color-letter-white 25%, #356daa 0, #356daa 37.5%, color-letter-white 0, color-letter-white 50%) 0 / 6em 6em
+  background-image: url('../css/images/absurdity.png')
   .article-inner
-    border-radius: 3px
     overflow: hidden
     border: none
     box-shadow: none
     margin: -1px
-    background-image: url('../css/images/absurdity.png')
     position: relative
+    padding: 20px 30px
     .article-postmark
       height: 165px
       position: absolute
@@ -45,6 +48,9 @@ $article-meta
 @media mq-mobile
   .article-postmark
     display: none
+  .article-post
+    .article-inner
+      padding: 15px 20px
 
 .article-inner
   @extend $block
@@ -53,9 +59,9 @@ $article-meta
 .article-meta
   clearfix()
   font-size: 1em
-  padding: 8px 0
-  margin: 0 article-padding
+  padding: 8px 5px
   position: relative
+  margin: 0 -5px
   border-bottom: 1px solid #ddd
   border-top: 1px solid #ddd
   line-height: 1.3em
@@ -75,14 +81,13 @@ $article-meta
   color: color-grey
 
 .article-header
-  padding: 26px article-padding
+  margin: 10px 0 30px
 
 .article-title
   text-decoration: none
   max-width: 660px
-  max-width: calc(100% - 200px)
+  max-width: calc(100% - 180px)
   font-size: 2em
-  font-weight: bold
   color: color-default
   line-height: 1.5em
   transition: color 0.2s
@@ -99,8 +104,7 @@ $article-meta
   @extend $base-style
   clearfix()
   color: color-default
-  padding: 0 article-padding
-  letter-spacing: 0.3px
+  letter-spacing: 0.4px
   table
     line-height: line-height
     margin: line-height 0
@@ -108,7 +112,6 @@ $article-meta
     line-height: line-height
     margin: 0.8em 0
   h1, h2, h3, h4, h5, h6
-    font-weight: bold
     line-height: line-height-title
     margin: 70px 0 25px
     color: color-default
@@ -253,7 +256,7 @@ $article-meta
   clearfix()
   font-size: 20px
   line-height: line-height
-  margin: 40px article-padding 10px
+  margin: 40px -15px -7.5px
   &.homepage
     border-top: none
   a
@@ -264,12 +267,12 @@ $article-meta
 
 .article-tag-list
   height: 40px
-  padding-top: 10px
+  padding: 10px 10px 0
   border-top: 1px solid #ddd
   font-family: font-serif
 
 .article-tag-list-item
-  float: left
+  display: inline-block
   margin-right: 10px
 
 .article-tag-list-link
@@ -370,7 +373,7 @@ $article-meta
   position: fixed
   padding: 0 20px
   box-sizing: border-box
-  top: banner-height + 20px
+  top: banner-height + 30px
   left: calc(50vw + 460px)
   right: 0
   position: fixed
@@ -385,7 +388,6 @@ $article-meta
     padding-bottom: 10px
     cursor: pointer
     font-family: font-serif
-    font-weight: 600
   .at-scroll
     overflow-y: auto
     max-height: calc(100vh - 100px - 20px - 40px - 20px)

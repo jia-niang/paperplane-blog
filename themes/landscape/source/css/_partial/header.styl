@@ -22,20 +22,21 @@
   display: inline-flex
   align-items: center
   height: banner-height
-  
-@media mq-tablet
-  #header-title
-    justify-content: center
 
 @media mq-mobile
   #header-title
+    display: flex
+    flex-grow: 1;
     justify-content: center
+  #header-wrapper
+    justify-content: center
+
 
 #header-title-txt
   text-decoration: none
   color: #444
   font-weight: normal
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3)
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2)
   font-size: logo-size
   letter-spacing: 2px
   font-family: font-serif
@@ -52,6 +53,7 @@
     display: none
 
 #header-links
+  color: #444
   display: inline-flex
   align-items: center
   font-family: font-serif
@@ -59,7 +61,7 @@
   height: banner-height
   a,span
     line-height: 1.2em
-    margin-right: 18px
+    margin-right: 24px
     text-decoration: none
     color: inherit
     position: relative
