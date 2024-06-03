@@ -222,13 +222,121 @@ await s3Client.send(uploadCommand)
 
 
 
-# 培养良好的语法习惯
+# 写死的对象类参数放置在组件以外
 
-开发时养成习惯，利好团队，一劳永逸。
+先来看两段 antd 的栅格组件代码：
+第一种用法：
+
+```tsx
+function MyComponent() {
+  return <Row gutter={[16, 16]}></Row>
+}
+
+// 或者
+
+function MyComponent() {
+  const gutter = [16, 16]
+  return <Row gutter={gutter}></Row>
+}
+```
+
+第二种用法：
+
+```tsx
+const gutter = [16, 16]
+
+function MyComponent() {
+  return <Row gutter={gutter}></Row>
+}
+```
+
+可以明显看出，第一种用法因为传递给 `<Row>` 组件的参数是一个数组（换成对象类型也一样），无论数组通过字面量传递还是通过变量传递，组件每次被创建时这个参数的引用都和上次不相同，所以会导致 `<Row>` 组件被重新创建，即使 `<Row>` 组件是被 `React.memo()` 创建出的。
+
+而第二种用法，把数组或对象类型的参数放置在方法组件以外，它的引用被 “固定” 住，不会变化，因此 React 得以优化组件的渲染。
+
+因此，如果组件接受对象/数组/方法类型的参数，如果参数无需修改，最好将参数变量抽取到方法组件代码的外部；如果参数可能被修改，也最好使用 `useState()` 或 `useMemo()` 固定住，从而避免每次方法组件执行导致子组件接收到的参数引用发生变化。
+
+-----
+
+此外，使用数组或对象类型的参数，还会涉及到解构的用法。请看下一个小节。
 
 
 
-## 组件外显字段用 `ReactNode` 类型
+# 组件中的参数解构更好的用法
+
+组件代码中，一般存在两种解构方式：解构 `props` 取出参数，以及解构参数中的对象类型。
+
+解构 `props` 时，如果要设置默认值，需要注意入参的 `null` 值问题。
+这里给出一段示例代码：
+
+```tsx
+const emptyFriendList = []
+
+// 此组件接受一个参数 friendList，渲染好友列表
+function MyFriends(props: { friendList?: string[] }) {
+  const { friendList = emptyFriendList } = props
+
+  return (
+    <ul>
+      {friendList.map(item => (
+        <li key={item}>{item}</li>
+      ))}
+    </ul>
+  )
+}
+```
+
+上述代码中，参数 `friendList` 为可选参数，如果不提供参数，那么将使用默认的空数组作为参数。
+通常情况下，这段代码可以正常运行，即使 `friendList` 留空，也可以正常渲染，不会出错。但是，考虑到一种场景：**参数来源于 HTTP 请求的结果，此时如果后端返回一个 `null`，那么这段代码会直接报错。**
+
+原因很好得出，因为 `const { friendList = emptyFriendList } = props` 这种解构方式，赋默认值的行为只在参数为 `undefined` 的情况生效，很容易遗漏 `null` 的情况，而后端返回的结果保不准就会有个 `null`。
+
+因此，对于解构赋默认值的场合，可能需要考虑意外传入 `null` 值的场景，为此我们可能需要专门调整代码。
+
+-----
+
+第二种情况，通过解构取出对象或数组类型的参数，以此可以达成优化的效果。
+
+设想一个移动端日期选择器组件，参数形如 `[2023, 10, 15]` 这种年-月-日的数组格式。
+假设我们需要根据当前的 `year` 和 `month` 来生成选择 `date` 的列表：根据年份判断是否闰年，根据月份判断当月有多少天，此时组件内代码可能是这样的：
+
+```tsx
+function DatePicker(props: { value: [number, number, number] }) {
+  const { value } = props
+  const [year, month, date] = value
+
+  const dateList = useMemo(() => {
+  	return calcDateList(year, month)
+    // ↓ 注意这里
+	}, [year, month])
+
+  // ...
+}
+```
+
+我们对 `value` 进行解构，取出其中的年、月、日参数，此后就可以使用这些数值类型的参数，而不是使用对象格式的 `value`。
+上面这种写法，使得 `date` 的列表仅依赖 `year` 和 `month` 两个数字。这两个数字不变时，不会重新计算 `date` 列表。
+
+如果使用下面的写法，那么性能便会较差：
+
+```tsx
+function DatePicker(props: { value: [number, number, number] }) {
+  const { value } = props
+
+  const dateList = useMemo(() => {
+  	return calcDateList(value[0], value[1])
+    // ↓ 注意这里
+	}, [value])
+
+  // ...
+}
+```
+
+这样使得 `date` 列表依据于 `value`，而它是一个对象，我们难以保证这个对象的引用不发生变化，所以这种写法的优化非常有限。
+
+
+
+# 组件外显字段用 `ReactNode` 类型
 
 开发常见场景：
 开发一个组件，例如卡片，用户名等信息作为组件参数用于外显，开始使用 `string` 类型接收参数，满足需求：
@@ -254,6 +362,12 @@ function Card(props: { name: string }) {
 
 所以我们可以养成这样的习惯：
 **所有需要在组件中仅用于外显的字段，尽量使用 `ReactNode` 类型，而不是 `string`。**
+
+
+
+# 培养良好的语法习惯
+
+开发时养成习惯，利好团队，一劳永逸。
 
 
 
