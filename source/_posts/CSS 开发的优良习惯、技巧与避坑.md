@@ -551,6 +551,17 @@ export function TextTag(props: { color: string, children: ReactNode }) {
 
 而且，边框线通过 `currentColor` 值来继承标签内文本的颜色，无需传递多个变量，修改 `color` 后会使得文本和边框线同时生效。
 
+-----
+
+在使用 SVG 图片时，需要注意：
+
+在 `<img src="image.svg" />` 这种用法中，SVG 图片中的 `currentColor` 无效，因为此时 SVG 图片是直接作为图片本身，图片的内容肯定不会依据字体颜色而改变。
+
+如果想让 SVG 中的 `currentColor` 生效，需要直接在页面中放置 `<svg>` 标签。
+如果 SVG 来自其他来源，无法放置标签，可以使用这种方式：`<object type="image/svg+xml" data="image.svg" />`。
+
+你可能注意到了，`currentColor` 不符合 CSS 的命名方式，因为 CSS 中没有大写的关键字，所有驼峰写法（PascalCase）其实都应该改为横杠式（kebab-case），这是因为 `currentColor` 正是来自于 SVG 的。所以在 SVG 中这个关键词必须正确保持大小写，而在 CSS 中可以忽略大小写。
+
 
 
 
