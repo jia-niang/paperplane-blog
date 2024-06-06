@@ -641,7 +641,7 @@ Math.random() < 0.15
 
 `Symbol.for(name)`：尝试按指定的 `name` 来查找 `Symbol` 对象并返回找到的，如果找不到则创建一个并返回；只有通过此方法创建的 `Symbol` 才能被此方法找到
 
-`Symbol.keyFor(symbol)`：如果一个 `Symbol` 是通过 `Symbol.for()` 方式创建的，则可以该 `Symbol` 反查它被创建时候的 `name` 参数值，传入不是 `Symbol` 类型的参数会抛出错误，如果传入的 `Symbol` 不是通过 `Symbol.for()` 创建的或是找不到它的 `name` 则返回 `undefined`
+`Symbol.keyFor(symbol)`：如果一个 `Symbol` 是通过 `Symbol.for()` 方式创建的，则可以通过该方法反查它被创建时候的 `name` 参数值，传入不是 `Symbol` 类型的参数会抛出错误，如果传入的 `Symbol` 不是通过 `Symbol.for()` 创建的或是找不到它的 `name` 则返回 `undefined`
 
 注意：`Symbol` 对象无法使用 `new` 创建。
 
