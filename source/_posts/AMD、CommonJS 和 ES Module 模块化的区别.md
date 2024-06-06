@@ -12,10 +12,14 @@ categories:
 CMD 全名 Common Module Definition，最初是由 [Sea.js](https://github.com/seajs/seajs) 来提出的模块定义、加载规范，CMD 现在基本见不到了，本文不介绍 CMD，有相关需求可以参考 [CMD 教程](https://github.com/seajs/seajs/issues/242) 和 [CMD 规范手册](https://github.com/cmdjs/specification/blob/master/draft/module.md)；
 
 CommonJS 简称 CJS，它是一个项目，目的是为 JS 在浏览器以外实现模块化而制定规范，也是 Node.js 使用的模块化规范；
+我们常写的 `require(...)` 就是 CommonJS 的模块导入用法；
 
 AMD 全名 Asynchronous Module Definition，最初是由 [require.js](https://requirejs.org/) 提出的，它是一种浏览器端的模块化异步加载约定；
 
-ES Module 简称 ESM，它是语言规范进一步发展后新制定模块加载规范，目的是实现更先进的模块化方式，它既适用于浏览器侧也适用于 Node.js 侧，目前已被逐步支持。
+ES Module 简称 ESM，它是语言规范进一步发展后新制定模块加载规范，目的是实现更先进的模块化方式，它既适用于浏览器侧也适用于 Node.js 侧，目前已被逐步支持；
+我们常写的 `import ... from ...` 就是 ESM 的模块导入用法；
+
+UMD 模块是一种融合的模块化方式，在 HTML 中直接通过 `<script>` 标签就能引入模块，此外它还做到了对 CJS、AMD 模块系统的兼容，做到了真正的开箱即用。
 
 CommonJS 使用的加载方式可以参考 [cnblog 博客上的介绍](https://www.cnblogs.com/littlebirdlbw/p/5670633.html)，以及 [CommonJS官网](http://www.commonjs.org/)，还可以参考《深入浅出 Node.js》一书；有关 AMD 的介绍，阮一峰写了一些 [介绍文章](http://www.ruanyifeng.com/blog/2012/10/javascript_module.html)；而 ES Module 的加载方式可以在 [ES6 入门](http://es6.ruanyifeng.com/) 中查看。
 
@@ -56,7 +60,7 @@ const _ = require('lodash')
 ``` js
 const _omit = require('lodash/omit')
 ```
-使用这两种引入方式，Node.js 会尝试从当前目录同级的 node_modules 目录下寻找名为 lodash 的目录来引入，如果找不到，会一直向上级目录递归寻找 node_modules 目录。如果一直找不到，则会报错。
+使用这两种引入方式，Node.js 会尝试从当前目录同级的 node_modules 目录下寻找名为 lodash 的目录来引入（具体流程见下一章节），如果找不到，会一直向上级目录递归寻找 node_modules 目录。如果最终找不到，则会报错。
 
 
 
@@ -115,9 +119,9 @@ const mod = require("pkg")
 - 因为代码最终是打包成一个 JS 来执行的，因此模块的导出不具备 Node.js 那样的缓存机制，可以直接导出变量；
 - 前端不存在 `__dirname`、`__filename` 等变量，因为这些变量是 Node.js 运行时产生的；
 - 一般只有 JS 算模块，其他的文件格式默认是不支持的，前端如果需要引入图片等非 JS 格式的文件，此时需要借助 Webpack 的相关 Loader 来实现；
-- 前端存在 `window` 等全局对象，这些模块可以直接使用不需要 require；
+- 前端存在 `window` 等全局对象，这些模块可以直接使用不需要 `require`；
 - 前端不存在 `process` 等 Node.js 独有的变量，因此例如 `process.env.NODE_ENV` 这种环境变量会被 Webpack 特殊处理；
-- 浏览器也可能使用 `<script>` 引入了例如 jQuery 等其他全局性的模块，这些模块也是可以在 JS 代码中使用的（前提是入口 JS 代码的 `<script>` 在 HTML 上的位置比这些其他模块更靠后），并不需要写 require，如果写了 require，则通过 Webpack 的 `externals` 配置来处理；
+- 浏览器也可能使用 `<script>` 引入了例如 jQuery 等其他全局性的模块，这些模块也是可以在 JS 代码中使用的（前提是入口 JS 代码的 `<script>` 在 HTML 上的位置比这些其他模块更靠后），并不需要写 `require`，如果写了 `require`，则通过 Webpack 的 `externals` 配置来处理；
 - 因为没有用到的文件不会被打包，因此动态 require 时需要额外注意。
 
 -----
