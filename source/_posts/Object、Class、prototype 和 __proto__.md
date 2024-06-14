@@ -37,6 +37,7 @@ const Jack = new Person('Jack', 18)
 function Person(_name, _age) {
   this.name = _name
   this.age = _age
+
   // 直接在构造函数里给 this 加一个方法属性
   this.halo = function() {
     console.log(this.name)
@@ -56,6 +57,7 @@ function halo() {
 function Person(_name, _age) {
   this.name = _name
   this.age = _age
+
   // 此时 halo 方法被定义在构造函数之外
   this.halo = halo
 }
@@ -101,7 +103,8 @@ Student.prototype.constructor = Student
 
 2、然后把 `Person` 的 `.prototype` 对象复制一份拿过来当做自己的 `.prototype`，这样来继承 `Person` 的方法；
 
-3、因为上一步操作的把 `.prototype` 上的 `.constructor` 也一起改了，这个属性表示该原型的构造函数是哪个；`Student` 类的构造器肯定是 `Student` 构造函数本身，因此将它设置为 `Student`；如果省略这一步，别人对一个 `Student` 对象使用 `Object.create()` 构造出来的对象会是一个 `Person` 对象。
+3、因为上一步操作的把 `.prototype` 上的 `.constructor` 也一起改了，这个属性表示该原型的构造函数是哪个；`Student` 类的构造器肯定是 `Student` 构造函数本身，因此将它设置为 `Student`；
+如果省略这一步，别人对一个 `Student` 对象使用 `Object.create()` 构造出来的对象会是一个 `Person` 对象。
 
 这些面向对象的实现方式都非常复杂，并不好理解，而且大多涉及到了 `.prototype`、`.constructor` 等概念。如果对 JS 面向对象和 JS 原型不甚了解，很容易被搞糊涂。
 
@@ -127,7 +130,7 @@ ES6 的类必须使用 `new` 构建对象，这会调用它的构造器 `constru
 
 这种写法，类里面所有的方法都是定义在 `Person.prototype` 这个原型上的，不只有 `.halo()`，也包括了 `.constructor()`，因此它创建的所有对象上的实例方法都是相同的。
 
-上面类声明代码，可以看做是等价于：
+上面类声明的 `class` 代码，可以看做是等价于：
 
 ``` js
 function Person() {}
@@ -142,21 +145,22 @@ Person.prototype.halo = function() {
 }
 ```
 
+-----
 
-
-ES6 同样提供了类的继承：
+ES6 同样提供了类的继承，使用 `extends` 关键字：
 
 ``` js
 class Student extends Person {
   constructor(_name, _age, _school) {
     super(_name, _age)
+
     this.school = _school
   }
 }
 ```
 如果类使用了继承，它必须在 `constructor` 中首先调用 `super()`，这是强制的；因为 ES6 实现的原理是先用 `super` 调用父类的构造器，在 `this` 上添加父类的属性，然后再在 `this` 上添加子类的属性。
 
-如果想要在子类中访问父类的成员，则要使用 `super.prop` 这种形式。
+如果想要在子类中访问父类的属性，则要使用 `super.属性名` 这种形式。
 
 
 
@@ -170,7 +174,7 @@ class Student extends Person {
 
 - 它是一个 JS 引擎自动实现的对象，只有函数（类也是函数）具备 `.prototype`，而 JS 值、对象均不具备这个属性；
 
-- 它一般用于实现属性的继承：当一个方法开始执行的时候，他会把自己的 `.prototype` 这个对象复制一份拿过来当做 `this`，所以说在一个函数的 `.prototype` 对象上添加新的属性、添加函数，所有由该函数构造出的对象都会具备这些新添的属性或函数。
+- 它一般用于实现属性的继承：当一个方法开始执行的时候，他会把自己的 `.prototype` 这个对象复制一份拿过来当做 `this`，所以说在一个函数的 `.prototype` 对象上添加新的属性、方法，所有由该函数构造出的对象都会具备这些新添的属性或方法。
 
 
 
@@ -202,7 +206,7 @@ a1.constructor === A.prototype.constructor
 
 - 它用于实现**原型链**，如果在一个对象上找不到某个属性，JS 引擎就会去它的原型链上依次向上寻找；同时 `instanceof` 关键字也会沿着原型链依次向上搜寻。
 
-
+-----
 
 例如，以下表达式结果均为 `true`：
 ``` js
@@ -256,7 +260,8 @@ Student.prototype.__proto__ === Person.prototype
 
 假设我们调用的不是 `.halo()` 而是 `.toString()` 方法，此时 `Person.prototype` 上依然找不到这个方法，JS 引擎还会继续沿着原型链去寻找：
 
-`Person `本身没有继承别的类，但是 JS 和 Java、C# 等编程语言的行为类似——如果一个对象不继承其他类，那么它默认继承了 `Object` 类。因此 `Person.prototype.__proto__` 指向了下一步要搜索的作作用域 `Object.prototype`：
+`Person `本身没有继承别的类，但是 JS 和 Java、C# 等编程语言的行为类似——如果一个对象不继承其他类，那么它默认继承了 `Object` 类。
+因此 `Person.prototype.__proto__` 指向了下一步要搜索的位置 `Object.prototype`：
 
 ``` js
 // 以下表达式成立，返回 true
@@ -264,7 +269,7 @@ Person.prototype.__proto__ === Object.prototype
 ```
 因为 `.toString()` 确实定义在这里，所以 `.toString()` 可以成功调用。
 
-
+-----
 
 如果到了 `Object.prototype` 这里还是没有找到想要的属性，JS 引擎会再沿着原型链向上查找：
 
@@ -274,7 +279,7 @@ Object.prototype.__proto__ === null
 ```
 
 
-因为 `Objcect` 是几乎所有对象的基类，而它本身是没有基类的，它的原型链再往上就没有了，值为 `null`，JS 引擎判断到这里，发现 `.__proto__` 为 `null` 了，就知道到头了，如果此时还没有找到要找的属性，就会返回一个 `undefined`。
+因为 `Object` 是几乎所有对象的基类，而它本身是没有基类的，它的原型链再往上就没有了，值为 `null`，JS 引擎判断到这里，发现 `.__proto__` 为 `null` 了，就知道到头了，如果此时还没有找到要找的属性，就会得到一个 `undefined`。
 
 同样，`a instanceof A` 运算符也是依次沿着运算符 `a` 的 `.__proto__` 往上遍历，直到找到任何一个对象与 `A.prototype` 这个原型对象相等为止，返回 `true`；如果遍历到原型链最顶层的 `null` 还没有找到，返回 `false`。
 
@@ -295,7 +300,7 @@ Object.prototype.__proto__ === null
 
 -----
 
-对于类而言：
+总结一下，对于类而言：
 
 - 如果一个类没有继承任何其它的类，那么它的 `.prototype` 原型上的 `.__proto__` 便是 `Object.prototype`，所以类派生出的实例都有 `.toString()` 等属性；
 
@@ -372,11 +377,12 @@ class MyArray extends Array {
   
   // 自己定义一个给数组求和的函数
   sum() {
-    return this.reduce((a, b) => a + b )
+    return this.reduce((a, b) => a + b, 0)
   }
   
   // 【可选操作】
-  // 如果你想让这个自己的数组在 instanceof Array 时依然返回 true
+  // 想让本数组在被 .map 等需要返回新实例的方法调用后
+  // 其结果 instanceof Array 时依然为 true
   // 那么加上下面这个属性即可实现，不过这只在扩展 JS 原生类型时有用
   static get [Symbol.species]() {
     return Array
