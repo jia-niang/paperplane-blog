@@ -347,6 +347,8 @@ Chakra UI：https://chakra-ui.com/
 React Suite：https://rsuitejs.com/zh/ （嗨普智能）
 Shadcn：https://ui.shadcn.com/ （无需安装，粘贴源码即可使用）
 Radix UI：https://www.radix-ui.com/ （分离样式的 UI 库，兼容 Next.js）
+React95 仿 Win95 风格：https://github.com/React95/React95
+React95-io 仿 Win95 风格：https://github.com/react95-io/React95
 
 -----
 
