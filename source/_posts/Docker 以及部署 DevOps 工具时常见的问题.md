@@ -57,8 +57,10 @@ sudo systemctl restart docker.service
 
 **使用 Docker 源镜像：**
 
+2024 年 6 月更新：国内因政策原因，所有 Docker 镜像站均已关闭，以下所有源镜像均不可用了。
+建议 [阅读此文](https://gist.github.com/y0ngb1n/7e8f16af3242c7815e7ca2f0833d3ea6) 了解还有什么国外可用的源镜像，此外文中还有利用 Cloudflare Workers 自行搭建反代的介绍，可以尝试。
+
 用于国内拉取镜像加速。网上的版本太旧，很多都不能用了，Github Gist 上有人持续更新一个列表，[点击前往](https://gist.github.com/y0ngb1n/7e8f16af3242c7815e7ca2f0833d3ea6)。
-本文此部分最后一次更新于 2024 年 3 月。
 
 ```json
 {
