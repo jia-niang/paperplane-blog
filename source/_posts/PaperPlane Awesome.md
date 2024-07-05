@@ -554,6 +554,9 @@ LocalStorage 管理：https://www.npmjs.com/package/store2
 Cookies 管理：https://www.npmjs.com/package/js-cookie
 Licia 有四百种工具函数的库：https://licia.liriliri.io/
 stateshot 实现撤销与重做功能：https://github.com/gaoding-inc/stateshot
+yjs 二进制增量同步数据：https://docs.yjs.dev/
+y-websocket 配合上面的 yjs 库：https://github.com/yjs/y-websocket
+y-quill 配合上面的 yjs 库：https://github.com/yjs/y-quill
 JSONPath：https://github.com/JSONPath-Plus/JSONPath
 Lerna 用于 monorepo：https://lerna.js.org/
 workbox 用于 PWA：https://developer.chrome.com/docs/workbox/
