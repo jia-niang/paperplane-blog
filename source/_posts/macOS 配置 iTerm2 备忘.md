@@ -8,7 +8,7 @@ categories:
 no_toc: true
 ---
 
-记录 macOS 配置 iTerm2 相关过程。本文的 iTerm2 和 zsh 配置部分，参考了 [这篇博文](https://pjchender.blogspot.com/2017/02/mac-terminal-iterm-2-oh-my-zsh.html)；命令行前缀定制部分，参考了 [这篇博文]()。
+记录 macOS 配置 iTerm2 相关过程。本文的 iTerm2 和 zsh 配置部分，参考了 [这篇博文](https://pjchender.blogspot.com/2017/02/mac-terminal-iterm-2-oh-my-zsh.html)；命令行前缀定制部分，参考了 [这篇博文](https://github.com/solomonxie/blog-in-the-issues/issues/27)。
 
 
 
