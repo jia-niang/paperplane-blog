@@ -23,7 +23,7 @@ Vue 官方文档称这种过渡名为 “FLIP 动画”。有关 FLIP 动画的�
 
 
 
-# 理解 “FLIP” 的含义
+# “FLIP” 的含义和原理
 
 FLIP 这四个字母，分别表示四个单词：“First” 初始位置、“Last” 最终位置、“Invert” 反向、“Play” 播放。
 用中文翻译和解释为：“反向播放从最终位置到初始位置的过渡”；从终点回到起点的过程，反向播放，于是负负得正，动画就是正常的从起点到终点。
@@ -37,13 +37,13 @@ FLIP 这四个字母，分别表示四个单词：“First” 初始位置、“
 
 ![](../images/vue-docs-flip-dom.gif)
 
-可以看到，点击按钮后，DOM 瞬间就完成了更新，但是动画要播放一秒钟。
+可以看到，点击按钮后，DOM 瞬间就完成了更新，并不是等到动画结束之后。
 
 这也是 FLIP 动画的一大要素：**FLIP 动画是在元素的 DOM 变动完成后才开始播放的，此时元素已经位于终点了，所以播放的过渡动画其实是 “归位” 的过渡动画。**
-
 也正是因为这个原因，即使去掉了 FLIP 动画，调整元素顺序时也只是顺序瞬间调整完成了，没有了 “归位” 的动作，看上去比较突兀而已，不会有什么错误。
 
 而且，即使过渡没有播放完毕就重新调整 DOM 的位置，元素也能正确运动而且移动到正确的位置，因为 FLIP 动画始终是等到元素移动到最终位置后播放 “归位” 动画，最终都是要回到正确位置。
+
 如图：
 
 ![](../images/vue-docs-flip-fast-click.gif)
@@ -52,13 +52,11 @@ FLIP 这四个字母，分别表示四个单词：“First” 初始位置、“
 
 我们继续解释什么是 “归位”，当然这要和上面的 “反向” 相结合。
 
-CSS 中，元素的 `transition` 过渡是不论 “方向” 的，这正是我们实现 “归位” 动画的原理。
-
-举个最简单的例子，假设我们需要用动画实现让一个元素**向右**移动 `100px` 到目标位置：
-通常的做法是这样的：给元素设置 `transition` 之后，只需要再加上 `transform: translateX(100px)` 就能使它向右移动了；
+举个最简单的例子，假设某个元素出于某些原因， 接下来会出现在偏右 `100px` 的位置，我们想给这个过程加上动画：
+通常的做法是这样的，给元素设置 `transition` 之后，只需要再加上 `transform: translateX(100px)` 就能使它向右移动了；
 
 但是，“反向” 和 “归位” 的思路是这样的：
-先通过一些手段使元素移动到右侧的位置，然后设置 `transform: translateX(-100px)` 使它向左反向回到原先的位置，**此时需先设置 `transition` 属性，然后取消掉元素的 `transform: translateX(-100px)` 属性**，这样元素就会实现一个 “归位” 的动作，同样也是从左向右运动 `100px`，最终到达目标位置。
+等到元素到右边后，先给它设置 `transform: translateX(-100px)` 使它向左反向回到原先的位置，**然后再给它设置 `transition` 属性，并取消掉元素的 `transform: translateX(-100px)` 属性**，这样元素就会实现一个 “归位” 的动作，同样也是从左向右运动 `100px`，最终到达目标位置。
 
 你可以使用以下 HTML 来尝试：
 
@@ -80,7 +78,7 @@ CSS 中，元素的 `transition` 过渡是不论 “方向” 的，这正是我
         el.style.transform = 'translateX(-100px)'
 
         // 此时，再给元素加上过渡
-        el.style.transition = 'all 1s'
+        el.style.transition = 'transform 1s'
 
         // 然后移除掉偏移，让元素 “归位”
         el.style.transform = ''
@@ -90,14 +88,31 @@ CSS 中，元素的 `transition` 过渡是不论 “方向” 的，这正是我
 </html>
 ```
 
-上述按钮点击后，JS 代码会移去 `<div>` 的 `transform` 样式，此时，元素就会 “回正” 到默认的正确位置。
-如图：
+你可以试一下上面的代码，会发现无法实现动画，元素 “瞬移” 了。
+原因很简单，因为我们在同步代码中设置样式，此时 `transform` 最终被设置为空，自然不会有动画产生。
+
+解决方法也很简单，把最后两条样式操作改为异步即可：
+
+```js
+function move() {
+  const el = document.getElementById('div')
+  el.style.marginLeft = '100px'
+  el.style.transform = 'translateX(-100px)'
+
+  setTimeout(() => {
+    el.style.transition = 'transform 1s'
+    el.style.transform = ''
+  }, 0)
+}
+```
+
+运行网页并点击按钮，效果如图：
 
 ![](../images/invert-transition.gif)
 
 理解了这个 “归位” 的过程，那么你就离理解 FLIP 动画不远了。
 
-上面代码中，我们通过 `marginLeft` 来使元素移动到需要的目标位置；在 FLIP 动画中，这个步骤则是通过 JS 代码等方式让元素发生位置变化，具体怎么变化不重要，我们只需要等到位置变化完成后，继续执行后续代码即可。
+上面代码中，我们通过 `marginLeft` 来使元素移动到需要的目标位置；在 FLIP 动画中，这个步骤则是通过 JS 代码等方式让元素发生位置变化，例如列表中的元素的顺序被调整了，具体怎么变化不重要，我们只需要等到位置变化完成后，继续执行后续代码即可。
 
 总结一下，FLIP 动画做了这样的操作：
 
@@ -105,11 +120,39 @@ CSS 中，元素的 `transition` 过渡是不论 “方向” 的，这正是我
 - 步骤 ②：然后直接执行 DOM 变更；
 - 步骤 ③：DOM 变更完成后，再记录下 B 位置的坐标；
 - 步骤 ④：计算从 B 到 A 的偏移，通过 `transform: translate(x, y)` 设置元素的位置，使它偏移回到原先的 A 位置，**注意这个过程需要用 JS 先屏蔽掉元素的 `transition` 属性，避免移回的过程中产生过渡动画**；
-- 步骤 ⑤：使用 JS 恢复元素的 `transition` 属性，然后移除掉元素的 `transform: translate(x, y)` CSS 属性，这样元素就会回到 B 位置，播放从 A 到 B 的 “归位” 动画。
+- 步骤 ⑤：使用 JS 恢复元素的 `transition` 属性，同时移除掉元素的 `transform: translate(x, y)` CSS 属性，这样元素就会回到 B 位置，播放从 A 到 B 的 “归位” 动画。
 
-注意上面的步骤 ②③④ 过程中，元素移到终点后 JS 计算偏移并设置上去，这一系列动作由同步代码在帧内瞬间完成，视觉上是不会有闪动的。
+仔细观察上面的步骤 ②③④，你可能会有疑问：元素从终点设置偏移到起点，这个过程不会有闪动吗？用户是不是能看到元素的 “瞬移”？
+实际上，这个问题是 FLIP 动画核心技术要素，它涉及到浏览器的渲染机制，只有理解了这个原理，才能正确的实现动画，尤其是和 React 等库相配合。
 
-理解以上步骤，我们就可以使用 JS 来自己实现 FLIP 动画。
+浏览器渲染一帧画面的过程分为两个步骤：“布局” 和 “绘制”；考虑到网页上会有各种交互元素，所以这两个步骤几乎是每时每刻都在重复，所以又被称为 “重排/回流” 和 “重绘”。
+
+在 “布局” 步骤完成后，DOM 树已经完成解析并准备好，**此时所有元素的位置坐标和尺寸已被确定**；然后是 “绘制” 步骤，这一过程完成后，元素的最终显示外观被绘制到用户的屏幕上。
+
+可以发现，**在浏览器的 “布局” 完成之后、“绘制” 开始之前，中间这个空隙时间段，我们既可以获取元素最终位置坐标（对应上面的步骤 ③），又能设置元素的样式让元素偏移回到原来的位置（对应上面的步骤 ④），而且这并不会导致元素发生瞬移，毕竟此时浏览器这一帧的 “绘制” 还没开始。**
+
+那么如何才能在这个时机插入代码？这就涉及到浏览器提供的一个 API：[`requestAnimationFrame()`](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestAnimationFrame)。
+`requestAnimationFrame()` 接受一个回调方法作为参数，这个回调将在浏览器下一次 “绘制” 之前执行，它的执行时机正符合我们的需求；所以，上面的步骤 ②③④，只需要在 `requestAnimationFrame()` 回调中运行，即可做到既获取元素移动的终点坐标，又避免元素的瞬移闪动。
+
+此时你应该注意到了，步骤 ⑤ 必须放到下一次绘制来执行，因为如果立即执行步骤 ⑤，那么在浏览器开始绘制时，`transform` 已经没有了，完全实现不出动画的效果。在代码中，可以再套一层 `requestAnimationFrame()` 来执行步骤 ⑤。
+
+上述例子也可以优化为：
+
+```js
+function move() {
+  const el = document.getElementById('div')
+  el.style.marginLeft = '100px'
+  el.style.transform = 'translateX(-100px)'
+
+  // 使用 requestAnimationFrame，取代 setTimeout
+  requestAnimationFrame(() => {
+    el.style.transition = 'transform 1s'
+    el.style.transform = ''
+  })
+}
+```
+
+接下来，我们尝试使用 JS 来自己实现 FLIP 动画。
 
 
 
@@ -244,10 +287,10 @@ function shuffle() {
 此时，点击 “打乱” 按钮后，盒子的位置看上去没有发生变动，这是因为 DOM 变更后瞬间通过 `transform` 又把盒子偏移回到了原始的位置。接下来就是进行 “归位” 的操作了。
 
 注意，如果元素默认带有 `transition`，这一步需要提前把这个 `transition` 屏蔽掉，至少，不能让它针对 `transform` 动作生效；
-这里给出一个简化的代码，实际生产需要更精细的判断和处理：
+代码如下， 将它放置于方法体尾部：
 
 ```js
-box.style.transition = null // 暂时屏蔽掉过渡
+box.style.transition = null // 暂时屏蔽掉过渡，实际生产此处需完善
 box.style.transform = `translate(${deltaX}px, ${deltaY}px)`
 ```
 
@@ -266,28 +309,60 @@ box.style.transition = `transform 2s`
 box.style.transform = ''
 ```
 
-将上述代码追加到方法内末尾，你会发现并没有产生动画。
-
-这是因为，浏览器为了减少重绘和重排，可能会把批量的样式操作合并。
-一个简单的办法是，将上述代码放置于定时器中：
-
-```js
-setTimeout(() => {
-  box.style.transition = `transform 2s`
-	box.style.transform = ''
-}, 0)
-```
-
-这样，动画就能正常播放了。
-
-不过，这并不是最佳实践，更好的做法是使用 [`requestAnimationFrame()`](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestAnimationFrame)，它可以让浏览器在绘制完成后到下一次绘制之间的间隔执行回调，所以在回调中修改 CSS 后，它一定在下一帧开始生效；
-代码如下：
+当然不能把这段代码直接加入方法，我们要让这个代码在下一次重绘时生效，所以会写成：
 
 ```js
 requestAnimationFrame(() => {
   box.style.transition = `transform 2s`
   box.style.transform = ''
 })
+```
+
+把上面这段代码加入上面的方法体尾部，我们得到的代码：
+
+```js
+function shuffle() {
+  const container = document.querySelector('.container')
+  const boxes = Array.from(container.children)
+
+  // First: 记录每个盒子的起始位置
+  const startPositions = boxes.reduce(
+    (result, box) => ({ ...result, [box.getAttribute('key')]: box.getBoundingClientRect() }),
+    {}
+  )
+
+  // 随机打乱盒子顺序，然后把打乱好的盒子放回 DOM
+  boxes.sort(() => Math.random() - 0.5)
+  boxes.forEach(box => container.appendChild(box))
+
+  // Last: 记录每个盒子的最终位置
+  const endPositions = boxes.reduce(
+    (result, box) => ({ ...result, [box.getAttribute('key')]: box.getBoundingClientRect() }),
+    {}
+  )
+
+  // Invert: 计算 “反向” 偏移量
+  boxes.forEach(box => {
+    const key = box.getAttribute('key')
+    const start = startPositions[key]
+    const end = endPositions[key]
+
+    // 注意，此时 DOM 已经处于最终位置，所以它的 translate 是 “反向” 的
+    // 所以要用 start 来减去 end
+    const deltaX = start.left - end.left
+    const deltaY = start.top - end.top
+
+    // 让元素通过 transform 偏移回到起点
+    box.style.transition = null // 暂时屏蔽掉过渡，实际生产此处需完善
+    box.style.transform = `translate(${deltaX}px, ${deltaY}px)`
+
+    // Play: 下一帧，撤掉 transform 偏移，播放 “归位” 过渡动画
+    requestAnimationFrame(() => {
+      box.style.transition = `transform 2s`
+      box.style.transform = ''
+    })
+  })
+}
 ```
 
 实现的效果如下：
@@ -355,11 +430,11 @@ function shuffle() {
       return
     }
 
-    // 将盒子通过 translate 移至初始位置
-    box.style.transition = null
+    // 让元素通过 transform 偏移回到起点
+    box.style.transition = null // 暂时屏蔽掉过渡，实际生产此处需完善
     box.style.transform = `translate(${deltaX}px, ${deltaY}px)`
 
-    // Play: 播放动画应用变换
+    // Play: 下一帧，撤掉 transform 偏移，播放 “归位” 过渡动画
     requestAnimationFrame(() => {
       box.style.transition = `transform 2s`
       box.style.transform = ''
@@ -397,6 +472,8 @@ function shuffle() {
 这里，涉及到一个问题：元素可能被暂时移出 DOM 并插入回来，我们如何跟踪一个元素？
 在之前的例子里，元素附带有 `key` 属性，可以使用 `key` 属性来标识并跟踪元素（你可能发现了，Vue、React 也使用 `key` 属性来跟踪元素）；而我们自己实现的这个函数，如果不要求用户使用 `key`，那么我们可以使用 [`WeakMap`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/WeakMap) 来跟踪元素，把 DOM 作为键即可。
 
+> 实际上，`WeakMap` 诞生的目的就是为了此类代码场景。
+
 我们可以写出这样的代码：
 
 ```js
@@ -411,7 +488,7 @@ function flip(target) {
 
 此后，我们需要监听 DOM 变动。
 
-浏览器提供这样一个 API： [`MutationObserver`](https://developer.mozilla.org/zh-CN/docs/Web/API/MutationObserver) ，它可以用于监听 DOM 的变化，并在变化发生后触发给定的回调。我们使用它来触发 FLIP 的流程。
+浏览器提供这样一个 API： [`MutationObserver`](https://developer.mozilla.org/zh-CN/docs/Web/API/MutationObserver) ，它可以用于监听 DOM 的变化，并在变化发生后触发给定的回调。我们使用它来触发 FLIP 动画的代码。
 
 具体而言，`MutationObserver` 是这样的：
 
@@ -552,9 +629,11 @@ function flip(target) {
 而封装后的 `flip()` 函数通过 `MutationObserver` 来触发 FLIP 动画，这个回调**在 DOM 变更后才触发**， 此时元素已经被放置到了终点，我们可以直接获得终点的坐标，起点坐标就只能从 `WeakMap` 中来获取了，**但我们不会实时向 `WeakMap` 中记录元素位置**，所以动画的起点坐标是不正确的，动画自然也是错误的。
 
 解决方法是，采取一种方式跟踪元素的坐标并持续记录，即持续更新 `startPositions` 中的坐标值。
+如何持续跟踪元素的坐标？
 
-如何持续跟踪元素的坐标？这又要用到 [`requestAnimationFrame()`](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestAnimationFrame) 的回调。根据规范，`requestAnimationFrame()` 中注册的回调始终会在 JS 完成绘制后，在当前帧的剩余时间执行，它的回调不会导致页面的阻塞；
-而且还有一个 [`cancelAnimationFrame()`](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/cancelAnimationFrame) 可以取消前者的回调，用法和 `setTimeout` 相同。
+这又要用到 [`requestAnimationFrame()`](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestAnimationFrame) 的回调，它可以利用每一帧的空闲时间，在不阻塞的情况下运行一段代码；例如：设备是 60Hz 刷新率的屏幕，此时每一帧大约 16.67 毫秒的运行时间，浏览器运行 JS、布局、绘制是肯定用不到这么长时间，会有空闲时间段，而 `requestAnimationFrame()` 的代码就可以在这个空闲时间段中运行。
+
+而且还有一个 [`cancelAnimationFrame()`](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/cancelAnimationFrame) 可以取消前者的回调，用法和 `setTimeout` 相似。
 
 尝试编写一个持续跟踪元素坐标的函数：
 
@@ -657,6 +736,128 @@ function flip(target) {
 ![](../images/flip-functional-demo-ok.gif)
 
 虽然这个库的功能和兼容性可能也比较单薄，但我们已经大体了解了 FLIP 动画的实现原理和代码实现方式了。
+
+
+
+# 更多的过渡类型
+
+上面的例子中，我们只演示了列表元素顺序调整而播放的动画。
+实际上，FLIP 指的是 “反向播放从终点偏移到起点的过渡动画” 这一流程，只要是符合这种流程的过渡动画，都是 FLIP 动画，不仅限于列表顺序调整。
+
+例如，某个 “预览图片” 的 Demo 的过渡样式：
+
+![](../images/flip-demo-others.gif)
+
+这也是一种 FLIP 动画，源码如下：
+
+```html
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      .box {
+        width: 60px;
+        height: 60px;
+        color: white;
+        font-size: 30px;
+        margin: 10px;
+        box-sizing: border-box;
+        background-color: skyblue;
+        border: 2px black solid;
+        transition: width 500ms, height 500ms;
+      }
+
+      .scale {
+        position: absolute;
+        top: 90px;
+        left: 10px;
+        width: 120px;
+        height: 120px;
+        z-index: 10;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" style="display: flex">
+      <div class="box" key="1">1</div>
+      <div class="box" key="2">2</div>
+      <div class="box" key="3">3</div>
+      <div class="box" key="4">4</div>
+      <div class="box" key="5">5</div>
+    </div>
+
+    <script>
+      const container = document.querySelector('.container')
+      const boxes = Array.from(container.children)
+
+      boxes.forEach(box => {
+        box.addEventListener('click', () => {
+          // First: 记录每个盒子的起始位置
+          const startPositions = boxes.reduce(
+            (result, box) => ({
+              ...result,
+              [box.getAttribute('key')]: box.getBoundingClientRect(),
+            }),
+            {}
+          )
+
+          box.classList.toggle('scale')
+
+          // Last: 记录每个盒子的最终位置
+          const endPositions = boxes.reduce(
+            (result, box) => ({
+              ...result,
+              [box.getAttribute('key')]: box.getBoundingClientRect(),
+            }),
+            {}
+          )
+
+          // Invert: 计算 “反向” 偏移量
+          boxes.forEach(box => {
+            const key = box.getAttribute('key')
+            const start = startPositions[key]
+            const end = endPositions[key]
+
+            // 注意，此时 DOM 已经处于最终位置，所以它的 transform 是 “反向” 的
+            // 所以要用 first 来减去 last
+            const deltaX = start.left - end.left
+            const deltaY = start.top - end.top
+
+            // 如果元素 “原地不动”，那么跳过后续流程
+            if (deltaX === 0 && deltaY === 0) {
+              return
+            }
+
+            // 将盒子通过 transform 移至初始位置
+            box.style.transition = ''
+            box.style.transform = `translate(${deltaX}px, ${deltaY}px)`
+
+            // Play: 播放动画应用变换
+            requestAnimationFrame(() => {
+              box.style.transition = `all 500ms`
+              box.style.transform = ''
+            })
+
+            // FLIP 动画完成后，清理残余样式
+            box.addEventListener(
+              'transitionend',
+              () => {
+                box.style.transition = null
+                box.style.transform = null
+              },
+              { once: true }
+            )
+          })
+        })
+      })
+    </script>
+  </body>
+</html>
+```
+
+从这个例子可以看出，FLIP 动画并不局限于列表元素调换顺序，实际上可以实现很多种过渡动画类型。
 
 
 
@@ -894,11 +1095,11 @@ requestAnimationFrame(() => {
 
 但是在 React 的 `useEffect()` 中，却不能直接这么写。
 
-这是因为，React 会在数据变更后在 `requestAnimationFrame()` 的时机来触发 `useEffect()` 的回调，**此时，浏览器已经完成上一帧的绘制，此回调中的同步代码都将应用到下一帧，而 `requestAnimationFrame()` 的回调也是在下一帧执行，你会发现这两个动作被放在了同一时机执行，CSS 被设置一次之后立马又被改写了，所以动画无法产生**。
+这是因为，React 会在 “绘制” 完成后触发 `useEffect()` 的回调，**此时，浏览器已经完成上一帧的绘制，此回调中的同步代码都将应用到下一帧，而 `requestAnimationFrame()` 的回调也是在下一帧执行，你会发现这两个动作被放在了同一时机执行，CSS 被设置一次之后立马又被改写了，所以动画无法产生**。
 
 解决方式有两种：
 
-第一种方式，是使用 `useLayoutEffect()` 取代 `useEffect()`，因为它会在 DOM 变动后同步触发，所以同步代码（第一步）一定在当前帧内执行，然后 `requestAnimationFrame()` 的代码（第二步）会在下一帧执行，产生动画。
+第一种方式，是使用 `useLayoutEffect()` 取代 `useEffect()`，因为它会在 DOM 变动后同步触发，此时 “绘制” 还没有开始，所以同步代码（第一步）一定在当前帧内执行，然后 `requestAnimationFrame()` 的代码（第二步）会在下一帧执行，产生动画。
 
 第二种方式，是把上面的第一步放在下一帧、第二步放在下下帧，这样 CSS 的过渡总能生效；
 代码如下：
@@ -938,11 +1139,11 @@ interface IFlipProps {
 function Flip(props: IFlipProps) {
   const { children } = props
 
-  const domMapRef = useRef({} as Record<any, Element>)
-  const startPositionsRef = useRef({} as Record<any, any>)
+  const domMapRef = useRef({} as Record<string, Element>)
+  const startPositionsRef = useRef({} as Record<string, DOMRect>)
 
-  const [styleMap, setStyleMap] = useState({} as Record<any, CSSProperties>)
-  const [eventMap, setEventMap] = useState({} as Record<any, Function>)
+  const [styleMap, setStyleMap] = useState({} as Record<string, CSSProperties>)
+  const [eventMap, setEventMap] = useState({} as Record<string, Function>)
 
   useEffect(() => {
     children.forEach(child => {
@@ -962,14 +1163,14 @@ function Flip(props: IFlipProps) {
       // 记录新位置，为下一轮动画做准备
       startPositionsRef.current[key] = domMapRef.current[key].getBoundingClientRect()
 
-			// 关闭 transition，将元素通过 translate 移至初始位置
+			// 关闭 transition，将元素通过 transform 偏移至初始位置
       requestAnimationFrame(() => {
         setStyleMap(data => ({
           ...data,
           [key]: { transition: '', transform: `translate(${deltaX}px, ${deltaY}px)` },
         }))
 
-        // 开启 transition 并移除 translate，使元素 “归位”
+        // 开启 transition 并移除 transform，使元素 “归位”
         requestAnimationFrame(() => {
           setStyleMap(data => ({
             ...data,
@@ -1024,13 +1225,111 @@ function Flip(props: IFlipProps) {
 <br />
 
 这个组件的实现仍然不完善，在前一次 FLIP 动画未播放完之前再次点击按钮，动画播放就会出问题。这可以算得上是 “老问题” 了。
-经过上面的实践，你可能马上就能想到原因：因为动画起点的 DOM 坐标只在特定时机被写入 `startPositionsRef`，无法实时获取坐标。
+经过上面的实践，你可能马上就能想到原因：因为元素的坐标并不会被持续写入 `startPositionsRef`，无法实时获取坐标，所以元素处在中间态时计算偏移距离是错误的。
 
 在 React 中，使用 `useEffect()` 或 `useLayoutEffect()` 指定依赖数据后，在依赖数据变更后导致虚拟 DOM 变动，然后 React 执行 DOM API 将虚拟 DOM 设置为真实 DOM，在这步骤之后才会触发 hook 中的回调；所以，没有一个时机可以在数据变动时且 DOM 未变动时就直接触发。
+
+此时可以采取之前提到的使用 `requestAnimationFrame()` 来持续跟踪元素坐标的方案，你可以自行实践。
+
+> 你可能想到使用 `useMemo()` 来对 `children` 做一个 “tap” 操作，在这个操作中来获取并记录子元素的坐标。
+> 这是可行的，但是，`useMemo()` 和 `useLayoutEffect()` 之间很可能会跳帧，而且循环访问 DOM 坐标的操作比较耗时，这会导致组件出现阻塞、动画出现移位等问题，实际上并不能完美解决我们的诉求。
+
+在 React 中使用 FLIP 动画，我们推荐使用例如 `react-flip-toolkit` 这样的库。
 
 
 
 # 使用 `react-flip-toolkit`
 
+[`react-flip-toolkit`](https://www.npmjs.com/package/react-flip-toolkit) 是一个用于实现组件 FLIP 动画的 React 库，在它的 [GitHub 页](https://github.com/aholachek/react-flip-toolkit) 可以看到它与其他同类产品的比对，可以看出它的优势在于体积小巧、更新迅速、功能强大。
 
+我们来实践一下， 安装它：
+
+```bash
+yarn add react-flip-toolkit
+```
+
+它导出两个组件，其中 `Flipper` 是容器组件，`Flipped` 是需要应用 FLIP 动画的个体的包裹器：
+
+```tsx
+import { Flipper, Flipped } from 'react-flip-toolkit'
+```
+
+<br />
+
+使用时，我们需要用 `<Flipped>` 组件把我们要展示的列表项包裹起来，它还需要一个 `flipId` 属性作为表示，一般设置为和 `key` 一样即可：
+
+```tsx
+<Flipped key={id} flipId={id}>
+  {/* 你的组件 */}
+</Flipped>
+```
+
+容器组件使用 `<Flipper>`，需要提供子组件 ID 的序列，作为 `flipKey` 参数传递，一般来说，直接把子组件 ID 数组做一次 `.join('')` 操作即可：
+
+```tsx
+<Flipper flipKey={ids.join('')}>
+  {/* 子组件... */}
+</Flipper>
+```
+
+这样，组件便具备了 FLIP 动画。
+
+这里给出使用此工具的测试用例：
+
+```tsx
+import { useState } from 'react'
+import { Flipper, Flipped } from 'react-flip-toolkit'
+
+function FlipDemo() {
+  const [list, setList] = useState([1, 2, 3, 4, 5])
+
+  const shuffle = () => {
+    setList([...list.sort(() => Math.random() - 0.5)])
+  }
+
+  return (
+    <div>
+      <Flipper flipKey={list.join('')}>
+        <div style={{ display: 'flex' }}>
+          {list.map(item => (
+            <Flipped key={item} flipId={item}>
+              <div
+                style={{
+                  width: 60,
+                  height: 60,
+                  backgroundColor: 'skyblue',
+                  color: 'white',
+                  fontSize: '30px',
+                  margin: 10,
+                }}
+              >
+                {item}
+              </div>
+            </Flipped>
+          ))}
+        </div>
+      </Flipper>
+
+      <button onClick={shuffle}>打乱</button>
+    </div>
+  )
+}
+
+export default FlipDemo
+```
+
+在浏览器中运行，效果如下：
+
+![](../images/flip-react-flip-toolkit.gif)
+
+可以看到，默认的动画速度是非常快的。
+
+`react-flip-toolkit` 使用一种名为 `spring` 的配置参数来控制动画，它的功能更完善，可以实现类似于 “弹簧” 一样的回弹效果。
+例如，给 `<Flipper>` 组件添加 `spring="gentle"` 属性，它的动画效果会变为：
+
+![](../images/flip-react-flip-toolkit-effect-1.gif)
+
+这种动画带有一点回弹，观感会更好。
+
+不过，`react-flip-toolkit` 不支持直接配置过渡动画的持续时间，而是要根据需要的时间计算 `stiffness`、`damping` 两个参数（可以使用 [这个网站](https://codepen.io/aholachek/full/bKmZbV/) 进行可视化的参数调节），合并成对象传递给 `spring` 参数，实际使用时可能会有点麻烦。
 
