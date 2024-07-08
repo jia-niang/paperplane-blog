@@ -8,6 +8,20 @@
         </a>
       </div>
 
+      <script>
+        document.getElementById('header-title-txt').addEventListener('click', e => {
+          if (window.location.pathname === '/') {
+            return
+          }
+
+          const referrer = document.referrer || ''
+          if (referrer.startsWith(window.location.origin) && history.length > 1) {
+            e.preventDefault()
+            history.go(-1)
+          }
+        })
+      </script>
+
       <nav id="header-links">
         <span class="link-current">·Blog</span>
         <a href="https://tl.paperplane.cc/">动态</a>
