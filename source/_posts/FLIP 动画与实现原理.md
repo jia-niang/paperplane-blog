@@ -867,7 +867,7 @@ Vue 内置组件 [`<transition-group>`](https://cn.vuejs.org/guide/built-ins/tra
 
 先写一个原始的显示列表元素的组件：
 
-```vue
+```html
 <template>
   <div style="display: flex">
     <div class="box" v-for="item of list" :key="item">
@@ -904,7 +904,7 @@ const shuffle = () => void list.sort(() => Math.random() - 0.5)
 
 我们需要使用 `<transition-group>` 组件来作为容器，包裹住这些 `<div>`：
 
-```vue
+```html
 <template>
   <TransitionGroup style="display: flex" name="flip" tag="div">
     <div class="box" v-for="item of list" :key="item">
@@ -923,12 +923,10 @@ const shuffle = () => void list.sort(() => Math.random() - 0.5)
 我们这里为组件提供参数 `name="flip"`，所以在过渡过程中，子组件会附带 `"flip-move"` 类名。
 此时，我们添加一条样式：
 
-```vue
-<style scoped>
+```css
 .flip-move {
   transition: all 2s;
 }
-</style>
 ```
 
 这样一来，组件 FLIP 动画就可以生效了，点击按钮后就可以看到效果：
