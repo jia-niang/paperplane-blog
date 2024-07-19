@@ -1161,7 +1161,7 @@ function Flip(props: IFlipProps) {
       // 记录新位置，为下一轮动画做准备
       startPositionsRef.current[key] = domMapRef.current[key].getBoundingClientRect()
 
-			// 关闭 transition，将元素通过 transform 偏移至初始位置
+      // 关闭 transition，将元素通过 transform 偏移至初始位置
       requestAnimationFrame(() => {
         setStyleMap(data => ({
           ...data,
