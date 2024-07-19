@@ -519,12 +519,12 @@ function flip(target) {
       .map(item => Array.from(item.addedNodes))
       .reduce((result, subList) => result.concat(subList), [])
 
-    // Invert: 计算 “反向” 偏移量
     newElements.forEach(el => {
       // Last: 记录每个元素的最终位置
       const end = el.getBoundingClientRect()
       const start = startPositions.get(el)
 
+      // Invert: 计算 “反向” 偏移量
       const deltaX = start.left - end.left
       const deltaY = start.top - end.top
 
