@@ -653,7 +653,7 @@ yarn add -D @types/react-transition-group
 
 - 默认情况下，组件初次渲染时，即使 `in` 参数为关闭，子组件 DOM 也是会被附加的；
   此外，子组件初次挂载时也是不会执行 “渐入” 过渡的；
-- `appear` 开启此属性，则子组件初次挂载时也会执行 “渐入” 过渡；
+- `appear` 开启此属性，则组件被挂载时，如果 `in` 是 `true`，那么也会执行 “渐入” 过渡；
 - `mountOnEnter` 开启此属性，组件初次渲染时如果 `in` 参数关闭，那么 DOM 就不再会附加；
 - `unmountOnExit` 开启此属性，`in` 参数关闭后，在过渡播放完的下一帧后子组件 DOM 会移除。
 
@@ -721,8 +721,8 @@ function Dialog(props: IDialogProps) {
   过渡动画完成后会持续附加 `<前缀>-enter-done` 类名；
 - 在 `in` 被关闭时，在浏览器绘制前会为子组件附加 `<前缀>-exit` 类名，从浏览器开始绘制后会附加 `<前缀>-exit-active` 类名，这两个类名持续到过渡动画完成后才会被移除；
   过渡动画完成后会持续附加 `<前缀>-exit-done` 类名；
-- 如果子元素是首次出现，那么出现时是 `<前缀>-appear`，过渡中是 `<前缀>-appear-active` 类名，过渡完成后是 `<前缀>-appear-done` 类名；
-  注意 `<前缀>-appear-done` 会和 `<前缀>-enter-done` 同时生效。
+- 如果开启 `appear` 属性，在组件被挂载后如果 `in` 默认是开启，那么则会在在初次出现时也执行过渡，过渡过程中会附加 `<前缀>-appear` 类名，过渡中附加 `<前缀>-appear-active` 类名，过渡完成后持续附加 `<前缀>-appear-done` 类名；
+  **注意首次挂载时如果启动了过渡，`<前缀>-enter` 这类类名是不会生效的，但过渡完成后 `<前缀>-appear-done` 会和 `<前缀>-enter-done` 一同持续附加。**
 
 此外，它还有 [对象格式](https://reactcommunity.org/react-transition-group/css-transition#CSSTransition-prop-classNames) 的配置方式，可以通过对象精确地定义每一种情形使用的类名。
 
@@ -819,13 +819,101 @@ function Dialog(props: IDialogProps) {
 这个组件专门用于实现类似于 Vue 的 `<Transition>` 的 [`mode`](https://cn.vuejs.org/guide/built-ins/transition#transition-modes) 属性的功能，它们的参数取值也类似：
 
 - `"out-in"`：旧组件先展示 “渐出” 动画，然后新来的组件展示 “渐入” 动画；
-- `"in-out"`：新来的组件展示 “渐入” 动画，然后旧组件展示 “渐出” 动画，也就是说会过渡动画的时段两个组件都会显示在页面上。
+- `"in-out"`：新来的组件展示 “渐入” 动画，然后旧组件展示 “渐出” 动画，也就是说，在过渡动画的播放时段内，两个组件都会暂时出现在页面上。
+
+此组件和 Vue 的 `<Transition>` 的区别是：
+
+- 它无法实现组件同时渐入和渐出，这需要使用下面的 `<TransitionGroup>` 组件；
+- 它必须将一个 `<CSSTransition>` 或者 `<Transition>` 当做子组件，子组件过渡期间，会通过类似于 `in` 属性切换的方式来调度其 “渐入”、“渐出” 状态来实现过渡效果的播放，子组件的 `nodeRef` 参数还要和其内部元素的 `ref` 传相同的值，而且子组件需要 `key` 属性，通过它的切换来实现渲染组件的区分。
+
+此处给出一段代码示例：
+
+```tsx
+import { useState, useRef } from 'react'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
+
+export default function SwitchTransitionDemo() {
+  const [toggler, setToggler] = useState(true)
+
+  const openRef = useRef<HTMLDivElement>(null)
+  const closeRef = useRef<HTMLDivElement>(null)
+  const nodeRef = toggler ? openRef : closeRef
+
+  return (
+    <div>
+      <button onClick={() => void setToggler(t => !t)}>切换</button>
+
+      <SwitchTransition mode="in-out">
+        <CSSTransition key={toggler ? 1 : 0} classNames="counter" timeout={500} nodeRef={nodeRef}>
+          <div key={toggler ? 1 : 0} ref={nodeRef} className="counter">
+            {toggler ? '开启' : '关闭'}
+          </div>
+        </CSSTransition>
+      </SwitchTransition>
+    </div>
+  )
+}
+```
+
+使用以下样式文件：
+
+```css
+.counter {
+  padding: 15px 30px;
+  margin: 10px 0;
+  font-size: 20px;
+  text-align: center;
+  width: 100px;
+  background-color: skyblue;
+}
+
+/* 渐入期间 */
+.counter-enter {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+/* DOM 出现后第一帧开始 */
+.counter-enter-active {
+  opacity: 1;
+  transform: translateX(0%);
+}
+
+/* 渐出期间 */
+.counter-exit {
+  opacity: 1;
+  transform: translateX(0%);
+}
+/* 渐出开始后第一帧开始 */
+.counter-exit-active {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+/* 渐入/渐出期间 */
+.counter-enter-active,
+.counter-exit-active {
+  transition: opacity 500ms, transform 500ms;
+}
+```
+
+运行代码，点击按钮，效果如下：
+
+![](../images/switch-transition-demo.gif)
+
+把组件代码的 `mode="in-out"` 改为 `mode="out-in"`，效果变为：
+
+![](../images/switch-transition-demo-2.gif)
+
+<br />
+
+从代码中可以看出，最重要的是需要令 `nodeRef` 可以指向不同的节点，否则，组件的工作可能会不正常。
 
 
 
 ## 组件 `<TransitionGroup>`
 
-
+它渲染一个容器元素，并在增删内容时对其中的子元素进行过渡动画的调度。
+它的使用方法和 `<SwitchTransition>` 类似，必须使用 `<CSSTransition>` 或者 `<Transition>` 作为子元素；而且，和 Vue 的 [`<TransitionGroup>`](https://cn.vuejs.org/guide/built-ins/transition-group.html) 不同的是，此组件无法直接实现 “FLIP 过渡动画”。
 
 
 
