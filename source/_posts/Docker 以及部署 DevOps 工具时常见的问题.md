@@ -60,7 +60,7 @@ sudo systemctl restart docker.service
 2024 年 6 月更新：国内因政策原因，所有 Docker 镜像站均已关闭，以下所有源镜像均不可用了。
 建议 [阅读此文](https://gist.github.com/y0ngb1n/7e8f16af3242c7815e7ca2f0833d3ea6) 了解还有什么国外可用的源镜像，此外文中还有利用 Cloudflare Workers 自行搭建反代的介绍，可以尝试。
 
-用于国内拉取镜像加速。网上的版本太旧，很多都不能用了，Github Gist 上有人持续更新一个列表，[点击前往](https://gist.github.com/y0ngb1n/7e8f16af3242c7815e7ca2f0833d3ea6)。
+用于国内拉取镜像加速。网上的版本太旧，很多都不能用了，GitHub Gist 上有人持续更新一个列表，[点击前往](https://gist.github.com/y0ngb1n/7e8f16af3242c7815e7ca2f0833d3ea6)。
 
 ```json
 {
@@ -76,7 +76,7 @@ sudo systemctl restart docker.service
 
 上面的镜像源分别来自：
 [上海交通大学镜像服务](https://mirror.sjtu.edu.cn/)，他们也有 k8s 的镜像加速；
-[南京大学镜像服务](https://mirror.nju.edu.cn/)，他们有 k8s、ghcr（Github 的镜像仓库）、gcr（Google 的镜像仓库）等镜像加速，很赞；
+[南京大学镜像服务](https://mirror.nju.edu.cn/)，他们有 k8s、ghcr（GitHub 的镜像仓库）、gcr（Google 的镜像仓库）等镜像加速，很赞；
 [Dockerproxy](https://dockerproxy.com) 免费镜像，他们也提供上面各种国外镜像仓库加速，具体可以看文档；
 百度云；
 网易数帆。

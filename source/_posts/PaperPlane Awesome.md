@@ -184,8 +184,8 @@ macOS 为 iTerm2 选个好配色：https://pjchender.blogspot.com/2017/02/mac-te
 Git commit 书写建议：https://www.ruanyifeng.com/blog/2016/01/commit_message_change_log.html
 standard-version 使用规范的 Git 提交来生成改动日志：https://www.npmjs.com/package/standard-version
 一款漂亮的 Hexo 主题：https://github.com/chaooo/hexo-theme-BlueLake
-Github 使用 GPG 密钥：https://www.zackwu.com/posts/2019-08-04-how-to-use-gpg-on-github/
-Github 团队项目贡献者 README 展示工具：https://allcontributors.org/
+GitHub 使用 GPG 密钥：https://www.zackwu.com/posts/2019-08-04-how-to-use-gpg-on-github/
+GitHub 团队项目贡献者 README 展示工具：https://allcontributors.org/
 
 
 
@@ -340,7 +340,7 @@ TDesign（腾讯）：https://tdesign.tencent.com/ （含移动端组件）
 Semi UI（抖音）：https://semi.design/zh-CN/
 Arco Design（字节）：https://arco.design/
 Fluent UI（微软）：https://react.fluentui.dev/
-Primer Design（Github）：https://primer.style/design/
+Primer Design（GitHub）：https://primer.style/design/
 Semantic UI：https://semantic-ui.com/
 Blueprint UI：https://blueprintjs.com/
 Chakra UI：https://chakra-ui.com/
@@ -667,7 +667,7 @@ Lean Cloud 国际版：https://console.leancloud.app/
 # 其它
 
 itellyou 可用于下载 Windows 镜像：http://msdn.itellyou.cn/
-Github 官方文档：https://docs.github.com/zh
+GitHub 官方文档：https://docs.github.com/zh
 适合旅行和远程工作的城市：https://nomadlist.com/
 网站时光机： https://archive.org/ （外网访问）
 iqdb 图片搜索： http://iqdb.org/ （外网访问）

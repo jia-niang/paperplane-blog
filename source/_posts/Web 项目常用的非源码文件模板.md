@@ -407,7 +407,7 @@ tsc --module esnext --outDir es
 }
 ```
 
-这样你的包便可以同时提供三种类型的模块，而且还会提供 .d.ts 文件来提供 typescript 支持。
+这样你的包便可以同时提供三种类型的模块，而且还会提供 .d.ts 文件来提供 TypeScript 支持。
 
 
 

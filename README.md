@@ -4,7 +4,7 @@
 
 本博客基于 [Hexo](https://hexo.io/zh-cn/)，主题基于默认的 landscape 深度定制。
 
-> Github 代码仓库为镜像。  
+> GitHub 代码仓库为镜像。  
 > 原始代码仓库：https://git.paperplane.cc/jia-niang/paperplane-blog
 
 # 开发指南

@@ -495,7 +495,7 @@ import * as React from 'react'
 import React from 'react'
 ```
 
-如果使用 TypeScript，可以编辑 tsconfig.json 设置属性 `compilerOptions.esModuleInterop` 值设为 `true`，这会另 CommonJS 模块的 `module.exports` 当做模块的默认导出，即将 `module.exports` 当做 `export default`。
+如果使用 TypeScript，可以编辑 tsconfig.json 设置属性 `compilerOptions.esModuleInterop` 值设为 `true`，这会令 CommonJS 模块的 `module.exports` 当做模块的默认导出，即将 `module.exports` 当做 `export default`。
 属性 `compilerOptions.allowSyntheticDefaultImports` 决定了自 CommonJS 中导入 `default` 时是否报错，开启了 `esModuleInterop` 后也会默认开启它。
 
 因为 CommonJS 的导出不是静态的，因此这种方式只能加载 CommonJS 模块的整体，不能指定其中的导出名。
