@@ -206,7 +206,7 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=242'
 
 ![](../images/image-20240621173125181.png)
 
-未提交的 Git 仓库，其分支名辉变为黄色，还会有提交变更的 icon。
+未提交的 Git 仓库，其分支名会变为黄色，还会有提交变更的 icon。
 
 执行失败的指令，最左侧会出现一个叉号：
 
