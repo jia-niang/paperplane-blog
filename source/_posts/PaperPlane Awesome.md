@@ -552,6 +552,7 @@ pdf.js 前端渲染 PDF：https://www.npmjs.com/package/pdfjs-dist
 docx-preview 前端渲染 word：https://www.npmjs.com/package/docx-preview
 LocalStorage 管理：https://www.npmjs.com/package/store2
 Cookies 管理：https://www.npmjs.com/package/js-cookie
+Dexie.js 提供 IndexedDB 的封装：https://dexie.org/ （[知乎介绍](https://zhuanlan.zhihu.com/p/706654343)）
 Licia 有四百种工具函数的库：https://licia.liriliri.io/
 stateshot 实现撤销与重做功能：https://github.com/gaoding-inc/stateshot
 yjs 二进制增量同步数据：https://docs.yjs.dev/
