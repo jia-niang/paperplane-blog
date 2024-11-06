@@ -570,6 +570,7 @@ package.json 字段排序的 prettier 插件：https://github.com/shellscape/pre
 object-code 获取对象的哈希：https://www.npmjs.com/package/object-code
 axios 重试插件：https://www.npmjs.com/package/axios-retry
 前后端通用的 axios 缓存插件：https://www.npmjs.com/package/axios-cache-interceptor
+ArtPlayer 视频播放器：https://artplayer.org/
 
 -----
 
