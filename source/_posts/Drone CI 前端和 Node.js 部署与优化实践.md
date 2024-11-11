@@ -312,6 +312,9 @@ volumes:
 如果使用 npm，可以通过 `npm config get cache` 来获取当前缓存存储的目录。
 npm 通常缓存目录位于：`~/.npm`。
 
+-----
+
+请注意，有些依赖包自身内部有 `preinstall` 等脚本，会联网下载东西，或在本机进行编译（例如 sass、puppeteer、canvas 这些包，在国内的网络安装，甚至有时还会报错），仅将 yarn 缓存挂载出来，无法加速这些特殊操作的耗时。
 
 
 ## 通过 Layer 加快 Docker 镜像制作流程
