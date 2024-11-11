@@ -314,8 +314,14 @@ npm 通常缓存目录位于：`~/.npm`。
 
 -----
 
-请注意，有些依赖包自身内部有 `preinstall` 等脚本，会联网下载东西，或在本机进行编译（例如 sass、puppeteer、canvas 这些包，在国内的网络安装，甚至有时还会报错），仅将 yarn 缓存挂载出来，无法加速这些特殊操作的耗时。
+请注意，有些依赖包自身内部有 `preinstall` 等脚本，会联网下载东西，或在本机进行编译（例如 `sass`、`puppeteer`、`canvas` 这些包，在国内的网络安装，甚至有时还会报错），仅将 yarn 缓存挂载出来，无法加速这些特殊操作的耗时。
+一般而言这些包编译出的产物是存储于 `node_modules` 下的，而不是存储于 yarn 的缓存目录中。
 
+查看 Drone 构建命令输出的耗时一栏，“Resolving packages”、“Fetching packages”、“Linking dependencies” 步骤可以很快完成，这便是 yarn 缓存起到的作用；
+但是 “Building fresh packages” 这一步可能会花费很长时间，上文所述的就是原因。
+
+如果你想让这个步骤也加快，推荐继续阅读下文，利用 Docker 构建镜像的 “分层” 机制，实现对整个编译构建环境的缓存。
+注意：这种做法需要每次 CI/CD 都构建出一个 Docker 镜像，更适合于后端项目；对于前端项目而言，如果只需要静态文件，构建出镜像后可以使用 `docker cp` 指令将产物复制出来，然后用 `docker rmi` 删掉镜像。
 
 ## 通过 Layer 加快 Docker 镜像制作流程
 
