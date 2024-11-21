@@ -17,7 +17,7 @@ steps:
       CI: false
 
   - name: deploy
-    image: ubuntu:22.04
+    image: alpine:3.20
     volumes:
       - name: webroot
         path: /webroot
