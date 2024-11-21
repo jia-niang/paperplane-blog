@@ -6,7 +6,7 @@ workspace:
 
 steps:
   - name: build
-    image: node:14.21.3
+    image: node:20.13.0
     volumes:
       - name: yarncache
         path: /usr/local/share/.cache/yarn
@@ -27,7 +27,7 @@ steps:
       - cp -rf ./public/* /webroot/blog/
 
   - name: deploy-cdn
-    image: node:14.21.3
+    image: node:20.13.0
     commands:
       - yarn deploy
     environment:
