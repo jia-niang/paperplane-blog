@@ -316,7 +316,7 @@ CSS-In-JS 方案 @emotion：https://emotion.sh/
 CSS-In-JS 方案 styled-components：https://styled-components.com/
 CSS-In-JS 方案 polished：https://polished.js.org/
 CSS-In-JS 方案 jss：https://cssinjs.org/
-Ant Motion 动效库：https://motion.ant.design/index-cn
+Ant Motion 动效规范（用到 6 个库）：https://motion.ant.design/index-cn
 React Spring 动效库：https://www.react-spring.dev/
 Framer Motion 动效库：https://www.framer.com/motion/
 各种 loading：https://www.davidhu.io/react-spinners/
