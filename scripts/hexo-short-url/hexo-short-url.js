@@ -21,8 +21,7 @@ async function generateShortUrl(post) {
         },
       }
     )
-    .then(res => res.data)
-    .then(data => data.p01ShortUrl)
+    .then(res => res.data.data.p01ShortUrl)
 
   post.shortUrl = shortUrl
 }
