@@ -432,3 +432,63 @@ $article-meta
 @media mq-tablet
   #article-toc
     display: none
+
+#history
+  border-top: 1px solid #ddd
+  padding: 15px 10px
+  .history_title
+    font-size: 24px
+    font-family: font-serif
+    color: #3c3c43
+  .history_all
+    display: inline-block
+    color: #AAA
+    margin-top: 10px
+    margin-left: -3px
+    font-size: 16px
+    &:hover
+      color: #3c3c43
+  .history_list
+    margin-top: 10px
+    .history_item
+      display: flex
+      position: relative
+      font-size: 18px
+      line-height: 1.6em
+      padding-left: 15px
+      &::before
+        content: ''
+        position: absolute
+        top: 0
+        left: 0
+        width: 6px
+        height: 6px
+        border-radius: 50%
+        background: #888
+        margin: 12px 0 0 0
+      &::after
+        content: ''
+        position: absolute
+        top: 0
+        left: 0
+        width: 6px
+        height: 18px
+        border-left: 1px solid #888
+        margin: 20px 0 0 2.5px
+      .history_item_date
+        flex-shrink: 0
+        width: 150px
+        margin-right: 10px
+        color: #888
+        &:hover
+          color: #3c3c43
+      .history_item_title
+        overflow: hidden
+        white-space: nowrap
+        text-overflow: ellipsis
+    &.all-toyear .history_item_date
+      width: 80px
+
+@media mq-mobile
+  #history
+    display: none
