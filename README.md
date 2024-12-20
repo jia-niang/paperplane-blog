@@ -57,7 +57,8 @@ ext install digitalbrainstem.javascript-ejs-support
 
 除了官方文档默认的属性外，本博客系统额外扩展了以下配置项：
 
-- `no_toc: true` 关闭此篇文章的目录功能
+- `no_toc: true` 关闭此篇文章的目录功能，默认 `false`
+- `history: -1` 文章修订记录显示个数，默认 `-1` 表示不限，设为 `0` 可以关闭此文章的修订记录
 
 ## 分类
 

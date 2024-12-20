@@ -1,0 +1,52 @@
+<% if (post.history !== 0 && post.historyMeta) { %>
+<section id="history" class="history">
+  <div class="history_title">本文修订记录</div>
+  <ul class="history_list">
+    <%
+      const historyConfig = post.history === undefined ? -1 : post.history
+      const displayList = historyConfig === -1
+        ? post.historyMeta.list 
+        : post.historyMeta.list.slice(0, historyConfig) 
+      const hasMore = post.historyMeta.list.length > displayList.length
+    %>
+    <% for (const item of displayList) { %>
+      <% 
+        const dt = new Date(item.ts)
+        const year = dt.getFullYear()
+        const month = dt.getMonth() + 1
+        const date = dt.getDate()
+
+        const dateString = `${year}年 ${month}月${date}日`
+        const toyearDateString = `${month}月${date}日`
+      %>
+    <li class="history_item">
+      <a
+        class="history_item_date"
+        href="<%= item.url %>"
+        data-year="<%= year %>"
+        date-toyear-display="<%= toyearDateString %>"
+      >
+        <%= dateString %>
+      </a>
+      <a class="history_item_title" href="<%= item.url %>"><%= item.message %></a>
+    </li>
+    <% } %>
+  </ul>
+  <a class="history_all" href="<%= post.historyMeta.url %>">
+    查看全部 <%= post.historyMeta.list.length %> 次修订记录
+  </a>
+</section>
+
+<script>
+  const currentYear = new Date().getFullYear()
+  const historyDate = document.querySelectorAll('.history_item_date')
+  historyDate.forEach(el => {
+    el.getAttribute('data-year') === currentYear.toString()
+      ? el.textContent = el.getAttribute('date-toyear-display')
+      : null
+  })
+  if (Array.from(historyDate).every(el => el.getAttribute('data-year') === currentYear.toString())) {
+    document.querySelector('.history_list').classList.add('all-toyear')
+  }
+</script>
+<% } %>

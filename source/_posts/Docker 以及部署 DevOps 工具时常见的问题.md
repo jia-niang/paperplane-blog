@@ -193,7 +193,7 @@ environment:
 
 ```yaml
 environment:
-	- TZ=Asia/Shanghai
+  - TZ=Asia/Shanghai
 ```
 
 两种写法没有区别，也谈不上谁好谁坏。

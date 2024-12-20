@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.552.0",
+    "axios": "^1.7.9",
     "hexo": "^6.3.0",
     "hexo-cdnify": "^1.1.0",
     "hexo-generator-archive": "^2.0.0",

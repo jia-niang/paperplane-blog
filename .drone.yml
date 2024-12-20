@@ -15,6 +15,10 @@ steps:
       - yarn build
     environment:
       CI: false
+      PAPAERPLANE_API_ADMIN_HEADER_NAME:
+        from_secret: PAPAERPLANE_API_ADMIN_HEADER_NAME
+      PAPAERPLANE_API_ADMIN_HEADER_VALUE:
+        from_secret: PAPAERPLANE_API_ADMIN_HEADER_VALUE
 
   - name: deploy
     image: alpine:3.20
