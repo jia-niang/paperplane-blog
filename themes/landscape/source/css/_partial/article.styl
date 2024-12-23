@@ -283,6 +283,15 @@ $article-meta
 .article-comment-link
   @extend $article-meta
 
+.article-history-link
+  @extend $article-meta
+
+.article-comment-href, .article-history-href
+  text-decoration: none
+  color: color-grey
+  line-height: 1em
+  text-shadow: 0 1px #fff
+
 #article-shorts
   @extend $article-meta
 
@@ -434,6 +443,7 @@ $article-meta
     display: none
 
 #history
+  scroll-margin-top: banner-height
   border-top: 1px solid #ddd
   padding: 15px 10px
   .history_title
