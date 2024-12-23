@@ -11,6 +11,12 @@
       <div class="article-meta">
         <%- partial('post/date', {class_name: 'article-date', date_format: null}) %>
         <%- partial('post/category') %>
+        <% if (post.history !== 0) { %>
+          <a href="<%- url_for(post.path) %>#comments" class="article-comment-link">
+            修订
+            <span class=""><%= post.historyMeta.list.length %></span>
+          </a>
+        <% } %>
         <% if (post.comments && theme.valine.enable && theme.valine.appId && theme.valine.appKey ){ %>
           <a href="<%- url_for(post.path) %>#comments" class="article-comment-link">
             <%= __('comment') %>
@@ -24,7 +30,7 @@
           </script>
         <% } %>
         <% if (post.shortUrl) { %>
-          <span id="article-shorts"><%= post.shortUrl %></span>
+          <span id="article-shorts">短链 <%= post.shortUrl %></span>
         <% } %>
       </div>
       <div class="e-content article-entry" itemprop="articleBody">
