@@ -22,7 +22,7 @@ categories:
 
 # 禁用 IP 访问
 
-以下示例中，将 IP 访问方式重定向到默认 404 页面：
+以下示例中，阻断直接 IP 访问：
 
 ```nginx
 server {
@@ -30,13 +30,15 @@ server {
   listen 80 default_server;
   listen [::]:80 default_server;
 
-  return 404;
+  return 444;
 }
 ```
 
-这里出现了 `_` 这个主机名，它表示：接受未被任何其他 `server_name` 匹配到的主机名；
+这里出现了：
 
-也出现了 `default_server` 这个端口监听的关键字，它表示：这个端口监听默认的服务器主机，也就是没有匹配到任何 `server` 时，使用这个监听来处理请求。
+- `_` 这个主机名，它表示：接受未被任何其他 `server_name` 匹配到的主机名；
+- `default_server` 这个端口监听的关键字，它表示这个端口监听默认的服务器主机，也就是没有匹配到任何 `server` 时，使用这个监听来处理请求；
+- `444` 状态码，它不是一个标准 HTTP 状态码，仅用于 Nginx 内部，表示拒绝连接，浏览器显示为 “XXX 未发送任何数据”，可以避免暴露这个 IP 是一台 Web 服务器。
 
 
 
@@ -155,7 +157,6 @@ location @website-name {
   try_files /index.html =404;
   
   # 下面就是禁用缓存相关的配置，本段参考了知乎、腾讯云的响应体
-  expires -1;
   add_header Cache-Control "private, no-cache, no-store, max-age=0";
   add_header Pragma "no-cache";
   add_header Expires "0";
@@ -163,6 +164,29 @@ location @website-name {
 ```
 
 其中 `@website-name` 可以自定义，在两段配置中保持一致即可。
+
+
+
+# gzip 压缩
+
+开启 `gzip` 压缩可以显著减小传输的流量，对小带宽服务器而言非常合适，带来的副作用是服务器 CPU 占用提高。
+
+使用这种方式开启：
+
+```nginx
+http {
+  gzip on;
+  gzip_comp_level 5;
+  gzip_types text/plain
+    text/css
+    text/javascript
+    application/javascript
+    application/xml
+    application/json;
+}
+```
+
+Nginx 支持对 `gzip` 压缩进行详细的配置，例如根据 UA 判断压缩与否、小于多大的文件不压缩、压缩缓冲区等，本文不再赘述。
 
 
 
@@ -297,6 +321,20 @@ location / {
   # ...
 }
 ```
+
+-----
+
+这里提供一个避免简单爬虫的配置示例：
+
+```nginx
+if ($http_user_agent ~* "(Go-http-client|node-fetch|python-requests|Python-urllib|Custom-AsyncHttpClient|BotPoke|^$)"){
+  return 403;
+}
+```
+
+注：请根据实际情况充分测试后使用，切勿直接照抄。
+例如：`Go-http-client` 是 Drone CI 用来进行 OAuth 认证的请求工具，屏蔽后 Drone CI 无法登录；
+而 `node-fetch` 是 Joplin 进行同步的请求工具，屏蔽后 Joplin 无法连接服务器。
 
 
 
