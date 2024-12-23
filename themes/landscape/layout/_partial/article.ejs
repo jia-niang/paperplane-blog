@@ -41,7 +41,20 @@
           </script>
         <% } %>
         <% if (post.shortUrl) { %>
-          <span>短链：<%= post.shortUrl %></span>
+          <span><a href="#" class="article-shorts-link">短链：<%= post.shortUrl %></a></span>
+          <script>
+            document.querySelector('.article-shorts-link').addEventListener('click', function (e) {
+              e.preventDefault()
+              if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText('<%= post.shortUrl %>').then(() => {
+                  document.querySelector('.article-shorts-link').innerText = '短链已复制'
+                  setTimeout(() => {
+                    document.querySelector('.article-shorts-link').innerText = '短链：<%= post.shortUrl %>'
+                  }, 2000)
+                })
+              }
+            })
+          </script>
         <% } %>
       </div>
       <div class="e-content article-entry" itemprop="articleBody">
