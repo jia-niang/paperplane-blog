@@ -9,39 +9,39 @@
         </header>
       <% } %>
       <div class="article-meta">
-        <span class="article-date-link">
+        <span>
           <%- partial('post/date', {class_name: 'article-date', date_format: null}) %>
         </span>
         <%- partial('post/category') %>
         <% if (post.history !== 0) { %>
-          <span class="article-history-link">
-            <a href="<%- url_for(post.path) %>#history" class="article-history-href">
+          <span>
+            <a href="<%- url_for(post.path) %>#history" class="article-history-link">
               修订 <%= post.historyMeta.list.length %>
             </a>
           </span>
           <script>
-            document.querySelector('.article-history-href').addEventListener('click', function (e) {
+            document.querySelector('.article-history-link').addEventListener('click', function (e) {
               e.preventDefault()
               document.querySelector('#history').scrollIntoView({ behavior: 'smooth' });
             })
           </script>
         <% } %>
         <% if (post.comments && theme.valine.enable && theme.valine.appId && theme.valine.appKey ){ %>
-          <span class="article-comment-link">
-            <a href="<%- url_for(post.path) %>#comments" class="article-comment-href">
+          <span>
+            <a href="<%- url_for(post.path) %>#comments" class="article-comment-link">
               <%= __('comment') %>
               <span class="post-comments-count valine-comment-count" data-xid="<%- url_for(post.path) %>" itemprop="commentCount">...</span>
             </a>
           </span>
           <script>
-            document.querySelector('.article-comment-href').addEventListener('click', function (e) {
+            document.querySelector('.article-comment-link').addEventListener('click', function (e) {
               e.preventDefault()
               document.querySelector('#comments').scrollIntoView({ behavior: 'smooth' });
             })
           </script>
         <% } %>
         <% if (post.shortUrl) { %>
-          <span id="article-shorts">短链： <%= post.shortUrl %></span>
+          <span>短链：<%= post.shortUrl %></span>
         <% } %>
       </div>
       <div class="e-content article-entry" itemprop="articleBody">
