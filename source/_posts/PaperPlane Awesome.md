@@ -140,6 +140,7 @@ SVG 图标库1：https://leungwensen.github.io/svg-icon/
 SVG 图标库2：https://icomoon.io/app/#/select
 免费透明 PNG 和 SVG 的 Logo：https://seeklogo.com/ （外网访问）
 各种循环图库索引：https://desdev.tools/tools/categories/textures-patterns/
+各种循环纹理图：https://www.transparenttextures.com/
 
 -----
 
