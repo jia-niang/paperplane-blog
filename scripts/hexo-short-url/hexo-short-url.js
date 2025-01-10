@@ -8,7 +8,7 @@ async function generateShortUrl(post) {
 
   const shortUrl = await require('axios')
     .post(
-      'https://app.paperplane.cc/api/shorts',
+      'https://console.paperplane.cc/api/shorts',
       {
         url: post.permalink,
         type: 'SYSTEM',
