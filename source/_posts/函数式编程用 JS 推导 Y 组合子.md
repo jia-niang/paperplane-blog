@@ -587,7 +587,7 @@ const tree: ITreeNode<number>[] = [
   },
 ]
 
-const newTree = mapTree2(tree, data => data + 10000)
+const newTree = mapTree(tree, data => data + 10000)
 
 console.log(newTree)
 console.log(tree)
