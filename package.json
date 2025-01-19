@@ -12,7 +12,6 @@
     "version": "6.3.0"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.552.0",
     "axios": "^1.7.9",
     "hexo": "^6.3.0",
     "hexo-cdnify": "^1.1.0",
@@ -25,7 +24,6 @@
     "hexo-renderer-marked": "^6.0.0",
     "hexo-renderer-stylus": "^2.1.0",
     "hexo-server": "^3.0.0",
-    "hexo-theme-landscape": "^0.0.3",
-    "mime": "^3.0.0"
+    "hexo-theme-landscape": "^0.0.3"
   }
 }
