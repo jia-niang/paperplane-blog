@@ -1,7 +1,9 @@
 {
   "name": "paperplane-blog",
+  "packageManager": "pnpm@9.15.2",
   "private": true,
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "dev": "hexo clean && hexo server",
     "build": "hexo generate",
     "clean": "hexo clean",
