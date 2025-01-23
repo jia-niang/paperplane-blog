@@ -306,9 +306,9 @@ function DatePicker(props: { value: [number, number, number] }) {
   const [year, month, date] = value
 
   const dateList = useMemo(() => {
-  	return calcDateList(year, month)
+    return calcDateList(year, month)
     // ↓ 注意这里
-	}, [year, month])
+  }, [year, month])
 
   // ...
 }
@@ -324,9 +324,9 @@ function DatePicker(props: { value: [number, number, number] }) {
   const { value } = props
 
   const dateList = useMemo(() => {
-  	return calcDateList(value[0], value[1])
+    return calcDateList(value[0], value[1])
     // ↓ 注意这里
-	}, [value])
+  }, [value])
 
   // ...
 }

@@ -462,7 +462,7 @@ Navicat 允许我们使用 SSH 隧道来连接数据库，会先 SSH 连接到�
 
 ```yaml
 services:
-	postgres:
+  postgres:
     ports:
       - '127.0.0.1:5432:5432'
       # 注意这里的 127.0.0.1 不能省略

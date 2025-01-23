@@ -381,7 +381,7 @@ Y(f => (n => n <= 1 ? n : n * f(n - 1)))(5)
 const Y = 
   f => 
     (t => t(t))
-		(g => f(x => g(g)(x)))
+    (g => f(x => g(g)(x)))
 ```
 
 将 `(t => t(t))` 展开，它也等价于：
@@ -389,8 +389,8 @@ const Y =
 ```ts
 const Y = 
   f => 
-		(g => f(x => g(g)(x)))
-		(g => f(x => g(g)(x)))
+    (g => f(x => g(g)(x)))
+    (g => f(x => g(g)(x)))
 ```
 
 这便是 `Y` 组合子在 JS 中的实现。
@@ -567,7 +567,7 @@ const mapTree = <TData = any, TResult = any>(
 ): ITreeNode<TResult>[] =>
   RA.Y((next: any) =>
     R.map(
-  	  R.pipe(R.when(R.complement(R.isEmpty), R.modify('children', next)),
+      R.pipe(R.when(R.complement(R.isEmpty), R.modify('children', next)),
       R.modify('data', handleFn)
     )
   ))(tree)

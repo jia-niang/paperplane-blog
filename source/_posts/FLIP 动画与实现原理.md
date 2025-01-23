@@ -309,7 +309,7 @@ function move() {
 假设存在以下网页：
 
 ```html
-<!DOCTYPE html>	
+<!DOCTYPE html>
 <html lang="zh-CN">
   <head>
     <style>
@@ -1469,7 +1469,7 @@ requestAnimationFrame(() => {
 ```ts
 requestAnimationFrame(() => {
   el.style.transition = null
-	el.style.transform = `translate(${deltaX}px, ${deltaY}px)`
+  el.style.transform = `translate(${deltaX}px, ${deltaY}px)`
   
   requestAnimationFrame(() => {
     el.style.transition = `transform 2s`
