@@ -61,8 +61,8 @@
   color: #444
   display: inline-flex
   align-items: center
+  margin-left: auto
   font-family: font-serif
-  margin-left: 30px
   height: banner-height
   a,span
     line-height: 1.2em
@@ -70,6 +70,8 @@
     text-decoration: none
     color: inherit
     position: relative
+    &:last-child
+      margin-right: 0
     &.link-current
       cursor: default
       font-weight: bold

@@ -4,6 +4,18 @@ name: default
 workspace:
   path: /home/node/app
 
+volumes:
+  - name: webroot
+    host:
+      path: /root/www
+  - name: pnpm-cache
+    host:
+      path: /root/.pnpm-cache
+
+trigger:
+  branch:
+    - master
+
 steps:
   - name: build
     image: node:20.13.0
@@ -53,15 +65,3 @@ steps:
     environment:
       BAIDU_ZHANZHANG_TOKEN:
         from_secret: BAIDU_ZHANZHANG_TOKEN
-
-volumes:
-  - name: webroot
-    host:
-      path: /root/www
-  - name: pnpm-cache
-    host:
-      path: /root/.pnpm-cache
-
-trigger:
-  branch:
-    - master
