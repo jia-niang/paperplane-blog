@@ -2,7 +2,7 @@ kind: pipeline
 name: default
 
 workspace:
-  path: /home/node/app
+  path: /paperplane-blog
 
 volumes:
   - name: webroot
@@ -21,7 +21,7 @@ steps:
     image: node:20.13.0
     volumes:
       - name: pnpm-cache
-        path: /source/.pnpm-store
+        path: /paperplane-blog/.pnpm-store
     commands:
       - npm i -g pnpm
       - pnpm i
