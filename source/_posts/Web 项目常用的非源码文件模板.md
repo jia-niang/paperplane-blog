@@ -108,6 +108,7 @@ SOFTWARE.
 # compiled output
 /dist
 /node_modules
+/.pnpm-store
 
 # Logs
 logs
@@ -409,6 +410,9 @@ tsc --module esnext --outDir es
 
 这样你的包便可以同时提供三种类型的模块，而且还会提供 .d.ts 文件来提供 TypeScript 支持。
 
+注意，使用 `tsc` 打包功能较为基础，且对于 `paths` 之类的支持还需要额外插件；
+推荐使用 `rollup` 之类的专用打包工具。
+
 
 
 # `.prettierrc` 模板
@@ -461,7 +465,12 @@ tsc --module esnext --outDir es
 
 
 
-#  `.eslintrc` 模板
+#  `.eslintrc` 模板（v8）
+
+2024 更新：
+现在出了 v9 版本的 ESLint 规则，基于 JS 对象而不是这种纯字符串，本身是挺好的，但目前不支持向上递归目录，这导致在 monorepo 中如果想为每个包配置规则，需要统一在根目录配置；我认为 v9 有待官方完善，后续会补充 v9 版本的配置。
+
+-----
 
 提供给 ESLint 的配置文件，具体配置可以参考 [官网文档](https://eslint.org/docs/latest/use/configure/)。
 
@@ -1329,6 +1338,7 @@ module.exports = {
 
 ```json
 {
+  "packageManager": "pnpm@<版本号>",
   "scripts": {
     "preinstall": "npx only-allow pnpm"
   },
