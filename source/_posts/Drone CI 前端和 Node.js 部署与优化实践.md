@@ -425,7 +425,10 @@ CMD [ "yarn", "start:prod" ]
 
 -----
 
-如果你的项目比较复杂，例如用到了 `.npmrc` 来规定一些包的行为，或者，你是一个 monorepo 项目，结构复杂，此时这个指令需要写的很长很长，这里我强烈推荐由我开发：[`docker-deps`](https://www.npmjs.com/package/docker-deps)，这是专为在把 Node.js 项目打包成 Docker 镜像而设计的工具，用于提取项目的依赖定义文件以加速构建，它使用简单、功能强大，我为它编写了大量测试用例确保运行无误，且我自己的多个项目也在使用它。
+如果你的项目比较复杂，例如用到了 `.npmrc` 来规定一些包的行为，或者，你是一个 monorepo 项目，结构复杂，此时这个指令需要写的很长很长，这里我强烈推荐由我开发的：[`docker-deps`](https://www.npmjs.com/package/docker-deps)。
+
+`docker-deps` 是一个 CLI 工具，专为把 Node.js 项目打包成 Docker 镜像而设计，用于提取项目的依赖定义文件以更好地命中 Layer 缓存。
+它使用简单、功能强大，我为它编写了大量测试用例确保运行无误，且我自己的多个项目也在使用它。
 
 （使用了 `docker-deps`，请直接按照下文的用法使用，忽略上面的改法。）
 
@@ -438,17 +441,30 @@ CMD [ "yarn", "start:prod" ]
     - npx -y docker-deps
 ```
 
-执行这个步骤后，工作区会出现一个 `.docker-deps`，这里面包含了整个项目所有依赖文件，例如 `package.json`、Lock 文件、`.npmrc`；
+执行这个步骤后，工作区会出现一个 `.docker-deps/`，这里面包含了整个项目所有依赖文件，例如 `package.json`、Lock 文件、`.npmrc`；
 然后，你需要编辑 Dockerfile，把下面两行插入到原本的 `COPY` 语句的前面：
 
+原来：
+
 ```dockerfile
-COPY .docker-deps 工作区目录
+COPY . <工作区目录>
 RUN npm i
+RUN npm build
+```
+
+更改为：
+
+```dockerfile
+COPY .docker-deps <工作区目录>
+RUN npm i
+
+COPY . <工作区目录>
+RUN npm build
 ```
 
 这样就 OK 了。
 
-经过这样的改造后，只要项目依赖相关的文件没有变动，构建镜像时就能命中之前的缓存，以 “CACHED” 的方式瞬间跳过 “npm install”，节约大量时间。
+经过这样的改造后，只要项目依赖相关的文件没有变动，构建镜像时就能命中之前的缓存，以 “CACHED” 的方式瞬间跳过 `npm i`，节约大量时间。
 
 -----
 
