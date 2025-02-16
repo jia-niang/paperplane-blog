@@ -524,7 +524,7 @@ RUN yarn
 
 修改为：
 
-```dock
+```dockerfile
 RUN --mount=type=cache,id=yarn,target=/usr/local/share/.cache/yarn yarn
 ```
 
