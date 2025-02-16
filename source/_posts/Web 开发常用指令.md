@@ -64,7 +64,7 @@ pnpm config delete registry
 pnpm config get registry
 
 # 查看缓存目录
-pnpm config get store-dir
+pnpm store path
 ```
 
 
