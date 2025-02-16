@@ -310,12 +310,12 @@ volumes:
 
 -----
 
-请注意：Drone 使用镜像中的默认用户来执行 CI/CD 命令；**`node` 镜像中，默认用户是 `root`**，也存在一个 `node` 用户不过不是默认的；可以通过 `docker run --rm node:20-alpine whoami` 来验证当前用户。
+请注意：Drone 使用镜像中的默认用户来执行 CI/CD 命令；`node` 镜像中，默认用户是 `root`，也存在一个 `node` 用户不过不是默认的；可以通过 `docker run --rm node:20-alpine whoami` 来验证当前用户。
 
 <br />
 
 使用 npm 的用户可以通过 `npm config get cache` 来获取当前缓存存储的目录；
-在 Linux 系统中通常位于：`~/.npm`；因此缓存目录是 **`/root/.npm`**。
+在 Linux 系统中通常位于：`~/.npm`；因此缓存目录是 `/root/.npm`。
 
 <br />
 
@@ -325,7 +325,7 @@ volumes:
 - 非 `root` 用户，缓存目录位于：`~/.cache/yarn`；
 - `root` 用户，缓存目录位于：`/usr/local/share/.cache/yarn`；
 
-镜像默认是 `root`，因此缓存目录是 **`/usr/local/share/.cache/yarn`**。
+镜像默认是 `root`，因此缓存目录是 `/usr/local/share/.cache/yarn`。
 
 <br />
 
@@ -397,7 +397,7 @@ Docker 镜像的产生需要通过 [Dockerfile](https://docs.docker.com/referenc
 
 可以发现：
 
-- **如果某一步完全没办法缓存，为了防止它影响后面步骤的缓存，我们需要尽量把这个步骤移至最尾部执行；**
+- **如果某一步没法缓存，为了防止它影响后面步骤的缓存，我们需要尽量把这个步骤移至最尾部执行；**
   例如把项目源码 `COPY` 进镜像，每次构建时项目源码肯定是发生过改动的，这一步肯定无法缓存，所以 `yarn build` 类似的指令在最后执行；
 - 以 yarn 来举例：**安装依赖时 `yarn` 指令必须要有 `package.json` 和 Lock 文件，而这两个文件一般来说不会特别频繁的修改，我们可以先只把这两个文件 `COPY` 到镜像，然后执行 `RUN yarn` 安装；这样一来，如果依赖项没有发生过任何变动，`COPY` 操作和 `RUN yarn` 的哈希值都没有变化，这两个 Layer 可以应用缓存，从而使得安装依赖的步骤瞬间完成。**
 
