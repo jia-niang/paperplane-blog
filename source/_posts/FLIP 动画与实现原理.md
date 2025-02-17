@@ -147,7 +147,7 @@ FLIP 动画做了这样的操作：
 
 我们通过 JS 或用户交互使得页面内容发生改变时，便会触发浏览器的相关机制，产生视觉效果。
 
-这个过程可分为几个步骤：**“计算样式”**、**“布局”**、**“绘制”** 和 “合成”；而考虑到网页上会有各种交互元素，所以这这些步骤会很频繁的触发。
+这个过程可分为几个步骤：**“计算样式”**、**“布局”**、**“绘制”** 和 “合成”；而考虑到网页上会有各种交互元素，所以这些步骤会很频繁的触发。
 
 时间轴大致如下：
 
@@ -209,7 +209,7 @@ function move() {
 
 **简单总结：**
 ① 在 “绘制” 之前，同步代码无论修改多少次样式，浏览器也只会使用最后的结果——这是因为同步代码执行完毕后只有一次 “计算样式”，后面紧接着就是 “绘制”；
-② 而想要产生过渡动画，必须能让浏览器在两次 “计算样式” 时样式发生变动，所以我们可以用 `setTimeout()`，它的回调是异步代码，执行时机较晚，比 “绘制” 还要晚，在下一次 “绘制” 前，浏览器就能感知到样式被修改了，从而产生过渡动画。
+② 而想要产生过渡动画，必须能让浏览器在两次 “计算样式” 时检测到样式发生变动，所以我们可以用 `setTimeout()`，它的回调是异步代码，执行时机较晚，比 “绘制” 还要晚，在下一次 “绘制” 前，浏览器就能感知到样式被修改了，从而产生过渡动画。
 
 但是，浏览器提供了一个更好的 API，专门用于实现这种类似的过渡动画类的需求，它就是 [`requestAnimationFrame()`](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestAnimationFrame)。
 
@@ -931,11 +931,11 @@ boxes.forEach(box => {
 </html>
 ```
 
-从这个例子可以看出，FLIP 动画并不局限于列表元素调换顺序，实际上可以实现很多种过渡动画类型。
+可见，FLIP 动画可以是多样的，并不局限于 “列表排序” 这种场景。
 
 
 
-# 封装一个 FLIP 动画库
+# 自己封装一个 FLIP 动画库
 
 了解了上面的流程后，我们可以封装一个实现 FLIP 动画的工具。
 
@@ -948,7 +948,7 @@ boxes.forEach(box => {
 这里，涉及到一个问题：元素可能被暂时移出 DOM 并插入回来，我们如何跟踪一个元素？
 在之前的例子里，元素附带有 `key` 属性，可以使用 `key` 属性来标识并跟踪元素（你可能发现了，Vue、React 也使用 `key` 属性来跟踪元素）；而我们自己实现的这个函数，如果不要求用户使用 `key`，那么我们可以使用 [`WeakMap`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/WeakMap) 来跟踪元素，把 DOM 作为键即可。
 
-实际上，[`WeakMap`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/WeakMap) 诞生的目的就是为了此类代码场景。
+实际上，[`WeakMap`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/WeakMap) 诞生的目的就是为了此类场景。
 
 我们可以写出这样的代码：
 
@@ -1112,8 +1112,12 @@ function flip(target) {
 
 而封装后的 `flip()` 函数通过 `MutationObserver` 来触发 FLIP 动画，这个回调**在 DOM 变更后才触发**， 此时元素已经被放置到了终点，虽然我们可以直接获得终点的坐标，但是起点坐标就只能从 `WeakMap` 中来获取了；**可是我们不会实时向 `WeakMap` 中记录元素位置**，所以在前一个过渡动画未完成时节点还处在 “半路上”，这时计算出的偏移距离就不正确了，这也导致了过渡动画出现问题。
 
-解决方法是，采取一种方式跟踪元素的坐标并持续记录，即持续更新 `startPositions` 中的坐标值。
-如何持续跟踪元素的坐标？
+有两种解决方法：
+
+- 采取一种方式跟踪元素的坐标并持续记录，即持续更新 `startPositions` 中的坐标值；
+- 在元素位置发生变动前，就提前通知这些元素，立即更新当前的 “Start” 坐标。
+
+本文介绍第一种方式，因为这样可以保持 `flip()` 的用法，无需使用者修改任何代码。
 
 这又要用到 [`requestAnimationFrame()`](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestAnimationFrame) 的回调，它可以利用每一帧的空闲时间，在浏览器布局后、绘制前运行代码；例如：设备是 60Hz 刷新率的屏幕，此时每一帧大约 16.666 毫秒的运行时间，浏览器运行 JS、布局、绘制是肯定用不到这么长时间，会有空闲时间段，而 `requestAnimationFrame()` 的代码就可以在这个空闲时间段中运行。
 
@@ -1182,7 +1186,7 @@ function flip(target) {
       const deltaX = start.left - end.left
       const deltaY = start.top - end.top
 
-      // ★ 下面这一行也不需要了
+      // ★ 下面这一行也不需要了，直接注释掉
       // startPositions.set(el, end)
 
       // 如果元素 “原地不动”，那么跳过后续流程
@@ -1301,11 +1305,11 @@ const shuffle = () => void list.sort(() => Math.random() - 0.5)
 
 回顾一下 FLIP 动画的流程：DOM 变动后，计算出元素的偏移并设置 `transform`，**这个动作瞬间完成，这期间都是不能带有 `transition` 过渡的**，此后再设置元素的 `transition`，然后移除掉元素的 `transform`，来播放 “归位” 过渡动画。
 
-实际上，`<TransitionGroup>` 也会为子组件做类似的流程，在 DOM 变动后，Vue 会暂时屏蔽掉子组件上面的过渡 CSS 样式，在计算偏移量、设置 `transform` 后，Vue 会解除对过渡样式的屏蔽，并为组件附加 `<前缀>-move` 类名直到播放完毕（也就是触发 `transitionend` 事件，Vue 内部会监听此事件），所以我们把 `transition` 属性放置在这个类名下，确保过渡只在正确的时机生效。
+实际上，`<TransitionGroup>` 也会为子组件做类似的流程，在 DOM 变动后，Vue 会暂时屏蔽掉子组件上面的过渡 CSS 样式，在计算偏移量、设置 `transform` 后，Vue 会解除对过渡样式的屏蔽，并为组件附加 `<前缀>-move` 类名直到播放完毕（也就是触发 `transitionend` 事件，当然 Vue 内部会监听此事件），所以我们把 `transition` 属性放置在 `.flip-move` 这个类名下，**确保过渡只在正确的时机生效**。
 
 你可以试一试直接把 `transition: all 2s;` 写在 `.box{}` 里面，此时动画仍然能生效，但是在前一个动画没播放完就连续点击按钮时，动画会出问题。
 
-同样，使用 `<TransitionGroup>` 组件必须保证子组件具有 `key` 属性并设为唯一的值，它用于跟踪组件的坐标变化。
+同样，使用 `<TransitionGroup>` 组件必须保证子组件具有 `key` 属性并设为唯一的值，它用于跟踪组件的顺序。
 
 
 
@@ -1403,7 +1407,8 @@ function Demo1() {
 上述代码无法运行，就算把 `ref={divRefs[index]}` 改成 `ref={divRefs.current[index]}` 也不行。
 
 此时，我们要用到 React 的一个非常冷门的用法：[`ref` 回调](https://zh-hans.react.dev/reference/react-dom/components/common#ref-callback)。
-组件的 `ref` 可以接受一个回调函数，每当组件的 DOM 在网页上被放置时，React 就会调用这个回调，并把组件自身作为第一个参数传给这个回调函数；此时我们就可以在代码中访问和储存 DOM 对象了。
+
+组件的 `ref` 可以接受一个回调函数，每当组件的 DOM 在网页上被放置时，React 就会调用这个回调，并把组件自身作为第一个参数传给这个回调函数；此时我们就可以在代码中访问和储存 DOM 对象了。组件被卸载时，React 也会调用这个回调，但此时参数为 `null`，所以需要做一个 `if` 判空处理。
 
 示例代码：
 
@@ -1416,7 +1421,8 @@ function Demo2() {
       {list.map((item, index) => (
         <div key={item} ref={node => {
           // 这里给 ref 提供一个函数，函数中将节点存入对象
-          if(node) { // node 可能为空，需做判空处理
+          // 需要对 node 判空，因为 React 会在卸载组件时传 null
+          if (node) {
             domRefs.current[item.key] = node
           }
         }}>{item}</div>
@@ -1453,15 +1459,20 @@ requestAnimationFrame(() => {
 
 但是在 React 的 `useEffect()` 中，却不能直接这么写。
 
-这是因为，React 始终会在前一帧的 “绘制” 完成后的某个时机触发 `useEffect()` 的回调，但回调执行的时机由 React 内部调度，可能会依据用户的交互行为（官方文档是 [这样说的](https://zh-hans.react.dev/reference/react/useEffect#caveats)），**很有可能同样也是在下一帧的 `requestAnimationFrame()` 时机执行 `useEffect()` 的回调，此时两个动作被放在了同一时机执行，CSS 被设置一次之后立马又被改写了，动画无法产生**。
+这是因为，React 始终会在前一帧的 **“绘制” 完成后** 的某个时机触发 `useEffect()` 的回调，但回调执行的时机由 React 内部调度，可能会依据用户的交互行为（官方文档是 [这样说的](https://zh-hans.react.dev/reference/react/useEffect#caveats)），**很有可能同样也是在下一帧的 `requestAnimationFrame()` 时机执行 `useEffect()` 的回调，此时两个动作被放在了同一时机执行，浏览器只有一次 “计算样式”，过渡动画无法产生**。
 
 这里给出一张简易的时间轴：
 
 ![](../images/image-20240725034520016.png)
 
+可以看出，`useEffect()` 执行时机太晚，都已经到下一帧了，很难管理后续的过渡。
+
+<br />
+
 解决方式有以下三种：
 
-第一种方式，是使用 `useLayoutEffect()` 取代 `useEffect()`，因为它会在 DOM 变动后同步触发，此时浏览器预备的第一次 “布局” 还没有开始，设置好偏移后，然后在 `requestAnimationFrame()` 的回调中修改属性，也就是图中的绿色区域，引发一次 “重排”，这样过渡就能正常生效了。
+第一种方式，是使用 `useLayoutEffect()` 取代 `useEffect()`，因为它会在 DOM 变动后同步触发，此时浏览器预备的第一次 “布局” 还没有开始。
+先在 `useLayoutEffect()` 中设置偏移（深蓝色区域），引发第一次 “计算样式”，然后在 `requestAnimationFrame()` 的回调中取消掉偏移（绿色区域），引发第二次 “计算样式”，这样在 “绘制” 时过渡就能正常生效了。
 
 第二种方式，是把上面的第一步放在下一次重绘前、第二步放在下下次重绘前，这样 CSS 的过渡总能生效；
 伪代码如下：
