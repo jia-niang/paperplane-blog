@@ -9,26 +9,26 @@ categories:
 - CSS
 ---
 
-> 本文中，很多 Demo 精确到 “帧” 级别，运行这些 Demo 时建议禁用浏览器所有插件，或使用无痕模式测试。
+> 本文中，很多 Demo 精确到 “帧” 级别，运行这些 Demo 时建议禁用浏览器所有插件，或使用无痕模式。
 
 Vue.js 2 的官方文档中，讲到组件过渡动画这一章时，有一个动画示例（[链接](https://v2.cn.vuejs.org/v2/guide/transitions.html#%E5%88%97%E8%A1%A8%E7%9A%84%E6%8E%92%E5%BA%8F%E8%BF%87%E6%B8%A1)）：
 
 ![](../images/vue-docs-flip.gif)
 
-Vue 官方文档称这种过渡名为 “FLIP 动画”。有关 FLIP 动画的介绍，可以 [点击链接](https://aerotwist.com/blog/flip-your-animations/) 参考这篇 2015 年的文章。
+这种过渡动画名为 “FLIP 动画”。国外至少早在 2015 年就有介绍 FLIP 动画的文章了，可以 [点击链接](https://aerotwist.com/blog/flip-your-animations/) 前往阅读。
 
-浏览器原生无法实现这种动画，是因为我们会使用 `element.appendChild()` 等 API 来重新插入 DOM，此时元素瞬间移位，不可能有 CSS 过渡产生。
+在调整 DOM 顺序时，无论是原生 JS，还是 React、Vue 等工具，最终都是要用 `element.appendChild()` 等 API 来重新插入 DOM 的。DOM 被插入文档时，想让元素产生这种过渡动画，势必需要一系列代码来完成。
 
-但是，无论 Vue 还是 React，在 DOM 发生变更时，工具的内部其实也是使用了 `element.appendChild()` 来操纵 DOM，那上图的效果是怎么实现的？
-
-实际上，要想实现上述动画效果，即使使用了 Vue，也必须配合 Vue 的内置组件 `<TransitionGroup>` 来实现，这个组件专为一组 DOM 进行顺序变化的场合而设计，例如列表插入、列表移除、调整顺序等需求，它会在多个元素变动时调度元素的 CSS 属性，以此实现这种 FLIP 动画的效果。
+本文旨在揭秘 FLIP 动画的原理，并给出原生 JS 的实现方式，还会用分别用原生 JS、React 来简单封装一个 FLIP 动画工具。
 
 
 
 # “FLIP” 的含义和原理
 
 FLIP 这四个字母，分别表示四个单词：“First” 初始位置、“Last” 最终位置、“Invert” 反向、“Play” 播放。
-用中文翻译和解释为：“反向播放从最终位置到初始位置的过渡”；从终点回到起点的过程，反向播放，于是负负得正，动画就是正常的从起点到终点。
+中文翻译为：“反向播放从最终位置到初始位置的过渡动画”。
+
+这么说很拗口，其实，从终点回到起点的过程，反向播放，于是负负得正，动画就是正常的从起点到终点。
 
 你可能会有疑惑：为什么会有一个 “Invert” 反向？什么叫反向应用过渡？
 实际上，理解这个 “Invert”，就几乎已经理解了 FLIP 动画的核心。我们先一步一步来。
@@ -44,9 +44,10 @@ FLIP 这四个字母，分别表示四个单词：“First” 初始位置、“
 可以看到，点击按钮后，DOM 瞬间就完成了更新，并不是等到动画结束之后。
 
 这也是 FLIP 动画的特点：**FLIP 动画是在元素的 DOM 变动完成后才开始播放的，此时元素已经位于终点了，所以播放的过渡动画其实是 “归位” 的过渡动画。**
-也正是因为这个原因，即使去掉了 FLIP 动画，也只算没了 “归位” 的过渡，看上去比较突兀而已，不会出什么错误。
 
-而且，即使过渡没有播放完毕就重新调整 DOM 的位置，元素也能正确运动而且移动到正确的位置，因为 FLIP 动画始终是等到元素移动到最终位置后播放 “归位” 动画，最终都是要回到正确位置。
+也正是因为这个原因，即使去掉了 FLIP 动画，也只是没了 “归位” 的过程，看上去比较突兀而已，不会出什么错误。
+
+而且即使过渡没有播放完毕就重新调整 DOM 的位置，元素也能正确运动而且移动到正确的位置，因为 FLIP 动画始终是等到元素移动到最终位置后播放 “归位” 动画，最终都是要回到正确位置。
 
 如图，频繁点击按钮，元素始终可以回到正确的位置：
 
@@ -58,11 +59,14 @@ FLIP 这四个字母，分别表示四个单词：“First” 初始位置、“
 
 我们继续解释什么是 “归位”，当然这要和上面的 “反向” 相结合。
 
-举个最简单的例子，假设某个元素出于某些原因， 接下来会出现在偏右 `100px` 的位置，我们想给这个过程加上动画：
-通常的做法是这样的：给元素设置 `transition` 之后，只需要再加上 `transform: translateX(100px)` 就能使它向右移动了；
+举个最简单的例子：
+假设某个元素出于某些原因， 接下来会出现在偏右 `100px` 的位置，我们想给这个过程加上动画。
+
+通常的做法是这样的：
+给元素设置 `transition`，然后只需要加上 `transform: translateX(100px)` 就能使它向右移动了。
 
 但是，“反向” 和 “归位” 的思路是这样的：
-等到元素到右边后，先给它设置 `transform: translateX(-100px)` 使它向左反向回到原先的位置，**然后再给它设置 `transition` 属性，并取消掉元素的 `transform: translateX(-100px)` 属性**，这样元素就会实现一个 “归位” 的动作，同样也是从左向右运动 `100px`，最终到达目标位置。
+先什么也不做，等到元素到右边 `100px` 后，给它设置 `transform: translateX(-100px)` 使它向左反向回到原先的位置，**然后再给它设置 `transition`，并取消掉元素的 `transform: translateX(-100px)` 属性**，这样元素就会实现一个 “归位” 的动作，同样也是从左向右运动 `100px`，最终到达目标位置。
 
 > 取消掉元素的 `transform: translateX(-100px)` 属性，可以看做是设置成了 `transform: translateX(0)`。
 
@@ -78,8 +82,8 @@ FLIP 这四个字母，分别表示四个单词：“First” 初始位置、“
       function move() {
         const el = document.getElementById('div')
 
-        // 通过其他方式使它移动到正确位置
-        // 在 FLIP 中，有可能是元素的位置被调整了之类的，具体怎么调整不重要
+        // 假设元素出于某些原因要往右移动 100px，例如顺序被重排了
+        // 我们这里用 marginLeft 来模拟
         el.style.marginLeft = '100px'
 
         // 设置 “反向” 的偏移
@@ -97,7 +101,9 @@ FLIP 这四个字母，分别表示四个单词：“First” 初始位置、“
 ```
 
 你可以试一下上面的代码，会发现无法实现动画，元素 “瞬移” 了。
-原因很简单：我们在同步代码中多次设置了样式，**但浏览器会等待同步代码运行完后才会去计算样式**，所以对于 `transform` 属性，浏览器会以最后一次设定的值为准，这样自然没有动画产生。
+
+原因很简单：
+我们在同步代码中多次设置了样式，**但浏览器会等待同步代码运行完后才会去计算样式**，所以对于 `transform` 属性，浏览器会以最后一次设定的值为准，这样自然没有动画产生。
 
 解决方法也很简单，把最后两条样式操作改为异步即可：
 
@@ -118,6 +124,8 @@ function move() {
 
 ![](../images/invert-transition.gif)
 
+我们成功的使用 “归位” 的思维来实现了需求。
+
 理解了这个 “归位” 的过程，那么你就离理解 FLIP 动画不远了。
 
 
@@ -133,7 +141,7 @@ FLIP 动画做了这样的操作：
 - 步骤 ③：DOM 变动完成后，再记录下元素在 B 位置的坐标；
 - 步骤 ④：计算从 B 到 A 的偏移，通过 CSS 样式 `transform: translate(x, y)` 来设置元素的位置，使它偏移回到原先的 A 位置；
   **这个过程需要用 JS 先屏蔽掉元素的 `transition` 属性，避免移回的过程中产生过渡动画**；
-- 步骤 ⑤：使用 JS 恢复元素的 `transition` 属性，同时移除掉元素的 `transform: translate(x, y)` CSS 属性，这样元素就会回到 B 位置，播放从 A 到 B 的 “归位” 动画。
+- 步骤 ⑤：使用 JS 设置元素的 `transition` 属性，同时移除掉元素的 `transform: translate(x, y)` CSS 属性，这样元素就会回到 B 位置，播放从 A 到 B 的 “归位” 动画。
 
 此时，相信你不免会有疑问：
 疑问一：步骤 ④ 中元素从终点设置偏移到起点，这个过程用户是不是能看到元素的 “瞬移”？
@@ -155,9 +163,9 @@ FLIP 动画做了这样的操作：
 
 我们可以通过代码，来对渲染的流程进行介入：
 
-- 增删 DOM、修改元素尺寸或边距、读取元素尺寸或坐标等操作，会触发浏览器的 “布局” 动作，使得浏览器重新 “计算样式”，得到元素的位置和尺寸，并重新 “布局” 这些元素；
+- 增删 DOM、修改元素尺寸或边距、读取元素尺寸或坐标等操作，会触发浏览器的 **“布局”** 动作，使得浏览器重新 **“计算样式”**，得到元素的位置和尺寸，并重新 “布局” 这些元素；
   这个过程也被称为 **“重排”** 或者 **“回流”**，运算开销较大；
-- 仅修改文字颜色、背景色、透明度等样式属性，会触发浏览器的 “绘制” 动作；
+- 仅修改文字颜色、背景色、透明度等样式属性，会触发浏览器的 **“绘制”** 动作；
   这个过程也被称为 **“重绘”**，运算开销较小；
 - 只要触发了 “重排”，这一帧就必定需要 “重绘”，在 “重绘” 之前可能会有过多次 “重排”；
 - 到了 “绘制” 环节，网页内容就会输出到用户屏幕上，此时修改元素样式等操作都会到下一帧才生效了（也就是 “来不及了”）。
@@ -188,22 +196,23 @@ function move() {
 
 <br />
 
-对于疑问二，解决方案是，**必须让浏览器在两次 “布局” 之间感知到元素的 `transform` 发生了变化，这样才会使得过渡能顺利产生。**
+对于疑问二，解决方案是，**必须让浏览器在两次 “计算样式” 时感知到元素的样式 （也就是 `transform`） 发生了变化，这样才会使得过渡能顺利产生。**
 
-**代码中的 `el.style.transform = ''` 在同步代码中运行，在浏览器 “计算样式” 时，得到的是同步代码执行完后的最终结果，中间状态被覆盖掉了，浏览器感知不到任何 CSS 属性的变化，自然没有过渡动画；**
+**上文中，我们写的修改样式的代码都是同步运行，在浏览器 “计算样式” 时，得到的是同步代码执行完后的最终结果，中间状态被覆盖掉了，浏览器感知不到任何样式的变化，自然没有过渡动画。**
+
 **所以，我们需要把这段代码的执行时机推迟到在浏览器布局完成后，使其引发一次 “重排”，这样浏览器就能感知到了**。
 
 我们先使用初版代码，无过渡动画的版本，查看性能时间线：
 
 ![](../images/image-20240726041922925.png)
 
-可以看到，初版代码虽然修改了两次 `transform`，但第二次修改只是单纯地覆盖了第一次设置的值，它并没有引起浏览器的重排。
+可以看到，初版代码虽然修改了两次 `transform`，但浏览器只会在同步代码运行完毕后，才进行 “计算样式”，第二次修改覆盖了第一次设置的样式，等于说第一次 “白改了”。
 
 使用 `setTimeout()` 把修改 `transform` 的代码放到异步任务中，过渡动画就可以正常产生了，我们查看它的时间线：
 
 ![](../images/image-20240726042408200.png)
 
-可以看到，定时器的触发时机要晚于浏览器绘制的时机，所以修改 `transform` 至少也要等到下一帧开始才生效了，这样浏览器一定能检测到 `transform` 的变动，动画可以产生。
+可以看到，定时器的触发时机要晚于浏览器 “绘制” 的时机，所以修改 `transform` 至少也要等到下一帧开始才生效了，这样浏览器一定能检测到 `transform` 的变动，动画可以产生。
 
 <br />
 
@@ -211,7 +220,9 @@ function move() {
 ① 在 “绘制” 之前，同步代码无论修改多少次样式，浏览器也只会使用最后的结果——这是因为同步代码执行完毕后只有一次 “计算样式”，后面紧接着就是 “绘制”；
 ② 而想要产生过渡动画，必须能让浏览器在两次 “计算样式” 时检测到样式发生变动，所以我们可以用 `setTimeout()`，它的回调是异步代码，执行时机较晚，比 “绘制” 还要晚，在下一次 “绘制” 前，浏览器就能感知到样式被修改了，从而产生过渡动画。
 
-但是，浏览器提供了一个更好的 API，专门用于实现这种类似的过渡动画类的需求，它就是 [`requestAnimationFrame()`](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestAnimationFrame)。
+你有没有看出来？如果想在当前帧就让浏览器产生过渡动画，就必须 **在 “计算样式” 之后、“绘制” 之前**，插入一次样式修改的动作，这会让浏览器额外安排一次 “计算样式”，第二次 “计算样式” 时如果感知到样式被修改了，就能在 “绘制” 时安排过渡动画。
+
+好巧不巧，浏览器真就提供了一个 API，专门用于实现这种类似的过渡动画类的需求，它就是 [`requestAnimationFrame()`](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestAnimationFrame)！
 
 
 
@@ -225,34 +236,29 @@ function move() {
 
 可以使用这段代码进行验证（建议禁用浏览器所有插件）：
 
-```html
-<!DOCTYPE html>
-<html lang="zh-CN">
-  <body>
-    <script>
-      function rafCallback() {
-        console.log('raf')
-        requestAnimationFrame(rafCallback)
-      }
-      rafCallback()
+```js
+document.addEventListener('visibilitychange', () => {
+  console.log('浏览器窗口显示与否：', document.visibilityState);
+})
+function rafCallback() {
+  console.log('raf')
+  requestAnimationFrame(rafCallback)
+}
+rafCallback()
 
-      let second = 0
-      setInterval(() => {
-        second += 1
-        console.log(second + '秒')
-      }, 1000)
-    </script>
-  </body>
-</html>
+let second = 0
+setInterval(() => {
+  second += 1
+  console.log(second + '秒')
+}, 1000)
 ```
 
 运行这个网页，查看控制台的输出，例如我使用 160Hz 的显示器，输出如下：
 
-![](../images/image-20240726053353839.png)
+![](../images/image-20250222125209125.png)
 
-可以看到，每一秒过去后，`requestAnimationFrame()` 都会执行大约 160 次，和我显示器的刷新率相等。
-
-此时，可以把网页切换到后台等一段时间，可以发现切换到后台后，定时器还在读秒，但是 `requestAnimationFrame()` 回调的执行会暂停。
+可以看到，每一秒过去后，`requestAnimationFrame()` 都会执行大约 160 次，和我显示器的刷新率相等；
+而网页切换到后台后，定时器还在读秒，但 `requestAnimationFrame()` 回调的执行会暂停。
 
 **如果当前帧时间内，JS 代码修改了元素的尺寸或样式，这会触发 “重新计算样式” 和 “布局”，此时我们调用 `requestAnimationFrame()`，那么回调将在当前帧默认的 “布局” 和 “绘制” 之间插入执行。**
 
@@ -282,13 +288,14 @@ function move() {
 
 ![](../images/image-20240725020718698.png)
 
-可以看出，重点在于让浏览器进行两次 “计算样式” 和 “重排” 动作，这样才能感知到元素属性的变更，从而产生过渡动画。
+可以看出，重点在于让浏览器进行两次 “计算样式” 动作，感知到元素属性的变更，从而产生过渡动画。
+`requestAnimationFrame()` 给了我们让浏览器多一次 “计算样式” 的机会。
 
 我们对新的代码使用浏览器 F12 的 “性能” 面板录制时间线：
 
 ![](../images/image-20240726045624772.png)
 
-印证了我们的想法。
+时间线中，“请求动画帧” 也就是 raf 注册的回调正好在 “计算样式” 之后、“绘制” 之前，这印证了我们的想法。
 
 <br />**简单总结：**
 ① 想让浏览器产生过渡动画，必须在两次 “计算样式” 时机让浏览器检测到样式的变更；
@@ -945,8 +952,11 @@ boxes.forEach(box => {
 
 我们来实现这个函数 `flip`，首先，它需要接受一个元素，获取其中所有子元素，并记录这些子元素的坐标信息。
 
-这里，涉及到一个问题：元素可能被暂时移出 DOM 并插入回来，我们如何跟踪一个元素？
-在之前的例子里，元素附带有 `key` 属性，可以使用 `key` 属性来标识并跟踪元素（你可能发现了，Vue、React 也使用 `key` 属性来跟踪元素）；而我们自己实现的这个函数，如果不要求用户使用 `key`，那么我们可以使用 [`WeakMap`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/WeakMap) 来跟踪元素，把 DOM 作为键即可。
+这里，涉及到一个问题：
+元素可能被暂时移出 DOM 并插入回来，我们如何跟踪一个元素？
+
+在之前的例子里，元素附带有 `key` 属性，可以使用 `key` 属性来标识并跟踪元素；你可能发现了，Vue、React 也使用 `key` 属性来跟踪元素。
+而我们自己实现的这个函数，可以不要求用户使用 `key`，而是利用 [`WeakMap`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/WeakMap) 来跟踪元素，只需要把 DOM 作为键即可。
 
 实际上，[`WeakMap`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/WeakMap) 诞生的目的就是为了此类场景。
 
@@ -969,7 +979,7 @@ function flip(target) {
 
 <br />
 
-浏览器提供这样一个 API： [`MutationObserver`](https://developer.mozilla.org/zh-CN/docs/Web/API/MutationObserver) ，它可以用于监听 DOM 的变化，并在变化发生后触发给定的回调。我们使用它来触发 FLIP 动画的代码。
+浏览器提供这样一个 API：[`MutationObserver`](https://developer.mozilla.org/zh-CN/docs/Web/API/MutationObserver) ，它可以用于监听 DOM 的变化，并在变化发生后触发给定的回调。我们使用它来触发 FLIP 动画的代码。
 
 具体而言，`MutationObserver` 是这样的：
 
@@ -1110,18 +1120,19 @@ function flip(target) {
 
 这是因为，我们先前的实现方式，记录 `startPositions` 时始终以元素当前位置为基准，所以动画不会出问题。
 
-而封装后的 `flip()` 函数通过 `MutationObserver` 来触发 FLIP 动画，这个回调**在 DOM 变更后才触发**， 此时元素已经被放置到了终点，虽然我们可以直接获得终点的坐标，但是起点坐标就只能从 `WeakMap` 中来获取了；**可是我们不会实时向 `WeakMap` 中记录元素位置**，所以在前一个过渡动画未完成时节点还处在 “半路上”，这时计算出的偏移距离就不正确了，这也导致了过渡动画出现问题。
+而封装后的 `flip()` 函数通过 `MutationObserver` 来触发 FLIP 动画，这个回调 **在 DOM 变更后才触发**， 此时元素已经被放置到了终点，我们可以直接获得终点的坐标，但是起点坐标就只能从 `WeakMap` 中来获取了；
+**可是我们不会实时向 `WeakMap` 中记录元素位置**，所以在前一个过渡动画未完成时节点还处在 “半路上”，这时计算出的偏移距离就不正确了，这也导致了过渡动画出现问题。
 
 有两种解决方法：
 
 - 采取一种方式跟踪元素的坐标并持续记录，即持续更新 `startPositions` 中的坐标值；
 - 在元素位置发生变动前，就提前通知这些元素，立即更新当前的 “Start” 坐标。
 
-本文介绍第一种方式，因为这样可以保持 `flip()` 的用法，无需使用者修改任何代码。
+本文介绍第一种方式，因为这样可以保持 `flip()` 的简洁。
 
 这又要用到 [`requestAnimationFrame()`](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestAnimationFrame) 的回调，它可以利用每一帧的空闲时间，在浏览器布局后、绘制前运行代码；例如：设备是 60Hz 刷新率的屏幕，此时每一帧大约 16.666 毫秒的运行时间，浏览器运行 JS、布局、绘制是肯定用不到这么长时间，会有空闲时间段，而 `requestAnimationFrame()` 的代码就可以在这个空闲时间段中运行。
 
-而且还有一个 [`cancelAnimationFrame()`](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/cancelAnimationFrame) 可以取消前者的回调，避免无线循环记录元素坐标，导致性能的浪费，用法和 `setTimeout` 相似。
+而且还有一个 [`cancelAnimationFrame()`](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/cancelAnimationFrame) 可以取消前者的回调，避免无限循环记录元素坐标，导致性能的浪费，用法和 `setTimeout` 相似。
 
 尝试编写一个持续跟踪元素坐标的函数：
 
@@ -1281,8 +1292,10 @@ const shuffle = () => void list.sort(() => Math.random() - 0.5)
 
 因为容器原来是个 `<div>` 元素，因此这里的参数 `tag` 提供 `"div"`，而 `style` 属性照搬即可；
 
-注意 `name` 属性，它可以取任意值，我们这里取名 `"flip"`；这个属性直接作为组件在过渡动画期间的类名前缀；如果不提供 `name` 属性，那么类名前缀默认为 `"v"`；
-具体而言，在过渡期间，Vue 会根据阶段为子元素附加各种类名，例如 `<前缀>-enter-active`、`<前缀>-leave-to` 等，具体有 8 种，可以在 [`<Transition>` 组件文档](https://cn.vuejs.org/guide/built-ins/transition.html#css-based-transitions) 查看全部；注意 `<TransitionGroup>` 组件额外增加了一个 `<前缀>-move` 类名，因为它专用于为子组件实现过渡动画，在过渡动画过程中此类名会被附加到每个子组件。
+注意 `name` 属性，它可以取任意值，我们这里取名 `"flip"`；这个属性直接作为组件在过渡动画期间的类名前缀；如果不提供 `name` 属性，那么类名前缀默认为 `"v"`。
+
+具体而言，在过渡期间，Vue 会根据阶段为子元素附加各种类名，例如 `<前缀>-enter-active`、`<前缀>-leave-to` 等，具体有 8 种，可以在 [`<Transition>` 组件文档](https://cn.vuejs.org/guide/built-ins/transition.html#css-based-transitions) 查看全部；
+注意 `<TransitionGroup>` 组件额外增加了一个 `<前缀>-move` 类名，因为它专用于为子组件实现过渡动画，在过渡动画过程中此类名会被附加到每个子组件。
 
 我们这里为组件提供参数 `name="flip"`，所以在过渡过程中，子组件会附带 `"flip-move"` 类名。
 此时，我们添加一条样式：
@@ -1303,11 +1316,15 @@ const shuffle = () => void list.sort(() => Math.random() - 0.5)
 
 你可能会有疑问：为什么这个 `transition` 样式需要单独写在 `.flip-move{}` 里面？
 
-回顾一下 FLIP 动画的流程：DOM 变动后，计算出元素的偏移并设置 `transform`，**这个动作瞬间完成，这期间都是不能带有 `transition` 过渡的**，此后再设置元素的 `transition`，然后移除掉元素的 `transform`，来播放 “归位” 过渡动画。
+回顾一下 FLIP 动画的流程：
+DOM 变动后，计算出元素的偏移并设置 `transform`，**这个动作瞬间完成，这期间都是不能带有 `transition` 过渡的**，此后再设置元素的 `transition`，然后移除掉元素的 `transform`，来播放 “归位” 过渡动画。
 
-实际上，`<TransitionGroup>` 也会为子组件做类似的流程，在 DOM 变动后，Vue 会暂时屏蔽掉子组件上面的过渡 CSS 样式，在计算偏移量、设置 `transform` 后，Vue 会解除对过渡样式的屏蔽，并为组件附加 `<前缀>-move` 类名直到播放完毕（也就是触发 `transitionend` 事件，当然 Vue 内部会监听此事件），所以我们把 `transition` 属性放置在 `.flip-move` 这个类名下，**确保过渡只在正确的时机生效**。
+Vue 做的是：在 DOM 变动后，暂时屏蔽掉子组件上面的过渡 CSS 样式，在计算偏移量并设置 `transform` 后，Vue 会解除对过渡样式的屏蔽，并为组件附加 `<前缀>-move` 类名直到播放完毕。
+所以我们把 `transition` 属性放置在 `.flip-move` 这个类名下，**确保过渡只在正确的时机生效**。
 
 你可以试一试直接把 `transition: all 2s;` 写在 `.box{}` 里面，此时动画仍然能生效，但是在前一个动画没播放完就连续点击按钮时，动画会出问题。
+
+<br />
 
 同样，使用 `<TransitionGroup>` 组件必须保证子组件具有 `key` 属性并设为唯一的值，它用于跟踪组件的顺序。
 
