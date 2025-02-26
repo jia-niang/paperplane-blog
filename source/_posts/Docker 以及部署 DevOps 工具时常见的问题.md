@@ -57,32 +57,29 @@ sudo systemctl restart docker.service
 
 **使用 Docker 源镜像：**
 
-2024 年 6 月更新：国内因政策原因，所有 Docker 镜像站均已关闭，以下所有源镜像均不可用了。
+2025 年 2 月更新：
+来自 CoderJia 的可用 Docker 源镜像列表：
+https://www.coderjia.cn/archives/dba3f94c-a021-468a-8ac6-e840f85867ea
+量大管饱，可用状态也是一直在更新的，推荐选用。
+我自己部署的 Docker 源镜像：`https://docker-mirror.p01.cc`；服务器带宽比较低，拉取速度很慢，不建议使用。
+
+2024 年 6 月更新：
+国内因政策原因，大部分 Docker 镜像站均已关闭。
 建议 [阅读此文](https://gist.github.com/y0ngb1n/7e8f16af3242c7815e7ca2f0833d3ea6) 了解还有什么国外可用的源镜像，此外文中还有利用 Cloudflare Workers 自行搭建反代的介绍，可以尝试。
 
-用于国内拉取镜像加速。网上的版本太旧，很多都不能用了，GitHub Gist 上有人持续更新一个列表，[点击前往](https://gist.github.com/y0ngb1n/7e8f16af3242c7815e7ca2f0833d3ea6)。
+网上的版本太旧，很多都不能用了，GitHub Gist 上有人持续更新一个列表，[点击前往](https://gist.github.com/y0ngb1n/7e8f16af3242c7815e7ca2f0833d3ea6)。
+
+编辑 `daemon.json`，这样配置：
 
 ```json
 {
   "registry-mirrors": [
-    "https://docker.mirrors.sjtug.sjtu.edu.cn",
-    "https://docker.nju.edu.cn",
-    "https://dockerproxy.com",
-    "https://mirror.baidubce.com",
-    "https://hub.c.163.com"
+    "源镜像地址写在这里",
+    "支持多个",
+    "..."
   ]
 }
 ```
-
-上面的镜像源分别来自：
-[上海交通大学镜像服务](https://mirror.sjtu.edu.cn/)，他们也有 k8s 的镜像加速；
-[南京大学镜像服务](https://mirror.nju.edu.cn/)，他们有 k8s、ghcr（GitHub 的镜像仓库）、gcr（Google 的镜像仓库）等镜像加速，很赞；
-[Dockerproxy](https://dockerproxy.com) 免费镜像，他们也提供上面各种国外镜像仓库加速，具体可以看文档；
-百度云；
-网易数帆。
-
-阿里云需要去注册一个 [镜像加速器](https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors)，会提供一个带用户 ID 的域名；
-腾讯云的服务器可以使用 `https://mirror.ccs.tencentyun.com`，注意非腾讯云的服务器可能无法使用的。
 
 -----
 
@@ -225,12 +222,21 @@ sudo docker ps -aq | xargs docker inspect --format='{{.LogPath}}' | xargs trunca
 执行命令：
 
 ```bash
+# 查看 Dcoker 各个部分占用的磁盘空间
 docker system df
+
+# 查看 Docker Builder 占用的磁盘空间
+docker builder du
 ```
 
 可以输出 Docker 镜像、容器、卷、构建缓存等所占用的磁盘空间。
-其中，容器、卷占用的空间肯定无法释放，除非清理日志，但是日志一般也清理不了多少空间出来。所以我们主要清理镜像、构建缓存所占用的空间。
 
+其中，容器、卷占用的空间肯定无法释放，除非清理日志，但是日志一般也清理不了多少空间出来。
+所以我们主要清理镜像、**构建缓存**所占用的空间，尤其是后者，绝对的大头。
+
+-----
+
+清理不用的镜像：
 被容器使用中镜像无法删除，未被任何容器使用的镜像可以删除：
 
 ```bash
@@ -243,7 +249,10 @@ docker rmi <镜像id>
 docker image prune
 ```
 
-构建缓存也可以清理：
+-----
+
+
+【推荐】清理构建缓存：
 
 ```bash
 # 清理未使用的构建缓存
