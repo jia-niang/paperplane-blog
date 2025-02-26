@@ -13,7 +13,7 @@
           <%- partial('post/date', {class_name: 'article-date', date_format: null}) %>
         </span>
         <%- partial('post/category') %>
-        <% if (post.history !== 0) { %>
+        <% if (post.history !== 0 && post.historyMeta) { %>
           <span>
             <a href="<%- url_for(post.path) %>#history" class="article-history-link">
               修订 <%= post.historyMeta.list.length %>
