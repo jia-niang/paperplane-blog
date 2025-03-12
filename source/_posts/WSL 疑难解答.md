@@ -16,10 +16,11 @@ categories:
 
 # 运行报错解决
 
-此部分内容转载自 [名实合为](https://blog.mjyai.com/)，原文链接：https://blog.mjyai.com/2020/06/01/win10-wsl2-ubuntu/ （作者：mjy）。
-文中提到的问题，我自己也遇到过，经过这些解决方案的实践，结果证明可以奏效。
+此部分内容提到的问题都是我自己实践证实的。
 
 -----
+
+下面前两条转载自 [名实合为](https://blog.mjyai.com/)，原文链接：https://blog.mjyai.com/2020/06/01/win10-wsl2-ubuntu/ （作者：mjy）。
 
 **报错：WslRegisterDistribution failed with error: 0x800706ba 解决：**
 
@@ -73,6 +74,31 @@ NoLsp.exe c:\windows\system32\wsl.exe
 ```
 
 这可以使 WSL 绕开 Proxifier 修改过的 LSP。
+
+-----
+
+以下内容转载自 GitHub 上的 [这个 Issue 讨论](https://github.com/microsoft/WSL/issues/11697#issuecomment-2168104220)，本文仅作转载记录。
+
+**报错：Could not write value to key
+\SOFTWARE\Classes\Directory\shell\WSL.Verify that
+you have sufficient access to that key, or contact your
+support personnel：**
+
+打开运行输入 `regedit` 启动注册表编辑器，修改重命名以下条目：
+
+- `计算机\HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Drive\shell\WSL`
+- `计算机\HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Directory\background\shell\WSL`
+- `计算机\HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Directory\shell\WSL`
+
+将以上三个条目，右键重命名，把 `WSL` 重命名为 `WSL_bak` 即可。
+
+我在操作时遇到了没权限编辑注册表的问题，根据后续讨论，提供两种思路：
+
+- 重命名第一项时提示没权限，不管它，只修改后两条也能解决问题；
+- 或，使用 [RunAsTrustedInstaller](https://github.com/fafalone/RunAsTrustedInstaller) 这个工具以最高权限编辑注册表，此时就没有权限问题了。
+
+另外，执行以上操作后，如果命令行运行 `wsl` 还提示报错，可能需要重启电脑；
+如果 `wsl` 命令一直启动不了，可以去 GitHub 的 [WSL 发布页](https://github.com/microsoft/WSL/releases/)  下载最新的 .msi 格式安装包重装，重装 WSL 不会影响 Linux 系统。
 
 
 
