@@ -336,21 +336,24 @@ extra_hosts:
 host.docker.internal
 ```
 
+如果你使用 WSL2，在 Docker Desktop 的设置界面有一个开关，打开后会给系统的 hosts 文件添加 `host.docker.internal`、`gateway.docker.internal` 的 hosts，并指向到本机；此时你甚至可以使用这个域名取代 `localhost`，即使在 Docker 外也可照常使用。
+
 注意，Linux 是不支持的，所以这个方法也不推荐。
 
 -----
 
-**使用宿主机的网络模式（仅 Linux 系统可用）：**
+**使用宿主机的网络模式：**
 
-编辑 Docker Compose 配置（再说一遍，仅 Linux 可以用）：
+编辑 Docker Compose 配置：
 
 ```yaml
 network_mode: host
 ```
 
 这会使得容器共享宿主机的网络，此时便可以通过 `localhost`、`127.0.0.1` 直接访问宿主机。
-此模式通讯效率也是最高的，但是会存在安全性问题，也没有做到网络隔离。实际上这种方法牺牲了 Docker 的很多特性，仅用于特定场景，不是广泛的解决方法。
+此模式通讯效率也是最高的，没有做到网络隔离，比较适合于特定场景例如家庭网关、内网穿透之类的，对于 Web 服务而言并不适合，也会存在安全性问题。
 
+以前这个网络模式只能在 Linux 系统使用，现在都可以用了。对于 Docker Desktop 用户而言，可以在设置菜单中 “Resources” > “Network” > “Enable host networking” 开启宿主机网络模式。
 
 
 # 部署 Nginx 时如何初始化
