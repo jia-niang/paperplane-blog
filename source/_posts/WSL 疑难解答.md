@@ -130,6 +130,32 @@ support personnel：**
 
 
 
+# WSL2 “镜像” 网络模式
+
+WSL 默认是 NAT 网络模式，也就是说 WSL 的操作系统运行在一个单独的网段，而我们的 Windows 系统充当子系统的 “网关”，此时两个系统之间的互访问会比较麻烦；
+如果是 WSL 中运行 Jellyfin 等场合，在不同的网段会导致 DLNA 等网络发现服务无法正常工作，带来很大的不便。
+
+在 2025 年，WSL2 推出了 “镜像” 网络模式，在这个模式下，宿主机上的接口会 “镜像” 到 WSL 上，提高两者的互访问性。
+这里附带上 [官网文档](https://learn.microsoft.com/zh-cn/windows/wsl/networking)。
+
+使用 `.wslconfig` 配置时，添加以下配置项：
+
+```ini
+[wsl2]
+networkingMode = mirrored
+```
+
+为了提高互访问性，还需要添加配置：
+
+```ini
+[experimental]
+hostAddressLoopback = true
+```
+
+这样便可以在宿主机或子系统的任意一方使用 `localhost` 来访问另一方的服务。
+
+
+
 # 安装位置移出 C 盘
 
 WSL 默认安装目录在 C 盘，如果想移动到别的目录，可以通过这个流程：
