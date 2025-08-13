@@ -147,6 +147,105 @@ categories:
 
 
 
+# 非常规文本方向
+
+此条适用于 UI 组件库开发者，尤其是有国际化需求的场景。
+
+假设在文本具有边距的场景，例如一段文本中所有 `<strong>` 需要加上左右边距，和两侧文本略微分开，但出现在首尾时，不要显示边距；最简单的做法是：
+
+```css
+strong {
+  padding: 0.1em 0.2em;
+  margin: 0 0.2em;
+  &:first-child {
+    margin-left: 0;
+  }
+  &:last-child {
+    margin-right: 0;
+  }
+}
+```
+
+这样已经实现了需求。
+但是，如果使用的从右向左排布的版式，例如阿拉伯文，这段 CSS 便会出问题，`:first-child` 里面的左边距需要改成右边距，同理另一段也要改。
+甚至，更极端的场景，文字需要竖向排布时，这里面的边距还得改换。
+
+我们常用的布局叫 LTR，也就是 “Left To Right 从左往右” 的布局版式，而世界上还存在少数 RTL 版式；虽然少，但不代表没有，目前各大 UI 组件库都提供了 RTL 的兼容。
+如图，`antd` 组件库官网主页右上角就有一个 RLT 切换按钮：
+
+![](../images/image-20250813181447021.png)
+
+所以，上面的代码只能在常用的 LTR 场景工作，为了让它适配 RTL，还需要做一些优化。
+
+CSS 提供了 `@media (direction: rtl)` 媒体查询，还提供了 `:dir(rlt)` 伪类，它们可以用于检测文本方向；
+一种优化思路是这样的：
+
+```css
+@media (direction: rtl) {
+  strong:first-child {
+    margin-right: 0;
+  }
+  strong:last-child {
+    margin-left: 0;
+  }
+}
+```
+
+在 RLT 环境下，可以让左右边距全部反过来；
+实际上，这段代码甚至都不用开发人员自己加，可以通过插件检测类似于 `padding-left`、`margin-right` 等这类单独设置左右边距的样式代码，自动生成 RTL 的规则。
+
+但是，这并不是最完美的解决办法。
+
+CSS 一直在推进网页国际化的解决方案，所以，针对 RTL 场景肯定也提供了对应的属性：
+
+- 对于文本排布方向的属性，可以使用 `-inline` 后缀，例如 `padding-inline: 4px;` 会使得文本两侧出现 `4px` 的边距；
+  - 文本开头方向，使用 `-inline-start` 来表示，在中英文语境下，可以理解成 “左边”；
+  - 文本结尾方向，使用 `-inline-end` 来表示，在中英文语境下，可以理解成 “右边”；
+- 对于文本垂直方向的属性，可以使用 `-block` 后缀，例如 `padding-block: 4px;` 会使得文本上下出现 `4px` 的边距；
+  - 文本的 “顶部”，使用 `-block-start` 来表示；
+  - 文本的 “底部”，使用 `-block-end` 来表示。
+
+这类属性叫做 “逻辑属性”，它不再是简单的上下左右，而是遵循文本的排布方向，在 RTL 或者垂直排布文字的场合也能正确显示。
+目前 `padding`、`margin`、`border`、`text-align` 等属性都支持上面这些写法。
+
+再回到我们给出的示例 CSS，使用上述的 “逻辑属性” 进行优化后：
+
+```css
+strong {
+  padding-inline: 0.2em;
+  padding-block: 0.1em;
+  margin-inline: 0.2em;
+  margin-block: 0;
+  &:first-child {
+    margin-inline-start: 0;
+  }
+  &:last-child {
+    margin-inline-end: 0;
+  }
+}
+```
+
+这样便一次性兼容 RTL 甚至竖排文字了，也不用写媒体查询或者伪类。
+
+> 注意：直接使用阿拉伯文等从右向左排布的文字，浏览器并不会自动设置 RTL；有的浏览器有实验性功能，可在设置了 `dir="auto"` 时自动检测语言并设置 RTL；具体行为还可能取决于操作系统语言或浏览器设置。
+>
+> 所以，在适配 RTL 时，需要用以下方式显示声明 RTL 环境：
+>
+> ```html
+> <html dir="rtl">
+> </html>
+> ```
+>
+> 或者
+>
+> ```css
+> :root {
+>   direction: rtl
+> }
+> ```
+
+
+
 # 胶囊形按钮的圆角怎么写
 
 一个普通的方形按钮，假设高度为 50px，如图：
