@@ -88,6 +88,13 @@ proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 proxy_set_header X-Forwarded-Proto $scheme;
 ```
 
+如果你想要所有 `proxy_pass` 都支持 WebSocket，也可以把以下两行也加进去：
+
+```nginx
+proxy_set_header Upgrade $http_upgrade;
+proxy_set_header Connection "upgrade";
+```
+
 示例使用方式：
 
 ```nginx
@@ -215,7 +222,18 @@ log_format main
 <br />
 
 如果是 Docker 中运行 Nginx，需要把容器中的 `/var/log/nginx/` 挂载出来，便于持久化保留日志。
-注意，挂载出日志目录后，`docker logs nginx` 可能不再持续打印日志输出了。
+
+注意，挂载出日志目录后，`docker logs nginx` 可能不再持续打印日志输出了；
+这可能会带来不便，可以这样修改：
+
+```nginx
+access_log /var/log/nginx/access.log main; # 这一行保持不变
+access_log /dev/stdout main;
+error_log  /var/log/nginx/error.log warn;
+error_log  /dev/stderr warn;
+```
+
+这样会把日志同时写入到文件并打印在 `docker logs` 中。
 
 
 
@@ -318,6 +336,8 @@ server {
 
 Nginx 内部存在着多个这种状态码，可以 [点击链接](https://redirect.li/http/status/nginx/) 查询；
 不过，我们能在配置文件中使用的，应该就只有 `444` 这一个，其他的状态码都是 Nginx 遇到特殊情况记录在日志中，向用户反馈特殊请求场合的。
+
+
 
 # 扩展知识：隐藏版本号
 
