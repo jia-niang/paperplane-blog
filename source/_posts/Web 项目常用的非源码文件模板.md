@@ -608,6 +608,157 @@ tsc --module esnext --outDir es
 
 
 
+# `eslint.config.mjs` 模板（v9）
+
+2025 更新：
+ESLint v9 不再能像以前一样在 Monorepo 的某个子包中单独配置并自动合并，而是必须在根目录统一配置，除非使用旧版的 `.eslintrc` 配置，或使用实验性功能。（参考 [官方文档](https://eslint.org/docs/latest/use/configure/configuration-files#experimental-configuration-file-resolution)，官方表示 v10 开始会提供这种方式）
+
+以下提供的代码均使用 `.mjs` 后缀，因此可以使用 `import` 与 `export`；
+如果不使用 `.mjs` 后缀，则需要修改为 `require` 和 `module.exports`。
+
+**注意：ESLint 默认对目录下所有文件进行检查，使用时需要传参数来指定检查范围，例如在 `package.json` 中定义成 `"eslint src"` 或 `"eslint \"./{src,tests}\""` 这种格式；以下配置中的 `files` 仅表示针对某个目录的规则 ”覆盖“，并不是说 `files` 以外的文件就不检查了。**
+
+-----
+
+适用于 TypeScript + React 项目：
+
+```js
+import pluginJs from '@eslint/js'
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
+import reactHooks from 'eslint-plugin-react-hooks'
+import globals from 'globals'
+import tsEslint from 'typescript-eslint'
+
+/** @type {import('eslint').Linter.Config[]} */
+export default tsEslint.config(
+  // ↓ 需要忽略的目录和文件
+  { ignores: ['**/dist'] },
+
+  pluginJs.configs.recommended,
+  ...tsEslint.configs.recommended,
+
+  // ↓ 项目配置
+  {
+    files: ['./{src,tests}/**/*.{ts,tsx}'],
+    plugins: {
+      'react-hooks': reactHooks,
+    },
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.browser,
+    },
+    rules: {
+      ...reactHooks.configs.recommended.rules,
+      // 自己的忽略规则 ...
+    },
+  },
+
+  eslintPluginPrettierRecommended
+)
+```
+
+这个规则带有 `prettier` 的格式化检测，以及 React Hooks 名称检测。
+注意除了代码中用到的依赖之外，还需要安装 `eslint-config-prettier`。
+
+-----
+
+适用于 TypeScript 库的配置：
+
+```js
+import pluginJs from '@eslint/js'
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
+import globals from 'globals'
+import tsEslint from 'typescript-eslint'
+
+/** @type {import('eslint').Linter.Config[]} */
+export default [
+  // ↓ 需要忽略的目录和文件
+  { ignores: ['**/dist'] },
+
+  pluginJs.configs.recommended,
+  ...tsEslint.configs.recommended,
+
+  // ↓ 项目配置
+  {
+    files: ['./{src,tests}/**/*.ts'],
+    languageOptions: { globals: globals.browser },
+    rules: {
+      // 自己的忽略规则 ...
+    },
+  },
+
+  eslintPluginPrettierRecommended,
+]
+```
+
+同上，带有 `prettier` 的格式化检测。
+注意除了代码中用到的依赖之外，还需要安装 `eslint-config-prettier`。
+
+-----
+
+适用于 Monorepo 库的配置：
+
+```js
+import pluginJs from '@eslint/js'
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
+import reactHooks from 'eslint-plugin-react-hooks'
+import globals from 'globals'
+import tsEslint from 'typescript-eslint'
+
+/** @type {import('eslint').Linter.Config[]} */
+export default [
+  // ↓ 需要忽略的目录和文件
+  { ignores: ['**/dist'] },
+
+  pluginJs.configs.recommended,
+  ...tsEslint.configs.recommended,
+
+  // ↓ 各包通用配置
+  {
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: { ...globals.node, ...globals.browser },
+    },
+  },
+
+  // ↓ 以下规则适用于：packages/server
+  {
+    files: ['packages/server/{src,test}/**/*.ts'],
+    plugins: {},
+    rules: {
+      // 自己的忽略规则 ...
+    },
+  },
+
+  // ↓ 以下规则适用于：packages/web
+  {
+    files: ['packages/web/src/**/*.{ts,tsx}'],
+    plugins: {
+      'react-hooks': reactHooks,
+    },
+    rules: {
+      ...reactHooks.configs.recommended.rules,
+      // 自己的忽略规则 ...
+    },
+  },
+
+  // ↓ 全局忽略规则，如果每个包都要用，可以写在这里
+  {
+    rules: {
+      '@typescript-eslint/no-empty-object-type': 'off',
+      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-empty-interface': 'off',
+      '@typescript-eslint/no-empty-function': 'off',
+    },
+  },
+
+  eslintPluginPrettierRecommended,
+]
+```
+
+
+
 # `.babelrc` 模板
 
 提供给 babel 的配置，它也会影响最终的代码运行，具体配置项可参考 [官方文档](https://babeljs.io/docs/options)。
