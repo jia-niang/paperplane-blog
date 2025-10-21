@@ -192,7 +192,7 @@ sudo vim /etc/hosts
 set-ExecutionPolicy RemoteSigned
 
 # 开关虚拟化（管理员终端）
-# 开启虚拟化，可以使用 Hyper-V、WSL2，关闭虚拟化可以优化性能，不建议关闭
+# 开启后可以使用 Hyper-V、WSL2，关闭虚拟化可以优化性能，一般不建议关闭
 bcdedit /set hypervisorlaunchtype auto
 bcdedit /set hypervisorlaunchtype off
 
@@ -206,6 +206,11 @@ notepad c:\windows\system32\drivers\etc\hosts
 # 解除 Windows 系统对 FTP 传输速度的限制
 netsh int tcp set global autotuninglevel=restricted
 netsh interface tcp set heuristics disabled
+
+# 修改终端编码为 UTF-8（默认是 GBK）
+chcp 65001
+# 修改回 GBK
+chcp 936
 ```
 
 
