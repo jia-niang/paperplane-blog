@@ -21,15 +21,8 @@ categories:
 
 - [`@paperplane/cra-template-mui`](https://www.npmjs.com/package/@paperplane/cra-template-mui)：基于 mui 的前端项目模板；
 - [`@paperplane/cra-template-antd`](https://www.npmjs.com/package/@paperplane/cra-template-antd)：基于 antd 的前端项目模板；
-- @paperplane/cra-template-antd-v4：（尚未完工）基于 antd v4 的前端项目模板；
-- @paperplane/cra-template-tdesign：（尚未完工）基于 TDesign 的前端项目模板；
-- @paperplane/cra-template-umijs：（尚未完工）基于 Umi.js 的前端项目模板。
 
-其他模板：
-
-- project-templates/node-nestjs：（尚未完工）基于 Nest.js 的 Node.js 项目模板；
-- project-templates/hybird-taro：（尚未完工）基于 Taro 的跨端项目模板；
-- project-templates/lib-mono：（尚未完工）monorepo 仓库模板。
+基于 Vite 的模板和 Next.js 等模板尚未完工，已完成的会添加在此列表。
 
 
 
@@ -202,7 +195,7 @@ canvas_binary_host_mirror=https://registry.npmmirror.com/-/binary/canvas
 
 
 
-# `package.json` 配置
+# `package.json` 模板
 
 建议阅读另一篇博文 [《读懂 package.json》](https://paperplane.cc/p/e340866d6dca/)。
 
@@ -430,6 +423,8 @@ tsc --module esnext --outDir es
   "endOfLine": "lf"
 }
 ```
+
+<br />
 
 额外推荐：安装 `@trivago/prettier-plugin-sort-imports` 这个包（[文档](https://github.com/trivago/prettier-plugin-sort-imports#readme)），它可以为 prettier 提供 `import` 语句分组排序功能。
 安装这个包之后，请在 `.prettierrc` 文件中添加以下内容：
@@ -883,10 +878,323 @@ export default [
 
 
 
+# `next.config.ts` 模板
+
+基础配置：
+
+```typescript
+import type { NextConfig } from 'next'
+
+const nextConfig: NextConfig = {
+  // 推荐，生产环境下避免输出 SourceMap 导致泄露源代码
+  // 也可以不在这里配置，而是通过 CI/CD 控制避免发布 .map 文件
+  productionBrowserSourceMaps: process.env.NODE_ENV === 'development',
+  // ...
+}
+
+export default nextConfig
+```
+
+-----
+
+静态资源放置于 CDN：
+
+```typescript
+const nextConfig: NextConfig = {
+  assetPrefix: process.env.NODE_ENV === 'production' ? 'https://cdn.example.com' : undefined,
+}
+```
+
+注意：Next.js 会针对图片来源进行限制，如果网站中存在使用 `Image` 组件且通过属性 `src="https://..."` 直接使用外部图片的情况，需要配置允许的图片来源：
+
+```typescript
+const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: 'https://cdn.example.com' },
+      // ...
+    ],
+  },
+}
+```
+
+如果用到了外部 `.svg` 图片，还需要进一步配置：
+
+```typescript
+const nextConfig: NextConfig = {
+  images: {
+    dangerouslyAllowSVG: true,
+  },
+}
+```
+
+<br />
+
+Next.js 自身具备图片服务器，请求图片时，会根据 `<Image>` 组件的 `width` 和 `height` 属性调整返回的图片尺寸，还会调整图片质量以应对缩略图、懒加载等情况。可参考 [官方文档](https://nextjs.org/docs/app/api-reference/components/image)。
+
+但是，图片如果放置于 CDN 上，此时 Next.js 便无法控制返回的图片。Next.js 提供了 “自定义图片 Loader” 的功能，允许我们提供一个 JS 函数，每当加载图片时，Next.js 会把路径、尺寸、质量作为参数传给函数，函数需返回一个 URL，可以只包含子目录和参数部分，Next.js 会使用这个 URL 来取代原来的 URL。
+
+`next.config.ts` 配置：
+
+```typescript
+const nextConfig: NextConfig = {
+  images: {
+    // 只有在生产环境才生效
+    loader: process.env.NODE_ENV === 'production' ? 'custom' : undefined,
+    loaderFile: process.env.NODE_ENV === 'production' ? './image-loader.js' : undefined,
+  },
+}
+```
+
+然后是这个 `image-loader.js` 文件，Next.js 官方在 [说明文档](https://nextjs.org/docs/app/api-reference/config/next-config-js/images) 中给出了如 AWS S3、CloudFlare R2 等多种对象存储的配置样例代码，如果你用的是这些云服务提供商，直接复制即可。
+
+此处给出腾讯云 COS 的配置代码：
+
+```typescript
+export default function imageLoader({ src, width, quality }) {
+  return `${src}?thumbnail/${width}x/quality/${quality || 100}/ignore-error/1`
+}
+```
+
+此处给出阿里云 OSS 的配置代码：
+
+```typescript
+export default function imageLoader({ src, width, quality }) {
+  return `${src}?x-oss-process=image/resize,w_${width}/quality,Q_${quality || 100}`
+}
+```
+
+
+
+# `vite.config.ts` 模板
+
+Vite 本身开箱即用，且有非常优秀的中文文档。此处仅给出一些特定需求的配置。
+
+React 项目最简版本：
+
+```typescript
+import react from '@vitejs/plugin-react'
+import path from 'path'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [react()],
+})
+```
+
+-----
+
+添加 `@/...` 路径别名：
+
+```typescript
+export default defineConfig({
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
+})
+```
+
+-----
+
+添加开发服务器：
+
+```typescript
+export default defineConfig({
+  server: {
+    port: 3000,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:4000',
+        rewrite: path => path.replace(/^\/api/, ''),
+      },
+    },
+  },
+})
+```
+
+这段配置会把网站的 `http://localhost:3000/api` 转发到 `http://localhost:4000`，并且 “吞掉” 开头的 `/api` 路径；
+如果你需要保留 `/api` 路径，删去 `rewrite` 即可。
+
+如果需要在 `0.0.0.0` 开放，在 `server` 下添加 `host: true` 即可。
+
+-----
+
+分析项目的各个模块文件大小：
+
+```typescript
+import { visualizer } from 'rollup-plugin-visualizer'
+
+export default defineConfig({
+  plugins: [react(), visualizer()],
+})
+```
+
+-----
+
+启用 Sass（安装 `sass` 或 `sass-embedded`）：
+
+```typescript
+export default defineConfig({
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern',
+        // 如果需要给每个文件都加上 Sass 全局变量 ↓
+        // additionalData: `@use "@/styles/variables.scss" as *;`,
+      },
+    },
+  },
+})
+```
+
+-----
+
+启用 Less（安装 `less`）：
+
+```typescript
+export default defineConfig({
+  css: {
+    preprocessorOptions: {
+      less: {
+        math: "always",
+        relativeUrls: true,
+        javascriptEnabled: true
+      },
+    },
+  }
+})
+```
+
+-----
+
+在 `vite.config.ts` 中，`.env` 的变量还并没有被注入环境，通过 `process.env` 只能访问到操作系统的环境变量；
+如果需要读取 `.env` 的变量，或是判断是开发还是生产，可以这样配置：
+
+```typescript
+import { defineConfig, loadEnv } from 'vite'
+
+export default defineConfig(({ mode, command }) => {
+  // 值为 "development" 或 "production"
+  console.log(mode)
+  
+  // 值为 "serve" 或 "build"
+  console.log(command)
+  
+  // 这个 env 包含了 .env 文件定义的 "VITE_" 开头的变量
+  const env = loadEnv(mode, process.cwd())
+  
+  return {
+    // 配置对象...
+  }
+})
+
+```
+
+-----
+
+静态放置于 CDN：
+
+```typescript
+import { defineConfig, loadEnv } from 'vite'
+
+export default defineConfig(({ mode }) => {
+  return {
+    base: mode === 'development' ? '/' : 'https://cdn.example.com/',
+  }
+})
+```
+
+开发环境下和原来一样，生产环境时资源的开头路径全部会替换成 CDN 的网址；
+如果网站部署于某个子目录而不是根目录 `/`，也是在这里修改。
+
+
+
+# `rollup.config.mjs` 模板
+
+此处给出的是 npm 包常用的打包编译 Rollup 配置。
+
+常用配置：
+
+```typescript
+import terser from '@rollup/plugin-terser'
+import typescript from '@rollup/plugin-typescript'
+import { defineConfig } from 'rollup'
+import del from 'rollup-plugin-delete'
+import { dts } from 'rollup-plugin-dts'
+
+export default defineConfig([
+  // 通过 rollup-plugin-delete 工具先提前把 dist 目录清空
+  // 通过 rollup-plugin-dts 输出 index.d.ts
+  // 因为这个工具可以把所有类型定义合并成一个
+  {
+    input: 'src/index.ts',
+    output: { file: './dist/index.d.ts', format: 'es' },
+    plugins: [
+      del({ targets: './dist/*' }),
+      dts(),
+    ],
+  },
+
+  // 分别输出 CommonJS 和 ES Module 两种格式的产物
+  {
+    input: ['src/index.ts'],
+    output: [
+      { format: 'cjs', file: './dist/index.cjs.js' },
+      { format: 'es', file: './dist/index.esm.js' },
+    ],
+    plugins: [typescript({ declaration: false })],
+  },
+
+  // 输出 UMD 格式的产物
+  // 注意 UMD 格式必须提供一个全局名称，例如 jQuery 或 $
+  // 这样才能在浏览器 <script> 引入时把你的库导入到全局变量
+  {
+    input: ['src/index.ts'],
+    output: {
+      format: 'umd',
+      file: './dist/index.umd.js',
+      name: '<全局名>',
+    },
+    plugins: [
+      typescript({ declaration: false }),
+      // UMD 模块已经是最终产物了，打包时直接压缩
+      terser(),
+    ],
+  },
+])
+
+```
+
+> 如果 `rollup-plugin-dts` 在 monorepo 仓库中遇到问题，可以这样配置：
+>
+> ```typescript
+> dts({ compilerOptions: { preserveSymlinks: false } })
+> ```
+
+-----
+
+如果你正在为 Vue 开发组件库，而且需要导出 UMD 格式，此时代码中只能通过全局变量来访问 Vue 实例，所以代码必须把 Vue 配置为 “通过全局变量访问的外部依赖”，此时需要这样配置：
+
+```typescript
+export default defineConfig([
+  {
+    // 添加下面这两行
+    external: ['vue'],
+    globals: { vue: 'Vue' },
+
+    // 其它配置项 ...
+  },
+])
+```
+
+
+
 # Webpack 配置模板
 
 Webpack 的配置较为复杂，我们不会从零开始，往往都是往已有的配置中合并/插入配置项。
-因为 cra 项目除非 eject 否则无法修改 webpack 配置，所以此处给出的配置仅供参考，下文还会对各个模板给出对应的 `react-app-rewired` 配置。
+具体是通过 Create-React-App 并 Eject 弹出配置，还是通过 CRARO 等工具定制，可以自行选用。
 
 添加路径别名：
 
@@ -1103,9 +1411,9 @@ module.exports = {
 
 
 
-# cra 配置模板
+# CRA 配置模板
 
-因为 cra 项目自带了一套 webpack 和 babel 配置，启动指令会使用 `react-scripts`，自带的配置就集成在这个包里面，所以必须使用例如 `react-app-rewired` 或 `craco` 这类工具来替换掉启动指令里面的 `react-scripts`，并提供一份它们约定的配置文件，这样能对 webpack 和 babel 进行定制。
+因为 CRA 项目自带了一套 webpack 和 babel 配置，启动指令会使用 `react-scripts`，自带的配置就集成在这个包里面，所以必须使用例如 `react-app-rewired` 或 `craco` 这类工具来替换掉启动指令里面的 `react-scripts`，并提供一份它们约定的配置文件，这样能对 webpack 和 babel 进行定制。
 
 使用 `react-app-rewired` 时，还可以配合 `customize-cra` 一同使用，极大程度减少配置代码量。
 **但是需要注意的是，这两个包已经很久没有维护了，现在比较推荐 `craco`。**
@@ -1426,7 +1734,7 @@ module.exports = {
 
 
 
-# Tailwindcss 配置
+# `tailwind.config.js` 配置
 
 安装 `tailwindcss`，然后创建文件 `tailwind.config.js`，写入以下内容：
 
