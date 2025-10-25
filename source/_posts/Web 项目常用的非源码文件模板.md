@@ -946,7 +946,7 @@ const nextConfig: NextConfig = {
 }
 ```
 
-然后是这个 `image-loader.js` 文件，Next.js 官方在 [说明文档](https://nextjs.org/docs/app/api-reference/config/next-config-js/images) 中给出了如 AWS S3、CloudFlare R2 等多种对象存储的配置样例代码，如果你用的是这些云服务提供商，直接复制即可。
+然后是这个 `image-loader.js` 文件，Next.js 官方在 [说明文档](https://nextjs.org/docs/app/api-reference/config/next-config-js/images) 中给出了如 AWS S3、Cloudflare R2 等多种对象存储的配置样例代码，如果你用的是这些云服务提供商，直接复制即可。
 
 此处给出腾讯云 COS 的配置代码：
 
