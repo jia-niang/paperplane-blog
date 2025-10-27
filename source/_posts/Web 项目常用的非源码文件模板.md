@@ -1111,20 +1111,20 @@ export default defineConfig(({ mode }) => {
 
 
 
-# `rollup.config.mjs` 模板
+# `rollup.config.js` 模板
 
 此处给出的是 npm 包常用的打包编译 Rollup 配置。
 
 常用配置：
 
 ```typescript
-import terser from '@rollup/plugin-terser'
-import typescript from '@rollup/plugin-typescript'
-import { defineConfig } from 'rollup'
-import del from 'rollup-plugin-delete'
-import { dts } from 'rollup-plugin-dts'
+const terser = require('@rollup/plugin-terser')
+const typescript = require('@rollup/plugin-typescript')
+const del = require('rollup-plugin-delete')
+const { dts } = require('rollup-plugin-dts')
 
-export default defineConfig([
+/** @type {import('rollup').RollupOptions} */
+module.exports = [
   // 通过 rollup-plugin-delete 工具先提前把 dist 目录清空
   // 通过 rollup-plugin-dts 输出 index.d.ts
   // 因为这个工具可以把所有类型定义合并成一个
@@ -1163,8 +1163,7 @@ export default defineConfig([
       terser(),
     ],
   },
-])
-
+]
 ```
 
 > 如果 `rollup-plugin-dts` 在 monorepo 仓库中遇到问题，可以这样配置：
@@ -1178,7 +1177,7 @@ export default defineConfig([
 如果你正在为 Vue 开发组件库，而且需要导出 UMD 格式，此时代码中只能通过全局变量来访问 Vue 实例，所以代码必须把 Vue 配置为 “通过全局变量访问的外部依赖”，此时需要这样配置：
 
 ```typescript
-export default defineConfig([
+module.exports = [
   {
     // 添加下面这两行
     external: ['vue'],
@@ -1186,7 +1185,7 @@ export default defineConfig([
 
     // 其它配置项 ...
   },
-])
+]
 ```
 
 
@@ -1734,9 +1733,23 @@ module.exports = {
 
 
 
-# `tailwind.config.js` 配置
+# `tailwind.config.js` 模版
 
-安装 `tailwindcss`，然后创建文件 `tailwind.config.js`，写入以下内容：
+**注意：TailwindCSS 从 v4 版本开始已经默认不再自动读取配置文件，即使提供此文件，也可能不会生效；如果你仍想使用配置文件，请参考 [官方文档](https://tailwindcss.com/docs/functions-and-directives#config-directive)，使用 `@config` 字段开启配置文件。**
+
+v4 版本开启配置文件的语法：
+
+```css
+@config "../../tailwind.config.js";
+```
+
+-----
+
+v4 版本请安装 `tailwindcss`、`@tailwindcss/postcss` 和 `postcss`；
+v3 版本则安装 `tailwindcss`、`postcss` 和 `autoprefixer`；
+建议先参考下一章节的内容，配置好 `postcss`，然后再来配置 `tailwindcss`。
+
+创建文件 `tailwind.config.js`，写入以下内容：
 
 ```js
 /** @type {import('tailwindcss').Config} */
@@ -1749,7 +1762,8 @@ module.exports = {
 }
 ```
 
-然后，在 CSS 目录中创建一个 `tailwind.css` 文件（不推荐用 `.less` 或 `.scss` 后缀），写入以下内容：
+然后，在 CSS 目录中创建一个 `tailwind.css` 文件（不推荐用 `.less` 或 `.scss` 后缀）；
+**v3 版本** 写入以下内容：
 
 ```css
 @tailwind base;
@@ -1757,11 +1771,23 @@ module.exports = {
 @tailwind utilities;
 ```
 
-然后，在项目入口 `index.js` 文件中添加一行：
+**v4 版本** 写入以下内容：
 
-```js
-import '@/styles/tailwind.css'
+```css
+@import "tailwindcss";
 ```
+
+或者，可以更精细地 “分层” 引入，这样可以使用自定义主题并调整优先级：
+
+```css
+@layer theme, base, components, utilities;
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css" layer(utilities);
+```
+
+然后，在项目中导入这个 CSS 文件即可。
 
 -----
 
@@ -1776,7 +1802,9 @@ import '@/styles/tailwind.css'
 
 -----
 
-注意，Tailwindcss 自带了一套 CSS 重置规则。如果你使用类似 `mui` 等自带全局 CSS 的工具，建议在 `tailwindcss.config.js` 中配置：
+注意，Tailwindcss 自带了一套 CSS 重置规则。如果你使用类似 `mui` 等自带全局 CSS 的工具，则可以关闭这一套默认规则：
+
+**v3 版本** 在 `tailwindcss.config.js` 中配置：
 
 ```js
 module.exports = {
@@ -1786,6 +1814,53 @@ module.exports = {
   },
 }
 ```
+
+**v4 版本** 则需要修改 `tailwind.css` 文件：
+
+```css
+@layer theme, base, components, utilities;
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+```
+
+这里删掉了 `@import "tailwindcss/preflight.css" layer(base);` 这一行。
+
+
+
+# `postcss.config.js` 模板
+
+根据安装的工具插件不同，添加键进行配置即可。
+
+```js
+/** @type {import('postcss-load-config').Config} */
+module.exports = {
+  plugins: {
+    autoprefixer: {},
+    // 其它插件 ...
+  },
+}
+```
+
+-----
+
+集成 TailwindCSS 配置： 
+
+```js
+/** @type {import('postcss-load-config').Config} */
+module.exports = {
+  plugins: {
+    // tailwindcss v4 
+    '@tailwindcss/postcss': {},
+    // tailwindcss v3
+    tailwindcss: {},
+
+    // 其它插件 ...
+  },
+}
+```
+
+代码中给出了 v4 和 v3 两种配置，根据你使用的版本来选择一个。
 
 
 
