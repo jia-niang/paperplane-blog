@@ -202,6 +202,7 @@ npm 包提供了这个字段并指向一个代码文件，使用方才能导入�
 
 **`typings` 字段：**
 如果这个包自身带有 TypeScript 类型定义，此字段为类型定义的 .d.ts 入口文件。
+（还支持 `typesVersions` 字段表示 TypeScripts 的版本，可参考 [官方文档](https://www.typescriptlang.org/docs/handbook/declaration-files/publishing.html#version-selection-with-typesversions)。）
 
 <br />
 
@@ -507,6 +508,43 @@ import lib2 from 'my-package/sub-path'
 
 如果只提供 `peerDependencies`，那么当使用者安装依赖后本地找不到 `mylib`，则 npm 会打印警告，使用上述的配置加一个 `optional: true` 便标志了 `mylib` 这一项对等依赖是 “可选” 的，即使没有安装它，npm 也不会打印警告。
 
+-----
+
+**`overrides` 字段：**
+是一个对象，可在当前项目中对某个依赖项的版本号进行覆写，具体可参考 [官方文档](https://docs.npmjs.com/cli/v9/configuring-npm/package-json#overrides)；
+这个字段支持的语法非常强大，可以通过嵌套写法，来对某个特定的（或特定版本号的）依赖项的子依赖进行版本号覆写，甚至可以通过 `$` 前缀来引用 `dependencies` 中某个包的版本号定义。
+
+这里给出一个示例：
+
+```json
+{
+  "overrides": {
+    "dep1": "1.0.0",
+    "dep2": {
+      ".": "2.0.0",
+      "dep3": "^3.1.0",
+      "dep4@4.0.0": "4.1.0"
+    }
+  }
+}
+```
+
+上述示例中，在当前项目中全局覆写 `dep1` 和 `dep2` 的版本号，并只针对 `dep2` 的依赖 `dep3` 覆写其版本号，只针对 `4.0.0` 版本的 `dep4` 覆写其版本号。`dep3` 作为其他包的依赖时，版本号不会被覆写；同理，`dep4` 版本号如果不是 `4.0.0`，其版本号也不会被覆写。
+
+
+
+## `packageManager` 包管理工具
+
+此字段指定使用的包管理工具以及其版本号，在 pnpm 项目中最常见到。
+一般写成 `"pnpm@10.14.0"` 这种格式，注意只支持确切的版本号，不支持 `^` 这种通配符。
+
+这是一个 Node.js 官方支持的字段，如果你使用 Node.js 官方 Docker 镜像，并通过 `corepack enable` 命令开启了 `corepack`，此时可以直接使用 `pnpm i` 等或 `yarn` 命令，`corepack` 会自动安装这个版本的 pnpm 或 yarn。
+
+在使用 `turbo` 或 `lerna` 等 monorepo 管理工具时，这个字段通常是必填的，否则工具可能会报错。
+
+> 注意 Node.js 官方 Docker 镜像中，`corepack` 默认是不开启的；
+> 这里推荐使用我的 [`paperplanecc/baseline-node`](https://github.com/paperplane-docker/baseline-node) 系列镜像，它默认通过 `corepack` 开启 pnpm，且预配置好了 pnpm 的相关环境变量，是真正意义上的 “开箱即用”；且提供了 `puppeteer` 版、`alpine` 兼容版等多个版本。
+
 
 
 # 命令/脚本
@@ -594,7 +632,7 @@ npm 运行脚本时，可能在运行之前/之后触发对应的脚本，具体
 
 
 
-# 发布 npm 包需要的字段
+# 用于发布 npm 包的字段
 
 如果你的项目是要发布到 npm 上的包，那么这些字段你可能需要用到：
 
@@ -663,20 +701,30 @@ npm 运行脚本时，可能在运行之前/之后触发对应的脚本，具体
 -----
 
 **`publishConfig` 字段：**
-是一个对象，在开发阶段它不起任何作用，只有在发布 npm 包时，这里面的字段才会生效（优先级比命令行参数低）。
+是一个对象；在开发期间它不起任何作用，只有当包正在被发布到 npm 时才生效：
+
+- 可视同为 `npm publish` 添加命令行参数，例如通过 `registry` 指定要发布到的源，或通过 `tag` 指定版本号标签；
+- **特定字段会在发布时覆盖掉 `package.json` 中的同名字段，这个功能很重要；**
+  会覆盖原始字段的字段名：`main`、`exports`、`types`、`typesVersions`、`unpkg`、`bin` 等；
+- 包被发布后的 `package.json` 中不会带有这个字段。
+
+例如，在 monorepo 中，仓库之间为了方便互相导入，`main` 入口会指定未编译的 .ts 文件，此时可以使用 `publishConfig` 字段中的 `main` 来指定编译后的 .js 文件，这个设置只在发布后生效，开发期间仍然可以正常使用 .ts 文件。
 
 这里给出一些示例：
 
 ```json
 {
+  "main": "src/index.ts",
+
   "publishConfig": {
+    "main": "dist/index.js",
     "tag": "next",
     "registry": "https://npm.paperplane.cc"
   }
 }
 ```
 
-上述示例可在发布时指定默认的源，并始终指定 `next` 版本标签。
+上述示例中，在发布后，覆写 `main` 入口，并可在发布时指定发布到的源，并指定 `next` 版本标签。
 
 
 
@@ -743,28 +791,57 @@ npm 现在原生支持 monorepo，它提供了一个 `workspaces` 字段用于�
 
 
 
-# 给其他工具准备的字段
+# 自定义配置一字段
 
-很多工具支持从 `package.json` 中读取配置字段，此处给出常见的。
+很多工具支持从 `package.json` 中读取配置字段；不过通常更建议使用单独的配置文件，没必要把其它工具的配置放到 `package.json` 中，因为这违背了单一职责的设计。
 
+## `config` 自定义配置字段
 
+npm 本身提供此用于存放一些用户自定义的配置。
+代码运行时，可通过 `npm_package_config_键名` 来访问这些变量，键名中的横杠 `-` 在环境变量名中会被替换成下划线 `_`。
 
-pnpm
-
-Prettier
-
-ESLint
-
-browserslist
-
-lint-staged
-
-commitizen
+不过，用到这个字段来配置的工具比较少（例如 `commitizen`），大部分工具都是直接放置在 `package.json` 的根级别字段，参考下一章节，了解常见工具在 `package.json` 中规定的自定义配置字段。
 
 
 
-例如，`prettier` 可以读取项目根目录的 `.prettierrc` 文件，但也支持读取 `package.json` 中的 `prettier` 字段。具体要看工具的支持情况。
+## 第三方工具自定义字段
 
-一般来说，`babel`、`eslint`、`prettier` 这类工具并不推荐把配置放在 `package.json` 中，原因是这些配置可能会使用 JS 代码来控制，或者是供给编辑器读取，如果放在 `package.json` 中可能会导致配置不便；而且这些配置的变更不应该反馈到 `package.json` 文件的变更时间线。
+下面列出一些常见的放在 `package.json` 的工具配置项目。
 
-相对来说，更推荐把 `husky`、`browserslist` 这些配置放在 `package.json` 中，因为它们本身就带有一定的 “描述性”，且不会频繁更改。
+<br />
+
+**pnpm：**
+它是 npm 的 “升级版”，除了和 npm 相同的行为以外，还支持从 `package.json` 的 `pnpm` 字段中读取额外的配置；
+不过，现在的新版本更推荐使用 `pnpm-workspace.yaml` 来配置。
+
+-----
+
+**Prettier：**
+此工具支持从 `package.json` 文件中的 `prettier` 字段中读取配置；
+不过，更推荐使用 `.prettierrc` 或 `.prettierrc.js` 或 `prettier.config.js` 来配置它。
+
+-----
+
+**ESLint（v8）：**
+旧版 v8 版本可以从 `package.json` 文件中的 **`eslintConfig`** 字段中读取配置，v9 开始不再支持；
+请使用 `eslint.config.js` 文件来配置它，不要使用上面的方式。
+
+-----
+
+**browserslist：**
+`browserslist` 是一个允许用户通过接近自然语言描述兼容浏览器版本号的工具，Babel、Webpack、PostCSS 等工具在编译代码时，通常都会调用它来获取用户需求的浏览器最低版本号。
+可以在 `package.json` 中通过 `browserslist` 字段来提供它的配置；另一种方式是使用一个 `.browserslistrc` 配置文件。
+
+因为 `browserslist` 几乎不会改动，且配置项内容不多，可以放在 `package.json` 里。
+
+-----
+
+**husky（v4）：**
+`husky` 是管理 Git Hook 的工具，允许用户通过文件配置，在提交代码、推送代码等环节添加检查逻辑。
+旧版 v4 版本可以通过 `package.json` 中的 `husky` 字段读取配置，但不推荐这种方式，更推荐的是使用 `.husky` 目录；新版本则完全不支持此配置方式。
+
+-----
+
+**lint-staged：**
+此工具结合 `husky` 使用，可在代码的 Git 提交操作时，对工作区中已修改的文件根据用户提供的命令进行一些检查等操作；
+可以通过 `package.json` 中的 `lint-staged` 字段来配置它，或使用 `lint-staged.config.js` 或 `.lintstagedrc.js` 或 `.lintstagedrc` 的单独配置文件。
