@@ -70,6 +70,8 @@ categories:
 
 其实这些字段大部分都是有用的。耐心看完本文，你对 `package.json` 的理解将更上一层楼。
 
+你还可以通过 [publint](https://publint.dev/) 来检查你的包的 `package.json` 是否存在错误，是否有优化空间。
+
 
 
 # 包信息
@@ -272,14 +274,16 @@ npm 包提供了这个字段并指向一个代码文件，使用方才能导入�
 
 
 
-# 现代化入口字段  `exports`
+# 条件导出  `exports`
 
-这个字段是 Node.js 提供的支持，所以 npm 文档中未提及。可以点击查看 [Node.js 相关文档](https://nodejs.org/api/packages.html#package-entry-points)，或在 [这篇文章](https://hirok.io/posts/package-json-exports) 进行进一步了解。
+这个字段是 Node.js 提供的支持，所以 npm 文档中未提及，可以点击查看 [Node.js 相关文档](https://nodejs.org/api/packages.html#package-entry-points)，另外强烈建议阅读 [这篇文章](https://hirok.io/posts/package-json-exports) 进行进一步了解。
 
 原本 npm 包只能通过 `main` 对外暴露一个导出，最多再加一个 `module`，这逐渐无法满足现在的需求；
 而 `exports` 便是一个更先进的导出配置，它支持多个导出端点，可以为每个导出端点分别指定 CJS 和 ESM 甚至 UMD 入口文件，甚至还能根据开发/生产环境进行分别区分。
 
-首先，只要 Node.js 版本支持，`exports` 的优先级会覆盖 `main`；尽管如此，还是建议提供一个用于 fallback 的 `main` 字段。
+<br />
+
+首先，只要 Node.js 或构建工具支持，`exports` 的优先级会覆盖 `main`；尽管如此，还是建议提供一个用于 fallback 的 `main` 字段。
 
 这里以 `vue` 的 `package.json` 举例（经过简化）：
 
@@ -330,7 +334,9 @@ npm 包提供了这个字段并指向一个代码文件，使用方才能导入�
 
 <br />
 
-首先，这个 `exports` 字段的格式可以是对象或字符串；如果是对象，它的键名可以区分导入时候的子目录，以提供不同的文件入口。
+首先，这个 `exports` 字段的格式可以是对象或字符串；
+如果是字符串，那么用法和 `main` 字段类似；
+如果是对象，它的键名可以区分导入时候的子目录，以提供不同的文件入口。
 
 例如，下面这两种导入方式：
 
@@ -353,29 +359,70 @@ import lib2 from 'my-package/sub-path'
 
 这里包名本身就是 `.` 键，其它子路径的键必须写成 `./` 开头的相对路径，这是强制的。
 
-使用 `exports` 字段的包，导入时子路径必须和其中的某个键匹配，如果没有任何键匹配，那么 Node.js 会直接报错；
-不过，`exports` 也支持星号 `*` 作为通配符，所以如果你的包要导出大量子路径，可以直接使用通配符，而不是挨个加到 `exports` 字段，例如上述 Vue 例子中的 `./dist/*`。
+注意，使用 `exports` 字段的包，导入时子路径必须和其中的某个键匹配，如果没有任何键匹配，那么 Node.js 会直接报错。
+如果你的包允许用户导入任何子文件单独使用，可以这样写：
 
-> Node.js 在根据子目录选择键时，会命中最具体匹配的劲键，如果多项的具体程度相同，则优先命中最靠前的。
+```json
+{
+  "exports": {
+    ".": "./index.js",
+    "./*": "./*"
+  }
+}
+```
+
+这里的星号 `*` 并不是 glob 通配符规则，而是支持嵌套多级目录。
+
+如果你的包要导出大量子路径，也可以直接使用 `*` 通配符，而不是挨个加到 `exports` 字段；
+例如上述 Vue 例子中的 `./dist/*`。
+
+> Node.js 在根据子目录选择键时，会命中最具体匹配的键，如果多项的具体程度相同，则优先命中最靠前的。
+
+你还可以通过 `null` 值来关闭某个目录的导出，例如：
+
+```json
+{
+  "exports": {
+    "./internal/*": null,
+    "./*": "./*",
+  }
+}
+```
+
+此时，针对 `./internal` 路径下的文件无法通过子目录的方式被导入。
 
 <br />
 
-然后，每一项导出，除了直接用字符串指定为文件外，还支持配置成一个对象，让 Node.js 或工具链根据具体需求，选择应需要的入口文件。
+然后，每一项导出，除了直接用字符串指定为文件外，还支持配置成一个对象，让 Node.js 或工具链根据需要的 **条件**，选择应需要的入口文件。
 
-这里列出几个常用的字段名（非全部）：
+这里列出几个常用 **条件** 字段名（非全部）：
 
 - `require`，表示 CommonJS 格式的导出，可看作是 `main` 字段；
 - `import`，表示 ES Module 格式的导出，可看作是 `module` 字段；
-- `node`，表示为 Node.js 准备的导出， 一般用不到这个字段；
-- `default`，官方文档建议提供的备选导出，应放置在最末位。
+- `node`，表示为 Node.js 准备的导出；
+- `default`，备选导出，建议每一个条件分支都保留此字段，并放置在最末位。
 
-以上字段是 Node.js 原生支持的，但 Vite、Webpack 等工具往往支持更多的字段，下面列出一些工具链常用的字段：
+以上字段是 Node.js 原生支持的，但 Rollup、Webpack 等工具往往支持更多的字段，下面列出一些工具链常用的字段：
 
-- `development` 和 `production`，特指开发或生产环境下生效；
+- `types`，为这个导出提供 `.d.ts` 类型定义；
+- `development` 和 `production`，特指开发或生产环境下生效，Vite 和 Webpack 均支持；
+- `module`，可看作是 ES Module 格式的导出；
 - `browser`，浏览器可使用的格式，例如 IIFE 或 UMD 格式；
-- `types`，为这个导出提供 `.d.ts` 类型定义。
+- `style`，被当做样式导入时，一般在 CSS 文件中的 `@import` 时生效，**使用时注意工具支持情况**；
+- `asset`，被当做资源文件使用时，一般在 `<img src="" />` 等场合生效，**使用时注意工具支持情况**。
 
 上面的所有字段，都可以互相嵌套形成组合条件，工具会根据具体情形选择对应的文件，可以参考上面 Vue 的示例。
+可以参考 [Webpack 文档](https://webpack.js.org/guides/package-exports/) 了解这些字段的用法、支持情况。
+
+<br />
+
+一般情况下，工具会自动根据导入情景和当前环境选择依赖包的条件导出字段；
+但我们也可以手动配置：
+
+- 在 Webpack 中通过 [`resolve.conditionNames`](https://webpack.js.org/configuration/resolve/#resolveconditionnames) 来配置；
+- 在 Vite 中通过 [`resolve.conditions`](https://cn.vite.dev/config/shared-options.html#resolve-conditions) 来配置；
+- 在 TypeScript 中通过 [`customConditions`](https://www.typescriptlang.org/tsconfig/#customConditions) 来配置，可通过 [官方文档](https://www.typescriptlang.org/docs/handbook/modules/reference.html#packagejson-exports) 来了解 TS 系统对条件导出的处理方式；
+- 在 Node.js 中通过 [`--conditions=xxx`](https://nodejs.org/api/packages.html#resolving-user-conditions) 来选择使用的导入条件。
 
 
 
