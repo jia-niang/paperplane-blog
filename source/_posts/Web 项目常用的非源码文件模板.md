@@ -1115,7 +1115,7 @@ export default defineConfig(({ mode }) => {
 
 此处给出的是 npm 包常用的打包编译 Rollup 配置。
 
-常用配置：
+适用于浏览器前端开发的打包配置：
 
 ```typescript
 const terser = require('@rollup/plugin-terser')
@@ -1166,6 +1166,10 @@ module.exports = [
 ]
 ```
 
+每一项配置的解释请参考代码中的注释。
+
+注意，如果你用到了某个 CommonJS 导出格式的依赖，那么你需要添加 `@rollup/plugin-commonjs` 插件，下面的代码示例中有这个插件的用法，请参考其中的部分。
+
 > 如果 `rollup-plugin-dts` 在 monorepo 仓库中遇到问题，可以这样配置：
 >
 > ```typescript
@@ -1187,6 +1191,52 @@ module.exports = [
   },
 ]
 ```
+
+-----
+
+适用于 Node.js 库的打包配置：
+
+```js
+const commonjs = require('@rollup/plugin-commonjs')
+const json = require('@rollup/plugin-json')
+const { nodeResolve } = require('@rollup/plugin-node-resolve')
+const typescript = require('@rollup/plugin-typescript')
+const { defineConfig } = require('rollup')
+const del = require('rollup-plugin-delete')
+const { dts } = require('rollup-plugin-dts')
+
+/** @type {import('rollup').RollupOptions} */
+module.exports = [
+  {
+    input: ['src/index.ts'],
+    output: { dir: 'dist', format: 'cjs' },
+    plugins: [
+      del({ targets: './dist/*' }),
+      typescript({ declaration: false }),
+
+      // 对于 Node.js 库而言需要把 fs、path 等库排除在外
+      // 所以需要 @rollup/plugin-node-resolve 插件
+      nodeResolve(),
+
+      // 因为部分包用到了 package.json 或者其他 json，所以配置了此插件
+      // 打包 Node.js 库大概率需要用到此插件，但不是一定，你可以尝试去除此插件
+      json(),
+
+      // 处理 CommonJS 的导入，因为 Rollup 现在面向 ESM 导入
+      // 打包 Node.js 库时这个插件和 @rollup/plugin-node-resolve 通常一同使用
+      commonjs(),
+    ],
+  },
+
+  {
+    input: 'src/index.ts',
+    output: { file: 'dist/index.d.ts', format: 'es' },
+    plugins: [dts()],
+  },
+]
+```
+
+
 
 
 
