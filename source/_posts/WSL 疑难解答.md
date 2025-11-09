@@ -172,7 +172,7 @@ wsl -t Ubuntu
 使用 `wsl export` 指令将 WSL 导出成压缩包，导出到任意临时目录即可：
 
 ```bash
-wsl --export Ubuntu "D:\wsl_export\ubuntu-export.tar"
+wsl --export Ubuntu "D:\wsl_export\ubuntu-export.vhdx" --vhd
 ```
 
 从系统中取消注册 WSL 实例：
@@ -185,10 +185,47 @@ wsl --unregister Ubuntu
 
 ```bash
 # 注意这里第一个 D:\wsl_new_directory\ubuntu 目录就是转移之后 WSL 实例的目录
-wsl --import Ubuntu "D:\wsl_new_directory\ubuntu" "D:\wsl_export\ubuntu-export.tar"
+wsl --import Ubuntu "D:\wsl_new_directory\ubuntu" "D:\wsl_export\ubuntu-export.vhdx" --vhd
 ```
 
 然后就可以删掉之前导出的压缩包了。
+
+> 2025 更新：现在加上了 `--vhd` 后缀，这样可以导出 `.vhdx` 格式的文件。
+> 默认是 `.tar` 后缀，这可能会导致 `pax format cannot archive sockets` 错误，增加风险。
+
+
+
+# WSL 占用太多磁盘空间
+
+WSL 使用过程中，占用的磁盘空间会越来越大，即使我们把 WSL 里的文件删除了，在 Windows 中占用的空间可能也不会释放，因此需要对这部分空间进行 “释放” 操作。
+
+WSL 使用 `.vhdx` 格式的 “虚拟硬盘” 文件来存储数据，这是 Windows 系统原生支持的一种磁盘映射文件，所以无需额外安装任何工具，可以直接使用命令来对这个文件进行操作。
+
+首先，找到 WSL 的 `ext4.vhdx` 文件：
+默认情况下，这个文件在 `C:\Users\<你的用户名>\AppData\Local\Docker\wsl\data\ext4.vhdx`
+但如果你像上一章节那样迁移过 WSL 的存储目录，那么直接到你迁移的目录里找即可。
+
+然后，释放空间需要停止 WSL 的运行：
+
+```bash
+wsl --shutdown
+```
+
+执行后，建议通过这个命令查看 WSL 是否彻底停止：
+
+```bash
+wsl -l -v
+```
+
+如果你安装了 Docker Desktop 并且使用 WSL 引擎，此处可能有 Docker 的实例仍在运行，退出 Docker Desktop 即可，确保都是 `Stopped` 状态。
+
+然后，运行命令：
+
+```bash
+Optimize-VHD -Path "<路径...>\ext4.vhdx" -Mode Full
+```
+
+运行后需要等待一会，进度条完成后，即可释放掉 WSL 占用的空间。
 
 
 
@@ -256,7 +293,8 @@ cd ~
   docker-desktop-data    Running         2
 ```
 
-这里的 `docker-desktop` 用于运行 Docker 引擎（dockerd），而 `docker-desktop-data` 用于存储容器和镜像。
+这里的 `docker-desktop` 用于运行 Docker 引擎（也就是 dockerd），而 `docker-desktop-data` 用于存储容器和镜像。
+（2025 更新：现在可能没有 `docker-desktop-data` 了，具体取决于实际情况。）
 
 即使在安装时没有选用 WSL，也可以后续在 Docker Desktop 设置页面找到 “Use the WSL 2 based engine” 复选框修改设置。
 如果你已有运行了的 WSL 的实例，也可以在 Docker Desktop 设置页面的 Resources > WSL integration 页面找到各个 WSL 实例，并配置允许哪些实例访问 Docker，在这些实例里面可以直接执行例如 `docker ps` 等命令。
