@@ -294,7 +294,8 @@ cd ~
 ```
 
 这里的 `docker-desktop` 用于运行 Docker 引擎（也就是 dockerd），而 `docker-desktop-data` 用于存储容器和镜像。
-（2025 更新：现在可能没有 `docker-desktop-data` 了，具体取决于实际情况。）
+
+> 注意，从 Docker Desktop 4.30 开始，不再会有 `docker-desktop-data` 实例了。以前创建的会继续保留。
 
 即使在安装时没有选用 WSL，也可以后续在 Docker Desktop 设置页面找到 “Use the WSL 2 based engine” 复选框修改设置。
 如果你已有运行了的 WSL 的实例，也可以在 Docker Desktop 设置页面的 Resources > WSL integration 页面找到各个 WSL 实例，并配置允许哪些实例访问 Docker，在这些实例里面可以直接执行例如 `docker ps` 等命令。
