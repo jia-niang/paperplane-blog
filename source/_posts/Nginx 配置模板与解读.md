@@ -431,3 +431,44 @@ docker run --rm --entrypoint htpasswd httpd -Bbn <用户名> <密码>
 
 运行后会输出用户名和哈希过的密码，可以将它追加到 `.htpasswd` 文件中。
 这段指令执行后，会自动删除 Docker 容器，没有其他副作用。
+
+
+
+# 大文件传输
+
+允许上传大文件：
+
+```nginx
+# 上传文件大小限制 100MB
+client_max_body_size 100m;
+
+# 或，不限上传文件大小
+client_max_body_size 0; 
+```
+
+默认情况下，Nginx 会使用缓冲区（内存）和临时文件（硬盘）来暂存用户上传的文件，然后发送给上游；
+你可以调整缓冲区的大小、临时文件的目录：
+
+```nginx
+# 缓冲区大小
+client_body_buffer_size 512k; 
+
+# 临时文件位置，后面的 1 2 表示目录层次
+client_body_temp_path /path-to-temp 1 2;
+```
+
+或者，你可以直接禁用 Nginx 的文件缓冲区：
+
+```nginx
+proxy_request_bufferings off;
+```
+
+<br />
+
+如果你的上游是 Jellyfin、NAS 等，需要支持分块下载、断点续传、视频播放，建议配置：
+
+```nginx
+proxy_set_header Range $http_range;
+proxy_set_header If-Range $http_if_range;
+```
+
