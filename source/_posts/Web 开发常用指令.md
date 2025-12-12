@@ -69,42 +69,6 @@ pnpm store path
 
 
 
-# 遇到 sass 等库安装失败
-
-`node-sass` 容易出错，新项目建议换用 sass（也就是 dart-sass）。
-如果是老项目没法换，以下方法选择一个即可：
-
-**方法1：**
-
-在项目根目录创建 `.npmrc` 文件，写入以下内容：
-
-```ini
-sass_binary_site=https://npmmirror.com/mirrors/node-sass/
-```
-
-或者全局配置 npm 和 yarn：
-
-```bash
-npm config set sass-binary-site https://registry.npmmirror.com/node-sass
-yarn config set sass-binary-site https://registry.npmmirror.com/node-sass
-```
-
-
-
-**方法2：**
-
-使用 `cnpm` 来安装依赖：
-
-```bash
-# 全局安装 cnpm
-npm i -g cnpm
-
-# 用 cnpm 来安装依赖
-cnpm i
-```
-
-
-
 # Git 相关
 
 ```bash
