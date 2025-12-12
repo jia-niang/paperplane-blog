@@ -23,7 +23,6 @@ steps:
       - name: pnpm-cache
         path: /paperplane-blog/.pnpm-store
     commands:
-      - npm i -g pnpm
       - pnpm i
       - pnpm build
     environment:
