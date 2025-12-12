@@ -18,7 +18,7 @@ trigger:
 
 steps:
   - name: build
-    image: node:20.13.0
+    image: paperplanecc/baseline-node20:2025.11.30
     volumes:
       - name: pnpm-cache
         path: /paperplane-blog/.pnpm-store
