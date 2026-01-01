@@ -9,9 +9,15 @@ categories:
 - DOC
 ---
 
-记录 Web 开发和 Node.js 开发中一些常见的非源码模板，最常见的也就是各种配置文件模板。
+2026 年更新：此内容已迁移至 https://paperplane.cc/snippet
 
+<br />
+<br />
+<br />
 
+以下是原内容，已过时且不再更新。
+
+-----
 
 # 完整项目模板
 

@@ -8,6 +8,14 @@ categories:
 - DOC
 ---
 
+2026 年更新：此内容已迁移至 https://paperplane.cc/snippet/command
+
+<br />
+<br />
+<br />
+
+以下是原内容，已过时且不再更新。
+
 # 配置 npm
 
 ``` bash
