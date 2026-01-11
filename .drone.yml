@@ -26,10 +26,8 @@ steps:
       - pnpm i
       - pnpm build
     environment:
-      PAPAERPLANE_API_ADMIN_HEADER_NAME:
-        from_secret: PAPAERPLANE_API_ADMIN_HEADER_NAME
-      PAPAERPLANE_API_ADMIN_HEADER_VALUE:
-        from_secret: PAPAERPLANE_API_ADMIN_HEADER_VALUE
+      API_KEY:
+        from_secret: API_KEY
 
   - name: deploy-upload-cdn
     image: plugins/s3

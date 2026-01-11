@@ -1,23 +1,19 @@
 async function generateShortUrl(post) {
-  if (
-    !process.env.PAPAERPLANE_API_ADMIN_HEADER_NAME ||
-    !process.env.PAPAERPLANE_API_ADMIN_HEADER_VALUE
-  ) {
+  if (!process.env.API_KEY) {
     return;
   }
 
   const shortUrl = await require("axios")
     .post(
-      "https://console.paperplane.cc/api/shorts",
+      "https://paperplane.cc/api/shorts",
       {
         url: post.permalink,
-        type: "SYSTEM",
-        expiredAt: null,
+        public: true,
+        reuse: true,
       },
       {
         headers: {
-          [process.env.PAPAERPLANE_API_ADMIN_HEADER_NAME]:
-            process.env.PAPAERPLANE_API_ADMIN_HEADER_VALUE,
+          "X-API-KEY": process.env.API_KEY,
         },
       }
     )
