@@ -36,6 +36,8 @@ Docker 具备跨平台构建镜像的能力，不过对于 Linux 用户而言，
 
 Docker 目前还是默认使用 `overlay2` 作为镜像存储引擎，而容器行业已经广泛推广 `containerd` 了，目前也只有后者支持存储跨平台镜像。
 
+**2026 年 1月更新：[v29 版本](https://github.com/moby/moby/releases/tag/docker-v29.0.0) 开始，Docker 已经默认使用 `containerd` 作为镜像存储引擎了；如果是新安装的 Docker 实例，不再需要配置此步骤，直接跳过本段即可。**
+
 > 有关 Docker 和其他产品争夺市场和话语权的故事，建议阅读极客时间的 [《深入剖析 Kubernetes》](https://time.geekbang.org/column/intro/100015201)。
 
 **想要支持多平台镜像的存储，必须切换成 `containerd` 模式，这会导致之前所有镜像无法使用。**所以这一步越趁早越好，最好在服务器刚初始化好，安装好 Docker，就马上做这一步。
