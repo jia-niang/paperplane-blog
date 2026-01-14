@@ -10,7 +10,7 @@ async function generateHistory(post) {
   const filePath = `source/_posts/${encodeURIComponent(post.slug)}.md`;
   const metaData = await require("axios")
     .get(
-      `https://git.paperplane.cc/api/v1/repos/chiskat/paperplane-blog/commits?sha=master&path=${filePath}&stat=false&verification=false`
+      `https://git.paperplane.cc/api/v1/repos/chiskat/paperplane-blog/commits?sha=main&path=${filePath}&stat=false&verification=false`
     )
     .then((res) => res.data)
     .catch(() => []);
@@ -24,7 +24,7 @@ async function generateHistory(post) {
   });
 
   const result = {
-    url: `https://git.paperplane.cc/chiskat/paperplane-blog/commits/branch/master/${filePath}`,
+    url: `https://git.paperplane.cc/chiskat/paperplane-blog/commits/branch/main/${filePath}`,
     list: history,
   };
 
