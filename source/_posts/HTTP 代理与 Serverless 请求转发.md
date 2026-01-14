@@ -8,19 +8,19 @@ categories:
 - DevOps
 ---
 
-我一直通过 [OpenRouter](https://openrouter.ai/) 购买和使用 AI 服务，但 AI 服务提供商往往会有服务地区限制，例如 OpenAI 不对亚洲大部分地区提供服务；而 OpenRouter 作为代理商，也遵守此规则，会把用户的 IP 透传给上游。
+我一直通过 [OpenRouter](https://openrouter.ai/) 购买和使用 AI 服务，但 AI 服务提供商往往会有服务地区限制，例如 OpenAI 不对亚洲大部分地区提供服务；而 OpenRouter 作为代理商，也遵守此规则透传用户 IP。
 
 因此，需要一种中转代理的方式，使我们的 AI 调用的出口 IP 改为欧美国家。
 
 有这么几种思路：
 
-- 直接使用国内中转商提供的 AI 服务，有中转商跑路、服务可用性低速度慢、提供低价 AI 模型输出以次充好这几方面的顾虑；
-- 选购欧美国家的云服务器作为代理，这种方式一劳永逸，但成本高；
-  因为很多便宜的云服务供应商的 IP 已经被严重滥用了，无法用做 OpenAI 中转；
-- 使用云服务供应商的 Serverless 服务来转发，这种方式成本低，按量计费，非常推荐；
-  但 Cloudflare Workers 无法使用，可以尝试阿里云或腾讯云，我就是用的腾讯云的 **硅谷** 地区的云函数。
+- 使用国内的 AI 中转商（[AI 中转商合集](https://www.aiapipk.com/)）：不稳定、会跑路、可能以次充好；
+- 选购欧美云服务器作代理：一劳永逸，但成本太高；
+  （很多便宜的云服务供应商的 IP 已经被严重滥用了，无法用做 AI 中转）
+- 使用云服务的 Serverless 服务来转发：成本低，按量计费，非常推荐；
+  这也是我使用的方式（之一），本文从零开始介绍这种 Serverless 代理请求的原理和搭建方式。
 
-本文介绍我自己的配置方式，同时对现在常见的各种代理、中转方案的原理、搭建方式进行介绍，方便有同类需求的开发者。
+注意：现在 Cloudflare Workers 已无法用作 AI 服务代理，这里推荐使用阿里云或腾讯云；我就是用的腾讯云的 **硅谷** 地区的云函数，效果良好；阿里云没试过，选择美国境内的机房应该也可以。
 
 
 
@@ -32,10 +32,15 @@ categories:
 
 ![](../images/image-20251025160312533.png)
 
-使用 HTTP 代理时，需要填写代理服务器地址和端口，以及用户名和密码。
+使用 HTTP 代理时，需要填写代理服务器地址和端口，以及用户名和密码；
+实际上，这就是一段 URL，软件界面上只是让我们分开填写而已，它等价于：
 
-再举一个 JS 库的例子，在 Node.js 运行的 `axios` 便支持代理，不过还需要安装 `https-proxy-agent` 这个库；
-以下是用法：
+```
+http://username:password@example.com:1234
+```
+
+再举一个 JS 库的例子，在 Node.js 运行的 `axios` 就支持代理，不过还需要安装 `https-proxy-agent` 这个库；
+用法是这样的：
 
 ```typescript
 import axios from 'axios'
@@ -96,12 +101,13 @@ GET http://target.com/ HTTP/1.1
 可以看出，原本只有子路径的首行，现在是一个完整 URL；
 代理服务器收到后，就能意识到这是一个代理请求，便会帮助来源把请求转发出去，同时在收到目标响应后回传。
 
-注意，代理服务器在转发请求时，可能会添加一些额外的请求头。
+注意，代理服务器在转发请求时，可能会添加一些额外的请求头；同样，在转发响应时，可能也会添加一些响应头。
+例如，请求头和响应头可能会多出来 `Via`、`X-Forwarded-Host` 等。
 
 <br />
 
 **代理 HTTPS 请求：**
-因为 HTTPS 请求是非对称加密的，代理服务器也无法解开，此时便不可解读请求体；
+因为 HTTPS 请求是非对称加密的，代理服务器完全无法解读，因此逻辑和 HTTP 请求的代理不同；
 此时，会向代理服务器 `proxy.com` 发出一个 `CONNECT` 请求，第一行是这样的：
 
 ```http
@@ -110,6 +116,8 @@ CONNECT target.com:443 HTTP/1.1
 
 这会和代理服务器建立一个 SSL/TLS 隧道，后续的所有数据都通过原始字节流传输；
 代理服务器在此过程中只能充当桥梁，无法得知任何请求和响应的内容。
+
+这也能看出，HTTPS 的普及使得我们即使使用代理服务器，也能保证网络数据安全。
 
 
 
@@ -184,7 +192,7 @@ curl -x http://127.0.0.1:9000 http://www.baidu.com
 curl -x http://127.0.0.1:9000 https://www.baidu.com
 ```
 
-如果是 Windows 系统，可以再写一个 `test.js` 文件：
+如果是 Windows 系统，建议写一个 `test.js` 文件来测试：
 
 ```typescript
 const axios = require('axios')
@@ -200,13 +208,13 @@ axios
   .then(console.log)
 ```
 
-然后运行 `node test.js` 便可测试。
+运行命令 `node test.js` 便可开始测试。
 
 -----
 
 如果你拥有一台 Node.js 服务器，那么可以尝试这种方法。但是海外云服务器的成本较高，更优的选择应该是 Serverless 云函数。
 
-以上代码无法在 Cloudflare Workers、腾讯云等 Serverless 端运行，因为云函数通常禁止 `CONNECT` 连接，而且云函数的用户协议通常也不允许代理行为，甚至可能内置了一些检测机制。
+还要注意的是，以上代码无法在 Cloudflare Workers、腾讯云等 Serverless 端运行，因为云函数通常禁止 `CONNECT` 连接，而且云函数的用户协议通常也不允许代理行为，甚至可能内置了一些检测机制。
 
  
 
@@ -215,7 +223,7 @@ axios
 上述 Node.js 示例太过简陋，实际上一般也不会使用它来当做代理；
 以下给出两个可用于搭建 HTTP 正向透明代理的 Docker 镜像。
 
-
+<br />
 
 **镜像 `ubuntu/squid`：**
 这是一个用于搭建 HTTP 代理的镜像，配置简单。
@@ -399,21 +407,24 @@ export default {
 
 你还要再修改一处，代码中的 `'<你的Worker的URL>'` 要换成这个 Worker 的访问地址。
 
-注意，经过 Cloudflare Workers 的请求，会被附加一些 `cf-` 开头的请求头，为了避免请求被过度修改，代码中已尽可能做了滤除；但还会有一些类似于 `cf-ray` 的请求头，由 Cloudflare Worker 强制添加，无法避免。
+> 经过 Cloudflare Workers 的请求，会被附加一些 `cf-` 开头的请求头，为了避免请求被过度修改，代码中已尽可能做了滤除；但还会有一些类似于 `cf-ray` 的请求头，由 Cloudflare Worker 强制添加，无法避免。
 
 完成后，便可以通过在这个 Worker 的访问地址后面拼接你需要访问的 URL，然后就能成功访问了；
 例如：`https://xxxx.xxxx.workers.dev/https://github.com`。
 
 不过，中国大陆地区可能无法使用 `workers.dev` 域名，因此，你可能需要准备一个域名并由 Cloudflare 托管，然后把它绑定到这个 Worker 上，使用自己的域名；
-绑定自己的域名时，上面代码中的 URL 也要改成自己的域名。
+绑定自己的域名时，别忘了把上面代码中的 URL 也要改成自己的域名。
 
-> Cloudflare Workers 无法用于 OpenAI。
+这样，你就得到了一个自己搭建的 URL 前缀代理，别人用你的这个域名，并在后面接上 `/https://github.com/xxxxxxx`，就可以直接下载 GitHub 的仓库源码了，而且 Cloudflare Workers 的免费额度很大，基本上是不花一分钱的（除了域名的花费）。
+
+不过，Cloudflare Workers 无法用于 AI，似乎是他们的 IP 被标记了。下文继续介绍使用腾讯云的 Serverless，腾讯云的硅谷机房可以使用 AI。
 
 
 
 ## 腾讯云云函数搭建 URL 前缀转发
 
 创建云函数时，选择 Node.js 18，类型选择 Web 函数；
+（如果需要使用 AI，地区请选择硅谷）
 在网页中的在线 IDE 中，打开终端，先输入 `cd src`，然后输入 `npm add express`，这样来安装依赖项；
 然后，把代码替换为：
 
@@ -472,8 +483,6 @@ app.listen(9000, () => {})
 注意，腾讯云的云函数也会给请求添加很多请求头，大部分以 `x-scf-` 和 `x-cube-` 开头，这些请求头甚至还包含腾讯云账户 ID 等敏感信息，一定要去除，代码中已经提供了去除的逻辑；
 此外，还有 `x-real-ip` 和 `x-forwarded-for` 两个请求头，这两个似乎是 `express` 加上的，代码中也已做去除。
 
-> 可以在硅谷地区创建腾讯云云函数，此地区可以使用 OpenAI。
-
 
 
 ## 通过 express 中间件中转 OpenRouter
@@ -481,7 +490,7 @@ app.listen(9000, () => {})
 上面的例子中，请求目标 URL 可以自己随便填写。
 但实际上，我们可以只代理针对某个特定 URL 的请求，不需要每次都从 URL 中提取；创建一个云函数或 Node.js 服务，代理发给某个地址的请求，把请求原样发过去、得到响应后原样传回，这样非常简便。
 
-这很适合 OpenRouter 或者其他 AI 服务的代理，因为大部分 AI 工具都允许我们自定义 Endpoint，我们只需要修改一下 Endpoint 到我们自己的云函数 URL 即可。
+这很适合 OpenRouter、OpenAI 或者其他 AI 服务的代理，因为大部分 AI 工具都允许我们自定义 Endpoint，我们只需要修改一下 Endpoint 到我们自己的云函数 URL 即可。
 
 这里可以用到 `express` 和 `http-proxy-middleware`，这个中间件的行为就如同上面描述的一样，且使用简单，只需要配置目标 URL 和是否更换 `Origin` 即可。
 这种方式既可以通过 Node.js 服务器运行，也可以通过 Serverless 云函数来运行。
