@@ -4,7 +4,7 @@
 这是我的个人技术博客 “[纸飞机的信笺](https://paperplane.cc)” 网站的源代码仓库。
 
 GitHub 代码仓库为镜像。<br />
-原始代码仓库：https://git.paperplane.cc/jia-niang/paperplane-blog
+原始代码仓库：https://git.paperplane.cc/chiskat/paperplane-blog
 
 # 简介
 

@@ -385,7 +385,7 @@ sudo docker rm -f tmp-nginx-container
 
 因为 Git 使用 SSH 通讯，默认走 22 端口，所以如果想让 Gitea（或者 Gitlab、Gogs 等）的容器也绑定到 22 端口，会与操作系统的 sshd 服务抢占 22 端口，导致无法成功。
 
-SSH 的 Git 克隆地址通常是这样的：`git@paperplane.cc:jia-niang/paperplane-blog.git`，其中指定了用户名 `git`，因此我们可以实现一个程序，判断连接到主机的用户名，如果叫 `git`，便将它转发给 Git 服务。
+SSH 的 Git 克隆地址通常是这样的：`git@paperplane.cc:chiskat/paperplane-blog.git`，其中指定了用户名 `git`，因此我们可以实现一个程序，判断连接到主机的用户名，如果叫 `git`，便将它转发给 Git 服务。
 
 如果直接将 Gitea 安装到宿主机，安装程序会自动帮我们部署转发程序；但在 Docker 中部署 Gitea 时，这个转发程序便需要由用户自行来完成了。这里有两份官方文档：[gitea.com 的中文文档](https://docs.gitea.com/zh-cn/installation/install-with-docker#ssh-%E5%AE%B9%E5%99%A8%E7%9B%B4%E9%80%9A)、[gitea.cn 的中文文档](https://docs.gitea.cn/installation/install-with-docker#ssh-%E5%AE%B9%E5%99%A8%E7%9B%B4%E9%80%9A)，可以提供第一手的支持，本文旨在写出自己的实践以避坑。
 

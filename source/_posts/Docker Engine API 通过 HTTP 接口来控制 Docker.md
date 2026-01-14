@@ -151,10 +151,8 @@ services:
 
 -----
 
-注意，上面例子中，`bobrik/socat` 这个镜像版本太旧，现在可能已经无法拉取。
-可以改用 [`paperplanecc/socat`](https://hub.docker.com/r/paperplanecc/socat) 这个镜像，这是我按照它的 [源代码](https://github.com/bobrik/docker-socat/blob/master/Dockerfile) 构建而来的。
-
-也可以自己构建，此处给出 Dockerfile 文件：
+注意，上面例子中，`bobrik/socat` 这个镜像版本太旧，现在可能已经无法拉取；
+因此可以自己构建一个新的并使用，此处给出 Dockerfile 文件：
 
 ```dockerfile
 FROM alpine:3.1
@@ -164,5 +162,5 @@ RUN apk --update add socat
 ENTRYPOINT ["socat"]
 ```
 
-你也可以使用 [`paperplanecc/docker-api`](https://hub.docker.com/r/paperplanecc/docker-api) 这个镜像，它是我专门为了访问 Docker Engine API 而构建的。
-它的用法和 `paperplanecc/socat` 相同，但是它额外预设好了 `command` 启动指令，所以你不需要在使用时再提供 `command` 配置了，只需要正确挂载 `/var/run/docker.sock` 即可通过 `2375` 端口访问 Docker Engine API。
+你也可以使用 [`chiskat/docker-api`](https://hub.docker.com/r/chiskat/docker-api) 这个镜像，它是我专门为了访问 Docker Engine API 而构建的。
+它的用法和 `bobrik/socat` 相同，但是它额外预设好了 `command` 启动指令，所以你不需要在使用时再提供 `command` 配置了，只需要正确挂载 `/var/run/docker.sock` 即可通过 `2375` 端口访问 Docker Engine API。

@@ -13,7 +13,7 @@ categories:
 不同于 Jenkins 等传统的 CI/CD 工具，这种构建流水线对环境的要求和构建过程产生的副作用都非常小，在多次构建之间的差异也更小。因此，我推荐学习和使用此类构建工具。
 
 而 [Drone CI](https://www.drone.io/) 就是这样的基于 Docker 镜像的构建流水线工具，也是本文的主题。
-本博客也是使用它构建而来，[点击链接](https://drone.paperplane.cc/jia-niang/paperplane-blog) 查看构建状态。
+本博客也是使用它构建而来，[点击链接](https://drone.paperplane.cc/chiskat/paperplane-blog) 查看构建状态。
 
 目前在 https://drone.paperplane.cc/ 上大约运行了 20 多个 CI/CD 流水线，截图如下：
 
@@ -143,7 +143,7 @@ server {
 >
 > 但是，迁移后小厂的问题暴露了出来，例如：小厂没有 Docker 的内网加速域名，也没有制品库服务，服务器上拉取和上传镜像必须走固定带宽小水管。 
 >
-> 而我的一些项目需求的 Docker 镜像体积较大，例如 [`paperplane-api`](https://git.paperplane.cc/jia-niang/paperplane-api) 这个项目的基础镜像就有 1.5 GB（压缩后也有近 900MB），打包依赖和代码后未压缩的体积竟然高达 2.5GB。上传镜像到制品库的耗时是不可接受的。 
+> 而我的一些项目需求的 Docker 镜像体积较大，例如 [`paperplane-api`](https://git.paperplane.cc/chiskat/paperplane-api) 这个项目的基础镜像就有 1.5 GB（压缩后也有近 900MB），打包依赖和代码后未压缩的体积竟然高达 2.5GB。上传镜像到制品库的耗时是不可接受的。 
 >
 > 虽然我有自搭的制品库，但小厂也不支持自建网络，Drone 运行的构建容器也没法配置 hosts，所以即使想推送到自搭制品库，流量也要经过外网绕一圈再回来。
 
@@ -256,7 +256,7 @@ Exec Runner 会直接在安装这个 Runner 的机器上运行命令，这和 Je
 
 # 优化 CI/CD 的速度
 
-这里给出项目 [`paperplane-api`](https://git.paperplane.cc/jia-niang/paperplane-api) 的 [构建流水线](https://drone.paperplane.cc/jia-niang/paperplane-api) 记录：
+这里给出项目 [`paperplane-api`](https://git.paperplane.cc/chiskat/paperplane-api) 的 [构建流水线](https://drone.paperplane.cc/chiskat/paperplane-api) 记录：
 
 ![](../images/image-20240501133030411.png)
 
@@ -354,8 +354,8 @@ volumes:
 
 为了测试以上内容，我创建了几个仓库：
 
-- [test-package-manager-cache](https://git.paperplane.cc/jia-niang/test-package-manager-cache) 测试三个包管理工具在 [Drone 流水线](https://drone.paperplane.cc/jia-niang/test-package-manager-cache) 中的缓存目录；
-- [test-package-manager-cache-default-workspace](https://git.paperplane.cc/jia-niang/test-package-manager-cache-default-workspace) 测试三个包管理工具在默认 `workspace` 时在 [Drone 流水线](https://drone.paperplane.cc/jia-niang/test-package-manager-cache-default-workspace) 中的缓存目录。
+- [test-package-manager-cache](https://git.paperplane.cc/chiskat/test-package-manager-cache) 测试三个包管理工具在 [Drone 流水线](https://drone.paperplane.cc/chiskat/test-package-manager-cache) 中的缓存目录；
+- [test-package-manager-cache-default-workspace](https://git.paperplane.cc/chiskat/test-package-manager-cache-default-workspace) 测试三个包管理工具在默认 `workspace` 时在 [Drone 流水线](https://drone.paperplane.cc/chiskat/test-package-manager-cache-default-workspace) 中的缓存目录。
 
 你可以点开流水线的页面，查看日志输出，找到这些缓存目录的位置和结构。
 

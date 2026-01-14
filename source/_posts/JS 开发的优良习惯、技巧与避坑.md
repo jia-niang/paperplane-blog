@@ -155,7 +155,7 @@ Docker 的官方镜像的 [README 文件](https://github.com/nodejs/docker-node/
 **所以，我们可以不使用供应商的对象存储 SDK，而是使用 S3 API。**
 **这样，以后更换供应商时，仅需要修改一些地址、密钥参数就可以，不需要修改任何代码。**
 
-这里以我自己的项目 [paperplane-api](https://git.paperplane.cc/jia-niang/paperplane-api) 为例，我使用的是腾讯云对象存储 COS：
+这里以我自己的项目 [paperplane-api](https://git.paperplane.cc/chiskat/paperplane-api) 为例，我使用的是腾讯云对象存储 COS：
 之前的代码：
 
 ```ts

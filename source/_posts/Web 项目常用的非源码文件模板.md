@@ -65,7 +65,7 @@ trim_trailing_whitespace = false
 使用方式：
 
 - 把其中的 `[year]` 替换成年份，例如 `2023-present`；
-- 把其中的 `[fullname]` 替换成你的名字，也可以把邮箱接在后面，例如 `jia-niang <1@paperplane.cc>`。
+- 把其中的 `[fullname]` 替换成你的名字，也可以把邮箱接在后面，例如 `chiskat <1@paperplane.cc>`。
 
 ```
 MIT License

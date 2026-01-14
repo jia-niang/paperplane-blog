@@ -95,11 +95,11 @@ categories:
   "keywords": ["关键词1", "关键词2"],
   "homepage": "https://paperplane.cc/",
   "bugs": {
-    "url": "https://git.paperplane.cc/jia-niang/paperplane-blog/issues"
+    "url": "https://git.paperplane.cc/chiskat/paperplane-blog/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://git.paperplane.cc/jia-niang/paperplane-blog"
+    "url": "https://git.paperplane.cc/chiskat/paperplane-blog"
   },
   "license": "MIT",
   "contributors": ["Frank Pu <1@paperplane.cc> (https://paperplane.cc/)"]
@@ -590,7 +590,7 @@ import lib2 from 'my-package/sub-path'
 在使用 `turbo` 或 `lerna` 等 monorepo 管理工具时，这个字段通常是必填的，否则工具可能会报错。
 
 > 注意 Node.js 官方 Docker 镜像中，`corepack` 默认是不开启的；
-> 这里推荐使用我的 [`paperplanecc/baseline-node`](https://github.com/paperplane-docker/baseline-node) 系列镜像，它默认通过 `corepack` 开启 pnpm，且预配置好了 pnpm 的相关环境变量，是真正意义上的 “开箱即用”；且提供了 `puppeteer` 版、`alpine` 兼容版等多个版本。
+> 这里推荐使用我的 [`chiskat/baseline-node`](https://github.com/paperplane-docker/baseline-node) 系列镜像，它默认通过 `corepack` 开启 pnpm，且预配置好了 pnpm 的相关环境变量，是真正意义上的 “开箱即用”；且提供了 `puppeteer` 版、`alpine` 兼容版等多个版本。
 
 
 

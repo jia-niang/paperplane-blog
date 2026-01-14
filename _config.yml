@@ -8,7 +8,7 @@ browser_title: '纸飞机 🌠 博客'
 subtitle: ''
 description: ''
 keywords:
-author: jia-niang
+author: chiskat
 language: zh-CN
 timezone: 'Asia/Shanghai'
 
@@ -113,7 +113,7 @@ cdn:
   tags:
     'img[src]':
       attribute: src
-      callback: > 
+      callback: >
         function(imgSrc) {
           return imgSrc.replace('//cdn.paperplane.cc/images', '//cdn.paperplane.cc/paperplane-blog/images')
         }
