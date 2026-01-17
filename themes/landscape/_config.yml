@@ -45,7 +45,7 @@ recent_posts_limits: 5
 # Miscellaneous
 google_analytics: G-697YVMN4XS
 gauges_analytics:
-favicon: 'css/images/favicon-96.png'
+favicon: 'css/images/favicon.png'
 twitter:
 fb_admins:
 fb_app_id:

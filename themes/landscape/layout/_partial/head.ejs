@@ -33,7 +33,7 @@
     (function() {
       var hm = document.createElement("script");
       hm.src = "https://hm.baidu.com/hm.js?b1b53dc42cdf180a24704cec0e52c6ec";
-      var s = document.getElementsByTagName("script")[0]; 
+      var s = document.getElementsByTagName("script")[0];
       s.parentNode.insertBefore(hm, s);
     })();
   </script>
@@ -47,7 +47,6 @@
   </style>
   <script defer async src="/js/cursor-effects.js" onload="setupCursorEffects()"></script> -->
   <%- css('css/style') %>
-  <%- css('css/typeface-source-code-pro') %>
   <%- open_graph({twitter_id: theme.twitter, fb_admins: theme.fb_admins, fb_app_id: theme.fb_app_id}) %>
   <%- favicon_tag(theme.favicon) %>
   <% if (config.feed) { %>

@@ -40,27 +40,38 @@
 
 .article-meta
   clearfix()
-  font-size: 1em
+  font-size: 0
   padding: 8px 5px
   position: relative
   margin: 0 -5px
   border-bottom: 1px solid #ddd
   border-top: 1px solid #ddd
   font-family: font-serif
+  overflow: scroll
+  scrollbar-width: 0
+  white-space: nowrap
+  &::-webkit-scrollbar
+    width: 0
+    height: 0
+    background: transparent
   a
+    font-size: 18px
     text-decoration: none
     color: color-grey
     text-shadow: 0 1px #fff
-    line-height: inherit
-  &>span
-    position: relative
+  &>span, &>span>a, &>span>a>*
+    font-size: 18px
     line-height: 1.2em
+    display: inline-block
+  &>span
+    font-size: 18px
+    position: relative
     padding: 0 12px
     &:before
       content: ''
       position: absolute
-      top: -0
-      left: -1px
+      top: 0
+      left: 0
       height: 1.2em
       border-right: 1.5px solid #ddd
     &:first-child
